@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "ultrautilities:block/lab_block"
+  }
+}

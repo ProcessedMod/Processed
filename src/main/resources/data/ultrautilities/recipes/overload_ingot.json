@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": { "item": "ultrautilities:overload_ore" },
+  "result": "ultrautilities:overload_ingot",
+  "experience": 1.0,
+  "cookingTime": 140
+}

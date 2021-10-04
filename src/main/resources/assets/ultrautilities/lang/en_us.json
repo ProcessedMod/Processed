@@ -1,0 +1,13 @@
+{
+  "block.ultrautilities.crafting_processor": "Crafting Processor",
+  "item.ultrautilities.processor_core": "Processor Core",
+  "item.ultrautilities.processor_sword": "Processor Sword",
+  "item.ultrautilities.overload_processor": "Overload Processor",
+  "item.ultrautilities.overload_ingot": "Overload Ingot",
+  "block.ultrautilities.overload_ore": "Overload Ore",
+  "itemGroup.ultraUtilitiesModTab": "UltraUtilities",
+  "itemGroup.ultraUtilitiesModTabTools": "UltraUtilities Tools & Weapons",
+  "block.ultrautilities.lab_block": "Lab Block",
+  "screen.ultrautilities.crafting_station": "Crafting Station",
+  "screen.ultrautilities.autocrafter": "Autocrafter"
+}
