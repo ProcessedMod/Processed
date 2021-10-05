@@ -2,6 +2,7 @@ package com.redcrafter07.ultrautilities;
 
 import com.redcrafter07.ultrautilities.blocks.ModBlocks;
 import com.redcrafter07.ultrautilities.container.ModContainers;
+import com.redcrafter07.ultrautilities.data.recipes.ModRecipeTypes;
 import com.redcrafter07.ultrautilities.item.ModItems;
 import com.redcrafter07.ultrautilities.screen.AutoCrafterScreen;
 import com.redcrafter07.ultrautilities.screen.CraftingStationScreen;
@@ -41,6 +42,7 @@ public class UltraUtilities {
         ModBlocks.register(eventBus); //Register Blocks
         ModTileEntities.register(eventBus); //Register Tile Entities
         ModContainers.register(eventBus);
+        ModRecipeTypes.register(eventBus);
 
         eventBus.addListener(this::setup);
         // Register the enqueueIMC method for modloading

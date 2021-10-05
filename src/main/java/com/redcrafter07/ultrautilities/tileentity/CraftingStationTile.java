@@ -1,9 +1,13 @@
 package com.redcrafter07.ultrautilities.tileentity;
 
+import com.redcrafter07.ultrautilities.data.recipes.CraftingStationRecipe;
+import com.redcrafter07.ultrautilities.data.recipes.ModRecipeTypes;
 import com.redcrafter07.ultrautilities.item.ModItems;
 import net.minecraft.block.BlockState;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -15,8 +19,9 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 
-public class CraftingStationTile extends TileEntity {
+public class CraftingStationTile extends TileEntity implements ITickableTileEntity {
     private final ItemStackHandler itemHandler = createHandler();
     private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
 
@@ -80,5 +85,33 @@ public class CraftingStationTile extends TileEntity {
             return handler.cast();
         }
         return super.getCapability(cap, side);
+    }
+
+    public void craft() {
+         Inventory inv = new Inventory(itemHandler.getSlots());
+        for (int i = 0; i < itemHandler.getSlots(); i++) {
+            inv.setInventorySlotContents(i, itemHandler.getStackInSlot(i));
+        }
+
+        Optional<CraftingStationRecipe> recipe = world.getRecipeManager()
+                .getRecipe(ModRecipeTypes.PROCESSOR_RECIPE, inv, world);
+
+        recipe.ifPresent(iRecipe -> {
+            ItemStack output = iRecipe.getRecipeOutput();
+
+            itemHandler.extractItem(0, 1, false);
+            itemHandler.extractItem(1, 1, false);
+            itemHandler.insertItem(2, output, false);
+
+            markDirty();
+        });
+    }
+
+    @Override
+    public void tick() {
+        if(world.isRemote)  return;
+
+
+        craft();
     }
 }
