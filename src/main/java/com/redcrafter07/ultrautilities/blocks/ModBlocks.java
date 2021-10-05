@@ -25,8 +25,6 @@ public class ModBlocks {
 //    TILE ENTITIES
     public static final RegistryObject<Block> CRAFTING_STATION = registerBlock("crafting_station", () -> new CraftingStationBlock(AbstractBlock.Properties.create(Material.WOOD).harvestLevel(0).harvestTool(ToolType.AXE).setRequiresTool()));
 
-    //public static final RegistryObject<Block> AUTOCRAFTER = registerBlock("autocrafter", () -> new AutoCrafterBlock(AbstractBlock.Properties.create(Material.WOOD).harvestLevel(0).harvestTool(ToolType.AXE).setRequiresTool()));
-
     public static <T extends Block>RegistryObject<T> registerBlock(String name, Supplier<T> block)  {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);
 

@@ -4,7 +4,6 @@ import com.redcrafter07.ultrautilities.blocks.ModBlocks;
 import com.redcrafter07.ultrautilities.container.ModContainers;
 import com.redcrafter07.ultrautilities.data.recipes.ModRecipeTypes;
 import com.redcrafter07.ultrautilities.item.ModItems;
-import com.redcrafter07.ultrautilities.screen.AutoCrafterScreen;
 import com.redcrafter07.ultrautilities.screen.CraftingStationScreen;
 import com.redcrafter07.ultrautilities.tileentity.ModTileEntities;
 import net.minecraft.block.Block;
@@ -67,7 +66,7 @@ public class UltraUtilities {
         //LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().options);
 
         ScreenManager.registerFactory(ModContainers.CRAFTING_STATION_CONTAINER.get(), CraftingStationScreen::new);
-        ScreenManager.registerFactory(ModContainers.AUTOCRAFTER_CONTAINER.get(), AutoCrafterScreen::new);
+
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
