@@ -1,0 +1,14 @@
+{
+  "type": "ultrautilities:processor",
+  "ingredients": [
+    {
+      "item": "ultrautilities:processor_core"
+    },
+    {
+      "item": "ultrautilities:overload_ingot"
+    }
+  ],
+  "output": {
+    "item": "ultrautilities:overload_processor"
+  }
+}
