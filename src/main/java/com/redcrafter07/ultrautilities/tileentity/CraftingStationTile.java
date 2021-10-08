@@ -57,6 +57,10 @@ public class CraftingStationTile extends TileEntity implements ITickableTileEnti
                 switch (slot)   {
                     case 0:
                         return stack.getItem() == ModItems.PROCESSOR_CORE.get();
+                    case 1:
+                        return stack.getItem() != ModItems.PROCESSOR_CORE.get();
+                    case 2:
+                        return stack.getItem() != ModItems.PROCESSOR_CORE.get();
                     default: return true;
                 }
             }
