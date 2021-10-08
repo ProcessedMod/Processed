@@ -1,5 +1,5 @@
 # UltraUtilities
-Another Utility Mod with different features
+### Another Utility Mod with different features
 
 UltraUtilities is a mod which ads diffrent utilities based on processors. It's made for automation, block creation and more. 
 
