@@ -1,0 +1,14 @@
+{
+  "type": "ultrautilities:processor",
+  "ingredients": [
+    {
+      "item": "ultrautilities:processor_core"
+    },
+    {
+      "item": "minecraft:crafting_table"
+    }
+  ],
+  "output": {
+    "item": "ultrautilities:crafting_processor"
+  }
+}
