@@ -13,6 +13,7 @@ Planned Features:
 - Auto Crafting Table
 - Crafting Station in- and outputs using hoppers
 - More building blocks
+- Processor Sword Functionality
 - And many more!
 
 **Info**: This Mod is in the early alpha. It's not released yet. You can watch and star [this repository](https://github.com/UltraUtilities/UltraUtilities) to get it as one of the first.
