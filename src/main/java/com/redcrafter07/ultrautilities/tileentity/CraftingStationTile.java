@@ -99,9 +99,14 @@ public class CraftingStationTile extends TileEntity implements ITickableTileEnti
         recipe.ifPresent(iRecipe -> {
             ItemStack output = iRecipe.getRecipeOutput();
 
-            itemHandler.extractItem(0, 1, false);
-            itemHandler.extractItem(1, 1, false);
-            itemHandler.insertItem(2, output, false);
+//            System.out.println(itemHandler.getStackInSlot(2).getCount());
+
+            if(itemHandler.getStackInSlot(2).getCount() < 1)   {
+                itemHandler.extractItem(0, 1, false);
+                itemHandler.extractItem(1, 1, false);
+                itemHandler.insertItem(2, output, false);
+            }
+
 
             markDirty();
         });
