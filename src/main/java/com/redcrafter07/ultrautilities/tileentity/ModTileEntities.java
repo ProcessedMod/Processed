@@ -17,6 +17,10 @@ public class ModTileEntities {
             TILE_ENTITIES.register("crafting_station_tile", () -> TileEntityType.Builder.create(
                     CraftingStationTile::new, ModBlocks.CRAFTING_STATION.get()).build(null));
 
+    public static RegistryObject<TileEntityType<OverloadStationTile>> OVERLOAD_STATION_TILE =
+            TILE_ENTITIES.register("overload_station_tile", () -> TileEntityType.Builder.create(
+                    OverloadStationTile::new, ModBlocks.OVERLOAD_STATION.get()).build(null));
+
 
     public static void register(IEventBus eventBus) {
         TILE_ENTITIES.register(eventBus);
