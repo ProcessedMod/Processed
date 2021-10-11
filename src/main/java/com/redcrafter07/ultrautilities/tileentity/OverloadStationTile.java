@@ -5,6 +5,7 @@ import com.redcrafter07.ultrautilities.data.recipes.ModRecipeTypes;
 import com.redcrafter07.ultrautilities.item.ModItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -46,7 +47,7 @@ public class OverloadStationTile extends TileEntity implements ITickableTileEnti
     }
 
     private ItemStackHandler createHandler()    {
-        return new ItemStackHandler(3) {
+        return new ItemStackHandler(2) {
             @Override
             protected void onContentsChanged(int slot) {
                 markDirty();
@@ -56,10 +57,8 @@ public class OverloadStationTile extends TileEntity implements ITickableTileEnti
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 switch (slot)   {
                     case 0:
-                        return stack.getItem() == ModItems.PROCESSOR_CORE.get();
+                        return stack.getItem() == ModItems.OVERLOAD_PROCESSOR.get();
                     case 1:
-                    case 2:
-                        return stack.getItem() != ModItems.PROCESSOR_CORE.get();
                     default: return true;
                 }
             }
@@ -90,36 +89,18 @@ public class OverloadStationTile extends TileEntity implements ITickableTileEnti
         return super.getCapability(cap, side);
     }
 
-    public void craft() {
-         Inventory inv = new Inventory(itemHandler.getSlots());
-        for (int i = 0; i < itemHandler.getSlots(); i++) {
-            inv.setInventorySlotContents(i, itemHandler.getStackInSlot(i));
-        }
-
-        Optional<CraftingStationRecipe> recipe = world.getRecipeManager()
-                .getRecipe(ModRecipeTypes.PROCESSOR_RECIPE, inv, world);
-
-        recipe.ifPresent(iRecipe -> {
-            ItemStack output = iRecipe.getRecipeOutput();
-
-//            System.out.println(itemHandler.getStackInSlot(2).getCount());
-
-            if(itemHandler.getStackInSlot(2).getCount() < 1)   {
-                itemHandler.extractItem(0, 1, false);
-                itemHandler.extractItem(1, 1, false);
-                itemHandler.insertItem(2, output, false);
-            }
-
-
-            markDirty();
-        });
-    }
-
     @Override
     public void tick() {
-        if(world.isRemote)  return;
+        //if(world.isRemote)  return;
 
+        System.out.println(itemHandler.getStackInSlot(0).getCount());
 
-        craft();
+        if(itemHandler.getStackInSlot(0).getCount() != 0)    {
+            System.out.println(itemHandler.getStackInSlot(1).getItem().getName());
+
+            //if(item.getName().toString() != "processor_sword") return;
+
+            itemHandler.getStackInSlot(1).getItem().setDamage(itemHandler.getStackInSlot(1), itemHandler.getStackInSlot(1).getItem().getDamage(itemHandler.getStackInSlot(1)) - 1);
+        }
     }
 }

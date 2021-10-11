@@ -11,7 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 public class OverloadStationScreen extends ContainerScreen<OverloadStationContainer> {
-    private final ResourceLocation guiLocation = new ResourceLocation(UltraUtilities.MOD_ID, "textures/gui/crafting_station.png");
+    private final ResourceLocation guiLocation = new ResourceLocation(UltraUtilities.MOD_ID, "textures/gui/overload_station.png");
 
     public OverloadStationScreen(OverloadStationContainer container, PlayerInventory inv, ITextComponent textComponent) {
         super(container, inv, textComponent);
