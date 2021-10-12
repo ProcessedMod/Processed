@@ -7,7 +7,7 @@ import net.minecraft.util.LazyValue;
 import java.util.function.Supplier;
 
 public enum ModItemTier implements IItemTier {
-    PROCESSOR(3, 2000, 7f, 9f, 10, () -> Ingredient.fromItems(ModItems.PROCESSOR_CORE.get()))
+    PROCESSOR(3, 200, 7f, 9f, 10, () -> Ingredient.fromItems(ModItems.PROCESSOR_CORE.get()))
     ;
 
 
