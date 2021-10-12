@@ -1,0 +1,14 @@
+{
+  "type": "ultrautilities:processor",
+  "ingredients": [
+    {
+      "item": "ultrautilities:processor_core"
+    },
+    {
+      "item": "minecraft:redstone_block"
+    }
+  ],
+  "output": {
+    "item": "ultrautilities:overload_station"
+  }
+}
