@@ -31,7 +31,7 @@ public class OverloadStationTile extends TileEntity implements ITickableTileEnti
     }
 
     public OverloadStationTile()    {
-        this(ModTileEntities.CRAFTING_STATION_TILE.get());
+        this(ModTileEntities.OVERLOAD_STATION_TILE.get());
     }
 
     @Override
@@ -59,6 +59,7 @@ public class OverloadStationTile extends TileEntity implements ITickableTileEnti
                     case 0:
                         return stack.getItem() == ModItems.OVERLOAD_PROCESSOR.get();
                     case 1:
+                        return stack.getItem() == ModItems.PROCESSOR_SWORD.get();
                     default: return true;
                 }
             }
@@ -91,15 +92,9 @@ public class OverloadStationTile extends TileEntity implements ITickableTileEnti
 
     @Override
     public void tick() {
-        //if(world.isRemote)  return;
-
-        System.out.println(itemHandler.getStackInSlot(0).getCount());
+        if(world.isRemote)  return;
 
         if(itemHandler.getStackInSlot(0).getCount() != 0)    {
-            System.out.println(itemHandler.getStackInSlot(1).getItem().getName());
-
-            //if(item.getName().toString() != "processor_sword") return;
-
             itemHandler.getStackInSlot(1).getItem().setDamage(itemHandler.getStackInSlot(1), itemHandler.getStackInSlot(1).getItem().getDamage(itemHandler.getStackInSlot(1)) - 1);
         }
     }
