@@ -57,7 +57,7 @@ public class OverloadStationTile extends TileEntity implements ITickableTileEnti
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 switch (slot)   {
                     case 0:
-                        return stack.getItem() == ModItems.OVERLOAD_PROCESSOR.get();
+                        return stack.getItem() == ModItems.OVERLOAD_PROCESSOR.get() || stack.getItem() == ModItems.POWERED_OVERLOAD_PROCESSOR.get();
                     case 1:
                         return stack.getItem() == ModItems.PROCESSOR_SWORD.get();
                     default: return true;
@@ -94,8 +94,12 @@ public class OverloadStationTile extends TileEntity implements ITickableTileEnti
     public void tick() {
         if(world.isRemote)  return;
 
+        //if(itemHandler.getStackInSlot(1).getItem() != ModItems.PROCESSOR_SWORD.get()) return;
+
         if(itemHandler.getStackInSlot(0).getCount() != 0)    {
-            itemHandler.getStackInSlot(1).getItem().setDamage(itemHandler.getStackInSlot(1), itemHandler.getStackInSlot(1).getItem().getDamage(itemHandler.getStackInSlot(1)) - 1);
+            int damageRemover = 1;
+            if(itemHandler.getStackInSlot(0).getItem() == ModItems.POWERED_OVERLOAD_PROCESSOR.get()) damageRemover = 4;
+            itemHandler.getStackInSlot(1).getItem().setDamage(itemHandler.getStackInSlot(1), itemHandler.getStackInSlot(1).getItem().getDamage(itemHandler.getStackInSlot(1)) - damageRemover);
         }
     }
 }
