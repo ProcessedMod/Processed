@@ -20,6 +20,7 @@ public class ModItems {
     public static final RegistryObject<Item> PROCESSOR_SWORD = ITEMS.register("processor_sword", () -> new ProcessorSwordItem(ModItemTier.PROCESSOR, 2, 3f, new Item.Properties().group(ModItemGroup.UU_TOOLS).maxStackSize(1)));
 
     public static final RegistryObject<Item> OVERLOAD_PROCESSOR = ITEMS.register("overload_processor", () -> new Item(new Item.Properties().group(ModItemGroup.UU_GROUP)));
+    public static final RegistryObject<Item> POWERED_OVERLOAD_PROCESSOR = ITEMS.register("powered_overload_processor", () -> new Item(new Item.Properties().group(ModItemGroup.UU_GROUP)));
     public static final RegistryObject<Item> OVERLOAD_INGOT = ITEMS.register("overload_ingot", () -> new Item(new Item.Properties().group(ModItemGroup.UU_GROUP)));
 
     public static void register(IEventBus eventBus) {
