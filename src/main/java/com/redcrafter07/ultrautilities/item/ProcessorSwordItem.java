@@ -34,31 +34,25 @@ public class ProcessorSwordItem extends SwordItem {
 
     @Override
     public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
-        if(stack.getDamage() == 1)  {
+        /*if(stack.getDamage() == 1)  {
             return 0;
-        }
+        }*/
         return super.damageItem(stack, amount, entity, onBroken);
     }
 
-    
 
     @Override
     public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if(stack.getDamage() == 1)  {
-            return false;
-        }   else    {
-            stack.damageItem(1, attacker, (entity) -> {
-                entity.sendBreakAnimation(EquipmentSlotType.MAINHAND);
-            });
-            return true;
-        }
+        stack.damageItem(1, attacker, (entity) -> {
+            entity.sendBreakAnimation(EquipmentSlotType.MAINHAND);
+        });
+        return true;
     }
 
     /*public ActionResult<?> setAttackDamage(int attackDamage, PlayerEntity player)    {
         ItemStack stack = player.getHeldItem(Hand.MAIN_HAND);
         return  ActionResult.resultSuccess(stack);
     }*/
-
 
 
 }
