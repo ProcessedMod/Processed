@@ -14,6 +14,7 @@ Planned Features:
 - Crafting Station in- and outputs using hoppers
 - More building blocks
 - Processor Sword Durability Upgrade
+- More unique textures
 - And many more!
 
 **Info**: This Mod is in the early alpha. It's not released yet. You can watch and star [this repository](https://github.com/UltraUtilities/UltraUtilities) to get it as one of the first.
