@@ -33,18 +33,18 @@ public class LightningConcentratorTile extends TileEntity implements ITickableTi
     }
 
     public LightningConcentratorTile()    {
-        this(ModTileEntities.OVERLOAD_STATION_TILE.get());
+        this(ModTileEntities.LIGHTNING_CONCENTRATOR_TILE.get());
     }
 
     @Override
     public void read(BlockState blockState, CompoundNBT nbt) {
-        itemHandler.deserializeNBT((CompoundNBT) nbt.get("craftingStationContents"));
+        itemHandler.deserializeNBT(nbt.getCompound("lightningConcentratorContents"));
         super.read(blockState, nbt);
     }
 
     @Override
     public CompoundNBT write(CompoundNBT nbt) {
-        nbt.put("craftingStationContents", itemHandler.serializeNBT());
+        nbt.put("lightningConcentratorContents", itemHandler.serializeNBT());
         return super.write(nbt);
     }
 
@@ -62,7 +62,6 @@ public class LightningConcentratorTile extends TileEntity implements ITickableTi
                     case 1:
                     case 3:
                     case 4:
-                        return stack.getItem() == ModItems.POWERED_OVERLOAD_PROCESSOR.get();
                     default: return true;
                 }
             }
