@@ -35,8 +35,8 @@ public class LightningConcentratorRecipe implements ILightningConcentratorRecipe
 
     @Override
     public boolean matches(Inventory inv, World worldIn) {
-        if(recipeItems.get(0).test(inv.getStackInSlot(0)))  {
-            return recipeItems.get(1).test(inv.getStackInSlot(1)) && recipeItems.get(2).test(inv.getStackInSlot(2)) && recipeItems.get(3).test(inv.getStackInSlot(3)) && recipeItems.get(4).test(inv.getStackInSlot(4)) && recipeItems.get(5).test(inv.getStackInSlot(5));
+        if (recipeItems.get(0).test(inv.getStackInSlot(0))) {
+            return recipeItems.get(1).test(inv.getStackInSlot(1)) && recipeItems.get(2).test(inv.getStackInSlot(2)) && recipeItems.get(3).test(inv.getStackInSlot(3)) && recipeItems.get(4).test(inv.getStackInSlot(4));
         }
 
         return false;
@@ -52,7 +52,7 @@ public class LightningConcentratorRecipe implements ILightningConcentratorRecipe
         return output.copy();
     }
 
-    public ItemStack getIcon()  {
+    public ItemStack getIcon() {
         return new ItemStack(ModBlocks.LIGHTNING_CONCENTRATOR.get());
     }
 
@@ -66,7 +66,7 @@ public class LightningConcentratorRecipe implements ILightningConcentratorRecipe
         return ModRecipeTypes.LIGHTNING_SERIALIZER.get();
     }
 
-    public static class LightningRecipeType implements IRecipeType<LightningConcentratorRecipe>   {
+    public static class LightningRecipeType implements IRecipeType<LightningConcentratorRecipe> {
         @Override
         public String toString() {
             return LightningConcentratorRecipe.TYPE_ID.toString();
@@ -107,7 +107,7 @@ public class LightningConcentratorRecipe implements ILightningConcentratorRecipe
         @Override
         public void write(PacketBuffer buffer, LightningConcentratorRecipe recipe) {
             buffer.writeInt(recipe.getIngredients().size());
-            for (Ingredient ing : recipe.getIngredients())  {
+            for (Ingredient ing : recipe.getIngredients()) {
                 ing.write(buffer);
             }
             buffer.writeItemStack(recipe.getRecipeOutput(), false);

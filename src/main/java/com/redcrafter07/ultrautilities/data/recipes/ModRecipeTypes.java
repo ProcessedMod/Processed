@@ -23,5 +23,6 @@ public class ModRecipeTypes {
         RECIPE_SERIALIZER.register(eventBus);
 
         Registry.register(Registry.RECIPE_TYPE, CraftingStationRecipe.TYPE_ID, PROCESSOR_RECIPE);
+        Registry.register(Registry.RECIPE_TYPE, LightningConcentratorRecipe.TYPE_ID, LIGHTNING_RECIPE);
     }
 }
