@@ -23,7 +23,7 @@ public class ModTileEntities {
 
     public static RegistryObject<TileEntityType<LightningConcentratorTile>> LIGHTNING_CONCENTRATOR_TILE =
             TILE_ENTITIES.register("lightning_concentrator_tile", () -> TileEntityType.Builder.create(
-                    LightningConcentratorTile::new, ModBlocks.OVERLOAD_STATION.get()).build(null));
+                    LightningConcentratorTile::new, ModBlocks.LIGHTNING_CONCENTRATOR.get()).build(null));
 
 
     public static void register(IEventBus eventBus) {
