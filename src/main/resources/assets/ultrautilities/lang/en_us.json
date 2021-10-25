@@ -15,6 +15,6 @@
   "screen.ultrautilities.crafting_station": "Crafting Station",
   "screen.ultrautilities.overload_station": "Overload Station",
   "screen.ultrautilities.lightning_concentrator": "Lightning Concentrator",
-  "info.ultrautilities.shift": "\u00A78Hold \u00A72\u00A7lSHIFT\u00A7r\u00A7 for info",
-  "info.ultrautilities.lightning_concentrator": "\u00A77The block causes a lightning, which allows to craft new items.\nThis only works when the weather is \"thunder  \""
+  "info.ultrautilities.shift": "\u00A78Hold \u00A72\u00A7lSHIFT\u00A7r\u00A78 for info",
+  "info.ultrautilities.lightning_concentrator": "\u00A77The block causes a lightning, which allows to craft new items.\nThis only works when the weather is \"thunder\""
 }
