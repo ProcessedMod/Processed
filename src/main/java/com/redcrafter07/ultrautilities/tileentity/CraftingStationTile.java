@@ -35,7 +35,7 @@ public class CraftingStationTile extends TileEntity implements ITickableTileEnti
 
     @Override
     public void read(BlockState blockState, CompoundNBT nbt) {
-        itemHandler.deserializeNBT((CompoundNBT) nbt.get("craftingStationContents"));
+        itemHandler.deserializeNBT(nbt.getCompound("craftingStationContents"));
         super.read(blockState, nbt);
     }
 
