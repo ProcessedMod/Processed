@@ -11,6 +11,8 @@
   "block.ultrautilities.lab_block": "Lab Block",
   "block.ultrautilities.crafting_station": "Crafting Station",
   "block.ultrautilities.overload_station": "Overload Station",
+  "block.ultrautilities.lightning_concentrator": "Lightning Concentrator",
   "screen.ultrautilities.crafting_station": "Crafting Station",
-  "screen.ultrautilities.overload_station": "Overload Station"
+  "screen.ultrautilities.overload_station": "Overload Station",
+  "screen.ultrautilities.lightning_concentrator": "Lightning Concentrator"
 }
