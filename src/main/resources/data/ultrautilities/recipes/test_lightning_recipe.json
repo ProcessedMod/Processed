@@ -1,0 +1,23 @@
+{
+  "type": "ultrautilities:lightning",
+  "ingredients": [
+    {
+      "item": "ultrautilities:powered_overload_processor"
+    },
+    {
+      "item": "ultrautilities:powered_overload_processor"
+    },
+    {
+      "item": "ultrautilities:powered_overload_processor"
+    },
+    {
+      "item": "ultrautilities:powered_overload_processor"
+    },
+    {
+      "item": "ultrautilities:powered_overload_processor"
+    }
+  ],
+  "output": {
+    "item": "ultrautilities:powered_overload_processor"
+  }
+}
