@@ -14,8 +14,10 @@ public class ModRecipeTypes {
             DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, UltraUtilities.MOD_ID);
 
     public static final RegistryObject<CraftingStationRecipe.Serializer> PROCESSOR_SERIALIZER = RECIPE_SERIALIZER.register("processor", CraftingStationRecipe.Serializer::new);
+    public static final RegistryObject<LightningConcentratorRecipe.Serializer> LIGHTNING_SERIALIZER = RECIPE_SERIALIZER.register("lightning", LightningConcentratorRecipe.Serializer::new);
 
     public static IRecipeType<CraftingStationRecipe> PROCESSOR_RECIPE = new CraftingStationRecipe.ProcessorRecipeType();
+    public static IRecipeType<LightningConcentratorRecipe> LIGHTNING_RECIPE = new LightningConcentratorRecipe.LightningRecipeType();
 
     public static void register(IEventBus eventBus) {
         RECIPE_SERIALIZER.register(eventBus);
