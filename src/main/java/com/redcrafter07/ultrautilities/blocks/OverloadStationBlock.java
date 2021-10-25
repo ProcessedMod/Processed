@@ -6,11 +6,14 @@ import com.redcrafter07.ultrautilities.tileentity.ModTileEntities;
 import com.redcrafter07.ultrautilities.tileentity.OverloadStationTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -23,6 +26,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class OverloadStationBlock extends Block {
     public OverloadStationBlock(Properties properties) {
@@ -44,6 +48,17 @@ public class OverloadStationBlock extends Block {
 
 
         return ActionResultType.SUCCESS;
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        if(Screen.hasShiftDown())   {
+            tooltip.add(new TranslationTextComponent("info.ultrautilities.overload_station"));
+        }   else    {
+            tooltip.add(new TranslationTextComponent("info.ultrautilities.shift"));
+        }
+
+        super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
     private INamedContainerProvider createContainerProvider(World world, BlockPos blockPos) {
