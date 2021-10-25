@@ -1,0 +1,25 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "#G#",
+    "XOX",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:iron_block"
+    },
+    "X": {
+      "item": "ultrautilities:powered_overload_processor"
+    },
+    "O": {
+      "item": "ultrautilities:overload_station"
+    },
+    "G": {
+      "item": "minecraft:glass_pane"
+    }
+  },
+  "result": {
+    "item": "ultrautilities:lightning_concentrator"
+  }
+}
