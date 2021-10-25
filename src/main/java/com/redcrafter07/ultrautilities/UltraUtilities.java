@@ -5,6 +5,7 @@ import com.redcrafter07.ultrautilities.container.ModContainers;
 import com.redcrafter07.ultrautilities.data.recipes.ModRecipeTypes;
 import com.redcrafter07.ultrautilities.item.ModItems;
 import com.redcrafter07.ultrautilities.screen.CraftingStationScreen;
+import com.redcrafter07.ultrautilities.screen.LightningConcentratorScreen;
 import com.redcrafter07.ultrautilities.screen.OverloadStationScreen;
 import com.redcrafter07.ultrautilities.tileentity.ModTileEntities;
 import net.minecraft.block.Block;
@@ -68,6 +69,7 @@ public class UltraUtilities {
 
         ScreenManager.registerFactory(ModContainers.CRAFTING_STATION_CONTAINER.get(), CraftingStationScreen::new);
         ScreenManager.registerFactory(ModContainers.OVERLOAD_STATION_CONTAINER.get(), OverloadStationScreen::new);
+        ScreenManager.registerFactory(ModContainers.LIGHTNING_CONCENTRATOR_CONTAINER.get(), LightningConcentratorScreen::new);
 
     }
 

@@ -25,6 +25,7 @@ public class ModBlocks {
 //    TILE ENTITIES
     public static final RegistryObject<Block> CRAFTING_STATION = registerBlock("crafting_station", () -> new CraftingStationBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(0).harvestTool(ToolType.PICKAXE).setRequiresTool()));
     public static final RegistryObject<Block> OVERLOAD_STATION = registerBlock("overload_station", () -> new OverloadStationBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(0).harvestTool(ToolType.PICKAXE).setRequiresTool()));
+    public static final RegistryObject<Block> LIGHTNING_CONCENTRATOR = registerBlock("lightning_concentrator", () -> new LightningConcentratorBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(0).harvestTool(ToolType.PICKAXE).setRequiresTool()));
 
     public static <T extends Block>RegistryObject<T> registerBlock(String name, Supplier<T> block)  {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);
