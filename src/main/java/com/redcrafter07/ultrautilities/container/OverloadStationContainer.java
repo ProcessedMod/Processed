@@ -30,8 +30,8 @@ public class OverloadStationContainer extends Container {
 
         if(tileEntity != null)  {
             tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
-                addSlot(new SlotItemHandler(handler, 0, 9, 14));
-                addSlot(new SlotItemHandler(handler, 1, 152, 67));
+                addSlot(new SlotItemHandler(handler, 0, 8, 13));
+                addSlot(new SlotItemHandler(handler, 1, 151, 66));
             });
         }
     }
