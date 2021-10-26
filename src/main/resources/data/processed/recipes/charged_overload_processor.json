@@ -8,7 +8,7 @@
       "item": "processed:powered_overload_processor"
     },
     {
-      "item": "processed:powered_overload_processor"
+      "item": "processed:deactivated_charged_overload_processor"
     },
     {
       "item": "processed:powered_overload_processor"
@@ -18,6 +18,6 @@
     }
   ],
   "output": {
-    "item": "processed:powered_overload_processor"
+    "item": "processed:charged_overload_processor"
   }
 }
