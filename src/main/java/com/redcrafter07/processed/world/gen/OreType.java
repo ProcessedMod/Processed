@@ -5,7 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraftforge.common.util.Lazy;
 
 public enum OreType {
-    OVERLOAD(Lazy.of(ModBlocks.OVERLOAD_ORE), 10, 0, 30)
+    OVERLOAD(Lazy.of(ModBlocks.OVERLOAD_ORE), 2, 0, 30)
     ;
 
     private final Lazy<Block> block;
