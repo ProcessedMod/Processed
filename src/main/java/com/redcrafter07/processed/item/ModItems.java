@@ -19,6 +19,8 @@ public class ModItems {
 
     public static final RegistryObject<Item> OVERLOAD_PROCESSOR = ITEMS.register("overload_processor", () -> new Item(new Item.Properties().group(ModItemGroup.UU_GROUP)));
     public static final RegistryObject<Item> POWERED_OVERLOAD_PROCESSOR = ITEMS.register("powered_overload_processor", () -> new Item(new Item.Properties().group(ModItemGroup.UU_GROUP)));
+    public static final RegistryObject<Item> CHARGED_OVERLOAD_PROCESSOR = ITEMS.register("charged_overload_processor", () -> new Item(new Item.Properties().group(ModItemGroup.UU_GROUP)));
+    public static final RegistryObject<Item> DEACTIVATED_CHARGED_OVERLOAD_PROCESSOR = ITEMS.register("deactivated_charged_overload_processor", () -> new DeactivatedChargedOverloadProcessor(new Item.Properties().group(ModItemGroup.UU_GROUP)));
     public static final RegistryObject<Item> OVERLOAD_INGOT = ITEMS.register("overload_ingot", () -> new Item(new Item.Properties().group(ModItemGroup.UU_GROUP)));
 
     public static void register(IEventBus eventBus) {
