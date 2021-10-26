@@ -1,0 +1,14 @@
+{
+  "type": "processed:processor",
+  "ingredients": [
+    {
+      "item": "processed:processor_core"
+    },
+    {
+      "item": "minecraft:redstone_block"
+    }
+  ],
+  "output": {
+    "item": "processed:overload_station"
+  }
+}

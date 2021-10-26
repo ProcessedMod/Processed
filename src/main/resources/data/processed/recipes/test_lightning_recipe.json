@@ -1,0 +1,23 @@
+{
+  "type": "processed:lightning",
+  "ingredients": [
+    {
+      "item": "processed:powered_overload_processor"
+    },
+    {
+      "item": "processed:powered_overload_processor"
+    },
+    {
+      "item": "processed:powered_overload_processor"
+    },
+    {
+      "item": "processed:powered_overload_processor"
+    },
+    {
+      "item": "processed:powered_overload_processor"
+    }
+  ],
+  "output": {
+    "item": "processed:powered_overload_processor"
+  }
+}
