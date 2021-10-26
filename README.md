@@ -1,7 +1,7 @@
-# UltraUtilities
+# Processed
 ### Another Utility Mod with different features
 
-UltraUtilities is a mod which ads diffrent utilities based on processors. It's made for automation, block creation and more. 
+Processed is a mod which ads diffrent utilities based on processors. It's made for automation, block creation and more. 
 
 ## Automation
 The automation won't be just one block, but in many steps for item processing. (Otherwise it would be too easy.)
@@ -17,7 +17,7 @@ Planned Features:
 - More unique textures
 - And many more!
 
-**Info**: This Mod is in the early alpha. It's not released yet. You can watch and star [this repository](https://github.com/UltraUtilities/UltraUtilities) to get it as one of the first.
+**Info**: This Mod is in the early alpha. It's not released yet. You can watch and star [this repository](https://github.com/processed/processed) to get it as one of the first.
 
 You can make suggestions in the issues tab. Thanks!
 
