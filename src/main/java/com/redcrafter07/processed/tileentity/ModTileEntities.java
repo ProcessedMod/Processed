@@ -25,6 +25,10 @@ public class ModTileEntities {
             TILE_ENTITIES.register("lightning_concentrator_tile", () -> TileEntityType.Builder.create(
                     LightningConcentratorTile::new, ModBlocks.LIGHTNING_CONCENTRATOR.get()).build(null));
 
+    public static RegistryObject<TileEntityType<ProcessorAssemblerTile>> PROCESSOR_ASSEMBLER_TILE =
+            TILE_ENTITIES.register("processor_assembler_tile", () -> TileEntityType.Builder.create(
+                    ProcessorAssemblerTile::new, ModBlocks.PROCESSOR_ASSEMBLER.get()).build(null));
+
 
     public static void register(IEventBus eventBus) {
         TILE_ENTITIES.register(eventBus);
