@@ -8,6 +8,7 @@
   "item.processed.deactivated_charged_overload_processor": "Deactivated Charged Overload Processor",
   "item.processed.overload_ingot": "Overload Ingot",
   "block.processed.overload_ore": "Overload Ore",
+  "block.processed.processor_assembler": "Processor Assembler",
   "itemGroup.processedModTab": "Processed",
   "itemGroup.processedModTabTools": "Processed Tools & Weapons",
   "block.processed.lab_block": "Lab Block",
@@ -17,9 +18,13 @@
   "screen.processed.crafting_station": "Crafting Station",
   "screen.processed.overload_station": "Overload Station",
   "screen.processed.lightning_concentrator": "Lightning Concentrator",
+  "screen.processed.processor_assembler": "Processor Assembler",
+  "screen.processed.manipulation_processor": "Manipulation Processor",
   "info.processed.shift": "\u00A78Hold \u00A72\u00A7lSHIFT\u00A7r\u00A78 for info",
-  "info.processed.lightning_concentrator": "\u00A77The block causes a lightning, which allows to craft new items.\nThis only works when the weather is \"thunder\"",
+  "info.processed.lightning_concentrator": "\u00A77This block causes a lightning, which allows to craft new items.\nThis only works when the weather is \"thunder\"",
   "info.processed.crafting_station": "\u00A77Use an processor core and an additional item to craft new processors!",
   "info.processed.overload_station": "\u00A77This block allows you to charge Overload Tools!",
-  "info.processed.deactivated_charged_overload_processor": "\u00A77Activate this processor using the lightning concentrator and add functionality!"
+  "info.processed.deactivated_charged_overload_processor": "\u00A77Activate this processor using the lightning concentrator and add functionality!",
+  "info.processed.processor_assembler": "\u00A77This block is an more late-game item which allow to create processors more easily.",
+  "info.processed.manipulation_processor": "\u00A77You have to use this item to craft the weather manipulator."
 }
