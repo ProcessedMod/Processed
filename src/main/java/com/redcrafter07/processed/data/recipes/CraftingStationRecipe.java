@@ -43,6 +43,11 @@ public class CraftingStationRecipe implements ICraftingStationRecipe {
     }
 
     @Override
+    public NonNullList<Ingredient> getIngredients() {
+        return recipeItems;
+    }
+
+    @Override
     public ItemStack getCraftingResult(Inventory inv) {
         return output;
     }
