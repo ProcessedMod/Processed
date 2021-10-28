@@ -26,6 +26,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> CRAFTING_STATION = registerBlock("crafting_station", () -> new CraftingStationBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(0).harvestTool(ToolType.PICKAXE).setRequiresTool()));
     public static final RegistryObject<Block> OVERLOAD_STATION = registerBlock("overload_station", () -> new OverloadStationBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(0).harvestTool(ToolType.PICKAXE).setRequiresTool()));
     public static final RegistryObject<Block> LIGHTNING_CONCENTRATOR = registerBlock("lightning_concentrator", () -> new LightningConcentratorBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(0).harvestTool(ToolType.PICKAXE).setRequiresTool()));
+    public static final RegistryObject<Block> PROCESSOR_ASSEMBLER = registerBlock("processor_assembler", () -> new ProcessorAssembler(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(0).harvestTool(ToolType.PICKAXE).notSolid()));
 
     public static <T extends Block>RegistryObject<T> registerBlock(String name, Supplier<T> block)  {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);
@@ -36,7 +37,7 @@ public class ModBlocks {
     }
 
     public static <T extends Block> void registerBlockItem(String name, RegistryObject<T> block) {
-        ModItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties().group(ModItemGroup.UU_GROUP)));
+        ModItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
     }
 
     public static void register(IEventBus eventBus) {
