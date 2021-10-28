@@ -7,10 +7,13 @@ import com.redcrafter07.processed.item.ModItems;
 import com.redcrafter07.processed.screen.CraftingStationScreen;
 import com.redcrafter07.processed.screen.LightningConcentratorScreen;
 import com.redcrafter07.processed.screen.OverloadStationScreen;
+import com.redcrafter07.processed.screen.ProcessorAssemblerScreen;
 import com.redcrafter07.processed.tileentity.ModTileEntities;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -26,6 +29,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.processing.Processor;
 import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -70,6 +74,9 @@ public class Processed {
         ScreenManager.registerFactory(ModContainers.CRAFTING_STATION_CONTAINER.get(), CraftingStationScreen::new);
         ScreenManager.registerFactory(ModContainers.OVERLOAD_STATION_CONTAINER.get(), OverloadStationScreen::new);
         ScreenManager.registerFactory(ModContainers.LIGHTNING_CONCENTRATOR_CONTAINER.get(), LightningConcentratorScreen::new);
+        ScreenManager.registerFactory(ModContainers.PROCESSOR_ASSEMBLER_CONTAINER.get(), ProcessorAssemblerScreen::new);
+
+        RenderTypeLookup.setRenderLayer(ModBlocks.PROCESSOR_ASSEMBLER.get(), RenderType.getCutout());
 
     }
 
