@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "processed:block/processor_assembler"
+    }
+  }
+}
