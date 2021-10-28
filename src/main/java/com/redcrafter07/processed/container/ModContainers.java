@@ -35,6 +35,13 @@ public class ModContainers {
                 return new LightningConcentratorContainer(windowId, playerWorld, blockPosition, inv, inv.player);
             })));
 
+    public static final RegistryObject<ContainerType<ProcessorAssemblerContainer>> PROCESSOR_ASSEMBLER_CONTAINER = CONTAINERS.register("processor_assembler_container",
+            () -> IForgeContainerType.create(((windowId, inv, data) -> {
+                BlockPos blockPosition = data.readBlockPos();
+                World playerWorld = inv.player.getEntityWorld();
+                return new ProcessorAssemblerContainer(windowId, playerWorld, blockPosition, inv, inv.player);
+            })));
+
     public static void register(IEventBus eventBus) {
         CONTAINERS.register(eventBus);
     }
