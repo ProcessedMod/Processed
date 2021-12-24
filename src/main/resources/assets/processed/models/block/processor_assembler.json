@@ -1,5 +1,5 @@
 {
-	"credit": "Made with Blockbench",
+	"credit": "Made by RedCrafter07",
 	"textures": {
 		"0": "processed:block/processor_assembler",
 		"particle": "processed:block/processor_assembler"
@@ -130,5 +130,13 @@
 			"rotation": [30, 45, 0],
 			"scale": [0.65, 0.65, 0.65]
 		}
-	}
+	},
+	"groups": [
+		{
+			"name": "VoxelShapes",
+			"origin": [14.5, 25, 16.5],
+			"color": 0,
+			"children": [0, 1, 2, 3, 4, 5, 6, 7]
+		}
+	]
 }
