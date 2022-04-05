@@ -19,10 +19,11 @@ public class ModItems {
 
     public static final RegistryObject<Item> OVERLOAD_PROCESSOR = ITEMS.register("overload_processor", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
     public static final RegistryObject<Item> POWERED_OVERLOAD_PROCESSOR = ITEMS.register("powered_overload_processor", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
-    public static final RegistryObject<Item> MANIPULATION_PROCESSOR = ITEMS.register("manipulation_processor", () -> new ManipulationProcessor(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
+    public static final RegistryObject<Item> ENVIRONMENTAL_PROCESSOR = ITEMS.register("environmental_processor", () -> new EnvironmentalProcessor(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
     public static final RegistryObject<Item> CHARGED_OVERLOAD_PROCESSOR = ITEMS.register("charged_overload_processor", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
     public static final RegistryObject<Item> DEACTIVATED_CHARGED_OVERLOAD_PROCESSOR = ITEMS.register("deactivated_charged_overload_processor", () -> new DeactivatedChargedOverloadProcessor(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
     public static final RegistryObject<Item> OVERLOAD_INGOT = ITEMS.register("overload_ingot", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
+    public static final RegistryObject<Item> PROCESSING_UNIT = ITEMS.register("processing_unit", () -> new ProcessingUnit(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
