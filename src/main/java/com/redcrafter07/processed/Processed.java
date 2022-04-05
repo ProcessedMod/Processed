@@ -77,7 +77,7 @@ public class Processed {
         ScreenManager.registerFactory(ModContainers.PROCESSOR_ASSEMBLER_CONTAINER.get(), ProcessorAssemblerScreen::new);
 
         RenderTypeLookup.setRenderLayer(ModBlocks.PROCESSOR_ASSEMBLER.get(), RenderType.getCutout());
-
+        RenderTypeLookup.setRenderLayer(ModBlocks.MOTHERBOARD.get(), RenderType.getCutout());
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
