@@ -1,0 +1,22 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "#O#",
+    "OXO",
+    "#O#"
+  ],
+  "key": {
+    "#": {
+      "item": "processed:overload_processor"
+    },
+    "O": {
+      "item": "processed:powered_overload_processor"
+    },
+    "X": {
+      "item": "processed:charged_overload_processor"
+    }
+  },
+  "result": {
+    "item": "processed:motherboard"
+  }
+}
