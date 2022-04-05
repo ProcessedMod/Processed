@@ -11,15 +11,15 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ManipulationProcessor extends Item {
-    public ManipulationProcessor(Properties properties) {
+public class EnvironmentalProcessor extends Item {
+    public EnvironmentalProcessor(Properties properties) {
         super(properties);
     }
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if(Screen.hasShiftDown())   {
-            tooltip.add(new TranslationTextComponent("info.processed.manipulation_processor"));
+            tooltip.add(new TranslationTextComponent("info.processed.environmental_processor"));
         }   else    {
             tooltip.add(new TranslationTextComponent("info.processed.shift"));
         }

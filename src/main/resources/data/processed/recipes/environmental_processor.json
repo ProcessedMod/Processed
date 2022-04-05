@@ -15,6 +15,6 @@
     }
   ],
   "output": {
-    "item": "processed:manipulation_processor"
+    "item": "processed:environmental_processor"
   }
 }
