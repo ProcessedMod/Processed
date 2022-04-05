@@ -86,11 +86,9 @@ public class ProcessorAssembler extends HorizontalBlock {
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         switch (state.get(HORIZONTAL_FACING)) {
             case NORTH:
+            case SOUTH:
                 return SHAPE_N;
             case EAST:
-                return SHAPE_E;
-            case SOUTH:
-                return SHAPE_S;
             case WEST:
                 return SHAPE_W;
             default:
