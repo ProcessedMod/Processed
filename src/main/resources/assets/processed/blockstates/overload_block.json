@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "processed:block/overload_block"
+    }
+  }
+}
