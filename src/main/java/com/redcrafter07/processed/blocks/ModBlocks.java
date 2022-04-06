@@ -22,10 +22,11 @@ public class ModBlocks {
 //    NORMAL BLOCKS
     public static final RegistryObject<Block> LAB_BLOCK = registerBlock("lab_block", () -> new Block(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(1).harvestTool(ToolType.PICKAXE).setRequiresTool()));
     public static final RegistryObject<Block> OVERLOAD_ORE = registerBlock("overload_ore", () -> new Block(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(3).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(1.5F, 6.0F)));
-    public static final RegistryObject<Block> MOTHERBOARD = registerBlock("motherboard", () -> new Motherboard(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(2).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(0.5F, 30F).notSolid()));
 
 //    MODIFIED BLOCKS
     public static final RegistryObject<Block> OVERLOAD_BLOCK = registerBlock("overload_block", () -> new OverloadBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(3).harvestTool(ToolType.PICKAXE).setRequiresTool().setLightLevel(value -> 5).hardnessAndResistance(1.0F, 6.0F)));
+    public static final RegistryObject<Block> MOTHERBOARD = registerBlock("motherboard", () -> new Motherboard(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(2).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(0.5F, 3.0F).notSolid()));
+    public static final RegistryObject<Block> ENVIRONMENTAL_SUPPRESSOR = registerBlock("environmental_suppressor", () -> new EnvironmentalSuppressor(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(1).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(1.0F,3.0F).notSolid().setLightLevel(value -> 14)));
 
 //    TILE ENTITIES
     public static final RegistryObject<Block> CRAFTING_STATION = registerBlock("crafting_station", () -> new CraftingStationBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(1).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(1.0F, 6.0F)));
