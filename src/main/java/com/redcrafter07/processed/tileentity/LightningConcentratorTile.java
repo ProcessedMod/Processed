@@ -2,6 +2,7 @@ package com.redcrafter07.processed.tileentity;
 
 import com.redcrafter07.processed.data.recipes.LightningConcentratorRecipe;
 import com.redcrafter07.processed.data.recipes.ModRecipeTypes;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -12,6 +13,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -97,6 +99,34 @@ public class LightningConcentratorTile extends TileEntity implements ITickableTi
             }
     }
 
+    public boolean checkForBlock(int x, int y, int z, int radius, Block block) {
+        x-=radius;
+        y-=radius;
+        z-=radius;
+
+        int u = x;
+        int v = y;
+        int w = z;
+        for(int k =0; k < (radius*2+1); k++) {
+            x = u;
+            for(int j =0; j < (radius*2+1); j++) {
+                z = w;
+                for(int i =0; i < (radius*2+1); i++) {
+                    Block tempBlock = world.getBlockState(new BlockPos(x, y, z)).getBlock();
+
+                    if(tempBlock == block) {
+                        return true;
+                    }
+                    z++;
+                }
+                x++;
+            }
+            y++;
+        }
+
+        return false;
+    }
+
     public void craft() {
         Inventory inv = new Inventory(itemHandler.getSlots());
         for (int i = 0; i < itemHandler.getSlots(); i++) {
@@ -109,7 +139,9 @@ public class LightningConcentratorTile extends TileEntity implements ITickableTi
         recipe.ifPresent(iRecipe -> {
             ItemStack output = iRecipe.getRecipeOutput();
 
-            if(world.isThundering()) {
+            BlockPos blockPos = this.getPos();
+
+            if(world.isThundering() || checkForBlock(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 15, this.getBlockState().getBlock())) {
                 lightning();
                 itemHandler.extractItem(0, 1, false);
                 itemHandler.extractItem(1, 1, false);
