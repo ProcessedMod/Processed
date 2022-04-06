@@ -1,5 +1,7 @@
 package com.redcrafter07.processed.tileentity;
 
+import com.redcrafter07.processed.blocks.LightningConcentratorBlock;
+import com.redcrafter07.processed.blocks.ModBlocks;
 import com.redcrafter07.processed.data.recipes.LightningConcentratorRecipe;
 import com.redcrafter07.processed.data.recipes.ModRecipeTypes;
 import net.minecraft.block.Block;
@@ -99,7 +101,7 @@ public class LightningConcentratorTile extends TileEntity implements ITickableTi
             }
     }
 
-    public boolean checkForBlock(int x, int y, int z, int radius, Block block) {
+    public boolean findEnvironmentalSuppressor(int x, int y, int z, int radius) {
         x-=radius;
         y-=radius;
         z-=radius;
@@ -112,9 +114,9 @@ public class LightningConcentratorTile extends TileEntity implements ITickableTi
             for(int j =0; j < (radius*2+1); j++) {
                 z = w;
                 for(int i =0; i < (radius*2+1); i++) {
-                    Block tempBlock = world.getBlockState(new BlockPos(x, y, z)).getBlock();
+                    Block block = world.getBlockState(new BlockPos(x, y, z)).getBlock();
 
-                    if(tempBlock == block) {
+                    if(block == ModBlocks.ENVIRONMENTAL_SUPPRESSOR.get().getBlock()) {
                         return true;
                     }
                     z++;
@@ -141,7 +143,7 @@ public class LightningConcentratorTile extends TileEntity implements ITickableTi
 
             BlockPos blockPos = this.getPos();
 
-            if(world.isThundering() || checkForBlock(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 15, this.getBlockState().getBlock())) {
+            if(world.isThundering() || findEnvironmentalSuppressor(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 15)) {
                 lightning();
                 itemHandler.extractItem(0, 1, false);
                 itemHandler.extractItem(1, 1, false);
