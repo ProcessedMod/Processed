@@ -29,6 +29,10 @@ public class ModTileEntities {
             TILE_ENTITIES.register("processor_assembler_tile", () -> TileEntityType.Builder.create(
                     ProcessorAssemblerTile::new, ModBlocks.PROCESSOR_ASSEMBLER.get()).build(null));
 
+    public static RegistryObject<TileEntityType<PowerstoneConverterTile>> POWERSTONE_CONVERTER_TILE =
+            TILE_ENTITIES.register("powerstone_converter_tile", () -> TileEntityType.Builder.create(
+                    PowerstoneConverterTile::new, ModBlocks.POWERSTONE_CONVERTER.get()).build(null));
+
 
     public static void register(IEventBus eventBus) {
         TILE_ENTITIES.register(eventBus);
