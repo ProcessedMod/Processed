@@ -78,6 +78,7 @@ public class Processed {
 
         RenderTypeLookup.setRenderLayer(ModBlocks.PROCESSOR_ASSEMBLER.get(), RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(ModBlocks.MOTHERBOARD.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.POWERSTONE_CONVERTER.get(), RenderType.getCutout());
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
