@@ -7,7 +7,7 @@
   ],
   "key": {
     "#": {
-      "item": "minecraft:nether_star"
+      "item": "minecraft:wither_skeleton_skull"
     },
     "O": {
       "item": "minecraft:gold_block"
@@ -31,7 +31,7 @@
       "item": "minecraft:redstone_lamp"
     },
     "L": {
-      "item": "minecraft:netherite_block"
+      "item": "minecraft:netherite_scrap"
     }
   },
   "result": {
