@@ -4,10 +4,7 @@ import com.redcrafter07.processed.blocks.ModBlocks;
 import com.redcrafter07.processed.container.ModContainers;
 import com.redcrafter07.processed.data.recipes.ModRecipeTypes;
 import com.redcrafter07.processed.item.ModItems;
-import com.redcrafter07.processed.screen.CraftingStationScreen;
-import com.redcrafter07.processed.screen.LightningConcentratorScreen;
-import com.redcrafter07.processed.screen.OverloadStationScreen;
-import com.redcrafter07.processed.screen.ProcessorAssemblerScreen;
+import com.redcrafter07.processed.screen.*;
 import com.redcrafter07.processed.tileentity.ModTileEntities;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -75,6 +72,7 @@ public class Processed {
         ScreenManager.registerFactory(ModContainers.OVERLOAD_STATION_CONTAINER.get(), OverloadStationScreen::new);
         ScreenManager.registerFactory(ModContainers.LIGHTNING_CONCENTRATOR_CONTAINER.get(), LightningConcentratorScreen::new);
         ScreenManager.registerFactory(ModContainers.PROCESSOR_ASSEMBLER_CONTAINER.get(), ProcessorAssemblerScreen::new);
+        ScreenManager.registerFactory(ModContainers.POWERSTONE_ACCUMULATOR_CONTAINER.get(), PowerstoneAccumulatorScreen::new);
 
         RenderTypeLookup.setRenderLayer(ModBlocks.PROCESSOR_ASSEMBLER.get(), RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(ModBlocks.MOTHERBOARD.get(), RenderType.getCutout());
