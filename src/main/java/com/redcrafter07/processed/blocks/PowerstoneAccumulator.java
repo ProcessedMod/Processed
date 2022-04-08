@@ -57,6 +57,16 @@ public class PowerstoneAccumulator extends Block {
     }
 
     @Override
+    public boolean hasComparatorInputOverride(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
+        return (int) Math.floor(blockState.get(FILL_STATE)/100);
+    }
+
+    @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FILL_STATE);
     }
