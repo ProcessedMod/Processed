@@ -2,6 +2,7 @@ package com.redcrafter07.processed.tileentity;
 
 import com.redcrafter07.processed.Processed;
 import com.redcrafter07.processed.blocks.ModBlocks;
+import com.redcrafter07.processed.blocks.PowerstonePlug;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
@@ -32,6 +33,14 @@ public class ModTileEntities {
     public static RegistryObject<TileEntityType<PowerstoneConverterTile>> POWERSTONE_CONVERTER_TILE =
             TILE_ENTITIES.register("powerstone_converter_tile", () -> TileEntityType.Builder.create(
                     PowerstoneConverterTile::new, ModBlocks.POWERSTONE_CONVERTER.get()).build(null));
+
+    public static RegistryObject<TileEntityType<PowerstonePlugTile>> POWERSTONE_PLUG_TILE =
+            TILE_ENTITIES.register("powerstone_plug_tile", () -> TileEntityType.Builder.create(
+                    PowerstonePlugTile::new, ModBlocks.POWERSTONE_PLUG.get()).build(null));
+
+    public static RegistryObject<TileEntityType<PowerstoneAccumulatorTile>> POWERSTONE_ACCUMULATOR_TILE =
+            TILE_ENTITIES.register("powerstone_accumulator_tile", () -> TileEntityType.Builder.create(
+                    PowerstoneAccumulatorTile::new, ModBlocks.POWERSTONE_ACCUMULATOR.get()).build(null));
 
 
     public static void register(IEventBus eventBus) {
