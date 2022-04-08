@@ -42,6 +42,13 @@ public class ModContainers {
                 return new ProcessorAssemblerContainer(windowId, playerWorld, blockPosition, inv, inv.player);
             })));
 
+    public static final RegistryObject<ContainerType<PowerstoneAccumulatorContainer>> POWERSTONE_ACCUMULATOR_CONTAINER = CONTAINERS.register("powerstone_accumulator_container",
+            () -> IForgeContainerType.create(((windowId, inv, data) -> {
+                BlockPos blockPosition = data.readBlockPos();
+                World playerWorld = inv.player.getEntityWorld();
+                return new PowerstoneAccumulatorContainer(windowId, playerWorld, blockPosition, inv, inv.player);
+            })));
+
     public static void register(IEventBus eventBus) {
         CONTAINERS.register(eventBus);
     }
