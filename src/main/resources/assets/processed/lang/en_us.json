@@ -28,6 +28,7 @@
   "screen.processed.overload_station": "Overload Station",
   "screen.processed.lightning_concentrator": "Lightning Concentrator",
   "screen.processed.processor_assembler": "Processor Assembler",
+  "screen.processed.powerstone_accumulator": "Powerstone Accumulator",
   "info.processed.shift": "\u00A78Hold \u00A72\u00A7lSHIFT\u00A7r\u00A78 for info",
   "info.processed.lightning_concentrator": "\u00A77This block causes a lightning, which allows to craft new items.\nThis only works when the weather is thunder or a Environmental Suppressor is nearby.",
   "info.processed.crafting_station": "\u00A77Use an processor core and an additional item to craft new processors!",
