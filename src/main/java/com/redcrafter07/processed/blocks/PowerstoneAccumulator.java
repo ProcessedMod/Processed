@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 public class PowerstoneAccumulator extends Block {
-    public static final IntegerProperty FILL_STATE = IntegerProperty.create("fill_state", 0, 15000);
+    public static final IntegerProperty FILL_STATE = IntegerProperty.create("fill_state", 0, 1500);
 
     public PowerstoneAccumulator(Properties properties) {
         super(properties);
@@ -63,13 +63,13 @@ public class PowerstoneAccumulator extends Block {
 
     @Override
     public ActionResultType onBlockActivated(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult blockRayTraceResult) {
-        if(!world.isRemote()) {
+        if (!world.isRemote()) {
             TileEntity tileEntity = world.getTileEntity(blockPos);
-            if(tileEntity instanceof PowerstoneAccumulatorTile)   {
+            if (tileEntity instanceof PowerstoneAccumulatorTile) {
                 INamedContainerProvider containerProvider = createContainerProvider(world, blockPos);
 
                 NetworkHooks.openGui(((ServerPlayerEntity) playerEntity), containerProvider, tileEntity.getPos());
-            }   else {
+            } else {
                 throw new IllegalStateException("Container Provider missing!");
             }
         }
@@ -91,7 +91,9 @@ public class PowerstoneAccumulator extends Block {
                 return new PowerstoneAccumulatorContainer(p_createMenu_1_, world, blockPos, inv, player);
             }
         };
-    };
+    }
+
+    ;
 
     @Nullable
     @Override
