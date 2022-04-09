@@ -26,19 +26,31 @@ public class PowerstonePlugTile extends TileEntity implements ITickableTileEntit
     public boolean checkAccumulator(int x, int y, int z, World worldIn) {
         y -= 1;
 
-        return worldIn.getBlockState(new BlockPos(x, y, z)).getBlock() == ModBlocks.POWERSTONE_ACCUMULATOR.get().getBlock() && worldIn.getBlockState(new BlockPos(x, y, z)).get(PowerstoneAccumulator.FILL_STATE) > 0;
+        return worldIn.getBlockState(new BlockPos(x, y, z)).getBlock() == ModBlocks.POWERSTONE_ACCUMULATOR.get().getBlock() && worldIn.getBlockState(new BlockPos(x, y, z)).get(PowerstoneAccumulator.FILLED);
     }
 
     public void updateBlockState(BlockPos pos, World worldIn, BlockState state) {
         boolean powered = checkAccumulator(pos.getX(), pos.getY(), pos.getZ(), worldIn);
         BlockPos accumulatorPos = new BlockPos(pos.getX(), pos.getY() - 1, pos.getZ());
-        BlockState accumulatorState = worldIn.getBlockState(accumulatorPos);
-        if (powered && !worldIn.isBlockPowered(pos)) {
+        int fillState = getFillState(worldIn, accumulatorPos);
+        if (powered && !worldIn.isBlockPowered(pos) && fillState > 0) {
             worldIn.setBlockState(pos, state.with(POWERED, Boolean.TRUE));
-            worldIn.setBlockState(accumulatorPos, accumulatorState.with(PowerstoneAccumulator.FILL_STATE, accumulatorState.get(PowerstoneAccumulator.FILL_STATE) - 1), 3);
+            setFillState(worldIn, accumulatorPos, fillState - 1);
         } else {
             worldIn.setBlockState(pos, state.with(POWERED, Boolean.FALSE));
         }
+    }
+
+    public int getFillState(World worldIn, BlockPos pos) {
+        return getTileEntity(worldIn, pos).getTileData().getInt("FillState");
+    }
+
+    public TileEntity getTileEntity(World worldIn, BlockPos pos) {
+        return worldIn.getTileEntity(pos);
+    }
+
+    public void setFillState(World worldIn, BlockPos pos, int newState) {
+        getTileEntity(worldIn, pos).getTileData().putInt("FillState", newState);
     }
 
     @Override

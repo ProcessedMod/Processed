@@ -10,6 +10,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -31,11 +33,11 @@ import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 public class PowerstoneAccumulator extends Block {
-    public static final IntegerProperty FILL_STATE = IntegerProperty.create("fill_state", 0, 1500);
+    public static final BooleanProperty FILLED = BooleanProperty.create("filled");
 
     public PowerstoneAccumulator(Properties properties) {
         super(properties);
-        setDefaultState(getDefaultState().with(FILL_STATE, 0));
+        setDefaultState(getDefaultState().with(FILLED, false));
     }
 
     public static final VoxelShape SHAPE = Stream.of(
@@ -63,12 +65,13 @@ public class PowerstoneAccumulator extends Block {
 
     @Override
     public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
-        return (int) Math.floor(blockState.get(FILL_STATE)/100);
+        int fillState = getFillState(worldIn, pos);
+        return Math.round(fillState / 100);
     }
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FILL_STATE);
+        builder.add(FILLED);
     }
 
     @Override
@@ -103,7 +106,17 @@ public class PowerstoneAccumulator extends Block {
         };
     }
 
-    ;
+    public int getFillState(World worldIn, BlockPos pos) {
+        return getTileEntity(worldIn, pos).getTileData().getInt("FillState");
+    }
+
+    public TileEntity getTileEntity(World worldIn, BlockPos pos) {
+        return worldIn.getTileEntity(pos);
+    }
+
+    public void setFillState(World worldIn, BlockPos pos, int newState) {
+        getTileEntity(worldIn, pos).getTileData().putInt("FillState", newState);
+    }
 
     @Nullable
     @Override

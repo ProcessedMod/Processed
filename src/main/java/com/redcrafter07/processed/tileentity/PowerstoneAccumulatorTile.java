@@ -19,6 +19,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class PowerstoneAccumulatorTile extends TileEntity implements ITickableTileEntity {
+    public int fillState;
+
     private final ItemStackHandler itemHandler = createHandler();
     private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
 
@@ -32,12 +34,14 @@ public class PowerstoneAccumulatorTile extends TileEntity implements ITickableTi
 
     @Override
     public void read(BlockState blockState, CompoundNBT nbt) {
+        nbt.getInt("FillState");
         itemHandler.deserializeNBT(nbt.getCompound("powerstoneAccumulatorContents"));
         super.read(blockState, nbt);
     }
 
     @Override
     public CompoundNBT write(CompoundNBT nbt) {
+        nbt.putInt("FillState", fillState);
         nbt.put("powerstoneAccumulatorContents", itemHandler.serializeNBT());
         return super.write(nbt);
     }
@@ -87,8 +91,13 @@ public class PowerstoneAccumulatorTile extends TileEntity implements ITickableTi
 
     @Override
     public void tick() {
-        if (itemHandler.getStackInSlot(0).getCount() > 0 && itemHandler.getStackInSlot(0).getDamage() < 100) {
-            world.setBlockState(getPos(), getBlockState().with(PowerstoneAccumulator.FILL_STATE, getBlockState().get(PowerstoneAccumulator.FILL_STATE) + 1), 3);
+        int currentState = world.getTileEntity(pos).getTileData().getInt("FillState");
+        System.out.println(currentState);
+        if(currentState > 0) world.setBlockState(pos,world.getBlockState(pos).with(PowerstoneAccumulator.FILLED, true));
+        else world.setBlockState(pos,world.getBlockState(pos).with(PowerstoneAccumulator.FILLED, false));
+        markDirty();
+        if (itemHandler.getStackInSlot(0).getCount() > 0 && itemHandler.getStackInSlot(0).getDamage() < 100 && currentState < 1500) {
+            world.getTileEntity(pos).getTileData().putInt("FillState", currentState + 1);
             itemHandler.getStackInSlot(0).setDamage(itemHandler.getStackInSlot(0).getDamage() + 1);
         }
     }
