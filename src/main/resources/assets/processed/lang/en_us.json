@@ -17,6 +17,7 @@
   "block.processed.powerstone_converter": "Powerstone Converter",
   "block.processed.powerstone_plug": "Powerstone Plug",
   "block.processed.powerstone_accumulator": "Powerstone Accumulator",
+  "block.processed.powerstone_receiver": "Powerstone Receiver",
   "itemGroup.processedModTab": "Processed",
   "itemGroup.processedModTabTools": "Processed Tools & Weapons",
   "block.processed.lab_block": "Lab Block",
