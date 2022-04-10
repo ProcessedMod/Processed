@@ -10,9 +10,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -32,10 +30,10 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-public class PowerstoneAccumulator extends Block {
+public class PowerstoneAccumulatorBlock extends Block {
     public static final BooleanProperty FILLED = BooleanProperty.create("filled");
 
-    public PowerstoneAccumulator(Properties properties) {
+    public PowerstoneAccumulatorBlock(Properties properties) {
         super(properties);
         setDefaultState(getDefaultState().with(FILLED, false));
     }

@@ -3,30 +3,21 @@ package com.redcrafter07.processed.blocks;
 import com.redcrafter07.processed.tileentity.ModTileEntities;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 import java.util.stream.Stream;
 
-public class PowerstoneConverter extends Block {
+public class PowerstoneConverterBlock extends Block {
     public static final BooleanProperty PLUGGED = BooleanProperty.create("plugged");
 
     public static final VoxelShape SHAPE = Stream.of(
@@ -53,7 +44,7 @@ public class PowerstoneConverter extends Block {
             Block.makeCuboidShape(15, 11, 1, 16, 16, 15)
     ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).get();
 
-    public PowerstoneConverter(Properties properties) {
+    public PowerstoneConverterBlock(Properties properties) {
         super(properties);
         this.setDefaultState(this.getDefaultState().with(PLUGGED, Boolean.FALSE));
     }

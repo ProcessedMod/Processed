@@ -16,13 +16,12 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class Motherboard extends HorizontalBlock {
+public class MotherboardBlock extends HorizontalBlock {
     public static final VoxelShape SHAPE_N = Stream.of(
             Block.makeCuboidShape(0, 0, 0, 16, 1, 16),
             Block.makeCuboidShape(3, 1, 2, 8, 2, 5),
@@ -123,7 +122,7 @@ public class Motherboard extends HorizontalBlock {
             Block.makeCuboidShape(3, 1, 15, 5, 2, 16)
     ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).get();
 
-    public Motherboard(Properties properties) {
+    public MotherboardBlock(Properties properties) {
         super(properties);
     }
 

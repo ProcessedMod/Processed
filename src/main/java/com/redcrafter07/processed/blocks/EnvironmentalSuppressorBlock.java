@@ -1,6 +1,5 @@
 package com.redcrafter07.processed.blocks;
 
-import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;
@@ -23,9 +22,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
-public class EnvironmentalSuppressor extends Block {
+public class EnvironmentalSuppressorBlock extends Block {
 
-    public EnvironmentalSuppressor(Properties properties) {
+    public EnvironmentalSuppressorBlock(Properties properties) {
         super(properties);
     }
 

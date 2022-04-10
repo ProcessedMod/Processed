@@ -16,10 +16,10 @@ import net.minecraft.world.IBlockReader;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-public class PowerstonePlug extends Block {
+public class PowerstonePlugBlock extends Block {
     public static final BooleanProperty POWERED = BooleanProperty.create("powered");
 
-    public PowerstonePlug(Properties properties) {
+    public PowerstonePlugBlock(Properties properties) {
         super(properties);
         this.setDefaultState(this.getDefaultState().with(POWERED, false));
     }

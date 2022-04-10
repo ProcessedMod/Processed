@@ -35,9 +35,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class ProcessorAssembler extends HorizontalBlock {
+public class ProcessorAssemblerBlock extends HorizontalBlock {
 
-    public ProcessorAssembler(Properties properties) {
+    public ProcessorAssemblerBlock(Properties properties) {
         super(properties);
     }
 
