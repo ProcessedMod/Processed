@@ -1,9 +1,8 @@
 package com.redcrafter07.processed.tileentity;
 
 import com.redcrafter07.processed.blocks.ModBlocks;
-import com.redcrafter07.processed.blocks.PowerstoneAccumulator;
-import com.redcrafter07.processed.blocks.PowerstonePlug;
-import net.minecraft.block.Block;
+import com.redcrafter07.processed.blocks.PowerstoneAccumulatorBlock;
+import com.redcrafter07.processed.blocks.PowerstonePlugBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -13,7 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class PowerstonePlugTile extends TileEntity implements ITickableTileEntity {
-    public static final BooleanProperty POWERED = PowerstonePlug.POWERED;
+    public static final BooleanProperty POWERED = PowerstonePlugBlock.POWERED;
 
     public PowerstonePlugTile(TileEntityType<?> tileEntityType) {
         super(tileEntityType);
@@ -26,7 +25,7 @@ public class PowerstonePlugTile extends TileEntity implements ITickableTileEntit
     public boolean checkAccumulator(int x, int y, int z, World worldIn) {
         y -= 1;
 
-        return worldIn.getBlockState(new BlockPos(x, y, z)).getBlock() == ModBlocks.POWERSTONE_ACCUMULATOR.get().getBlock() && worldIn.getBlockState(new BlockPos(x, y, z)).get(PowerstoneAccumulator.FILLED);
+        return worldIn.getBlockState(new BlockPos(x, y, z)).getBlock() == ModBlocks.POWERSTONE_ACCUMULATOR.get().getBlock() && worldIn.getBlockState(new BlockPos(x, y, z)).get(PowerstoneAccumulatorBlock.FILLED);
     }
 
     public void updateBlockState(BlockPos pos, World worldIn, BlockState state) {

@@ -2,7 +2,6 @@ package com.redcrafter07.processed.tileentity;
 
 import com.redcrafter07.processed.Processed;
 import com.redcrafter07.processed.blocks.ModBlocks;
-import com.redcrafter07.processed.blocks.PowerstonePlug;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;

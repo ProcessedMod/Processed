@@ -1,6 +1,6 @@
 package com.redcrafter07.processed.tileentity;
 
-import com.redcrafter07.processed.blocks.PowerstoneAccumulator;
+import com.redcrafter07.processed.blocks.PowerstoneAccumulatorBlock;
 import com.redcrafter07.processed.item.ModItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -93,8 +93,8 @@ public class PowerstoneAccumulatorTile extends TileEntity implements ITickableTi
     public void tick() {
         int currentState = world.getTileEntity(pos).getTileData().getInt("FillState");
         System.out.println(currentState);
-        if(currentState > 0) world.setBlockState(pos,world.getBlockState(pos).with(PowerstoneAccumulator.FILLED, true));
-        else world.setBlockState(pos,world.getBlockState(pos).with(PowerstoneAccumulator.FILLED, false));
+        if(currentState > 0) world.setBlockState(pos,world.getBlockState(pos).with(PowerstoneAccumulatorBlock.FILLED, true));
+        else world.setBlockState(pos,world.getBlockState(pos).with(PowerstoneAccumulatorBlock.FILLED, false));
         markDirty();
         if (itemHandler.getStackInSlot(0).getCount() > 0 && itemHandler.getStackInSlot(0).getDamage() < 100 && currentState < 1500) {
             world.getTileEntity(pos).getTileData().putInt("FillState", currentState + 1);

@@ -1,8 +1,8 @@
 package com.redcrafter07.processed.tileentity;
 
 import com.redcrafter07.processed.blocks.ModBlocks;
-import com.redcrafter07.processed.blocks.PowerstoneConverter;
-import com.redcrafter07.processed.blocks.PowerstonePlug;
+import com.redcrafter07.processed.blocks.PowerstoneConverterBlock;
+import com.redcrafter07.processed.blocks.PowerstonePlugBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.BooleanProperty;
@@ -13,7 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class PowerstoneConverterTile extends TileEntity implements ITickableTileEntity {
-    public static final BooleanProperty PLUGGED = PowerstoneConverter.PLUGGED;
+    public static final BooleanProperty PLUGGED = PowerstoneConverterBlock.PLUGGED;
 
     public PowerstoneConverterTile(TileEntityType<?> tileEntityType) {
         super(tileEntityType);
@@ -39,7 +39,7 @@ public class PowerstoneConverterTile extends TileEntity implements ITickableTile
                 for (int i = 0; i < (radius * 2 + 1); i++) {
                     Block block = worldIn.getBlockState(new BlockPos(x, y, z)).getBlock();
 
-                    if (block == ModBlocks.POWERSTONE_PLUG.get().getBlock() && worldIn.getBlockState(new BlockPos(x, y, z)).get(PowerstonePlug.POWERED)) {
+                    if (block == ModBlocks.POWERSTONE_PLUG.get().getBlock() && worldIn.getBlockState(new BlockPos(x, y, z)).get(PowerstonePlugBlock.POWERED)) {
                         return true;
                     }
                     z++;
