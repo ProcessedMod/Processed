@@ -92,7 +92,6 @@ public class PowerstoneAccumulatorTile extends TileEntity implements ITickableTi
     @Override
     public void tick() {
         int currentState = world.getTileEntity(pos).getTileData().getInt("FillState");
-        System.out.println(currentState);
         if(currentState > 0) world.setBlockState(pos,world.getBlockState(pos).with(PowerstoneAccumulatorBlock.FILLED, true));
         else world.setBlockState(pos,world.getBlockState(pos).with(PowerstoneAccumulatorBlock.FILLED, false));
         markDirty();
