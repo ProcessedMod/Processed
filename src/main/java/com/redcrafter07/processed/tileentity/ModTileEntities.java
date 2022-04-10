@@ -41,6 +41,10 @@ public class ModTileEntities {
             TILE_ENTITIES.register("powerstone_accumulator_tile", () -> TileEntityType.Builder.create(
                     PowerstoneAccumulatorTile::new, ModBlocks.POWERSTONE_ACCUMULATOR.get()).build(null));
 
+    public static RegistryObject<TileEntityType<PowerstoneReceiverTile>> POWERSTONE_RECEIVER_TILE =
+            TILE_ENTITIES.register("powerstone_receiver_tile", () -> TileEntityType.Builder.create(
+                    PowerstoneReceiverTile::new, ModBlocks.POWERSTONE_RECEIVER.get()).build(null));
+
 
     public static void register(IEventBus eventBus) {
         TILE_ENTITIES.register(eventBus);
