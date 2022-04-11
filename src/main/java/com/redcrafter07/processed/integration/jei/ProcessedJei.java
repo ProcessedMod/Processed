@@ -1,10 +1,7 @@
 package com.redcrafter07.processed.integration.jei;
 
 import com.redcrafter07.processed.Processed;
-import com.redcrafter07.processed.data.recipes.CraftingStationRecipe;
-import com.redcrafter07.processed.data.recipes.LightningConcentratorRecipe;
-import com.redcrafter07.processed.data.recipes.ModRecipeTypes;
-import com.redcrafter07.processed.data.recipes.ProcessorAssemblerRecipe;
+import com.redcrafter07.processed.data.recipes.*;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
@@ -32,6 +29,8 @@ public class ProcessedJei implements IModPlugin {
                 new LightningConcentratorRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(
                 new ProcessorAssemblerRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(
+                new AdvancedLightningConcentratorRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
@@ -48,5 +47,8 @@ public class ProcessedJei implements IModPlugin {
         registration.addRecipes(rm.getRecipesForType(ModRecipeTypes.PROCESSOR_ASSEMBLY_RECIPE).stream()
                         .filter(r -> r instanceof ProcessorAssemblerRecipe).collect(Collectors.toList()),
                 ProcessorAssemblerRecipeCategory.UID);
+        registration.addRecipes(rm.getRecipesForType(ModRecipeTypes.ADVANCED_LIGHTNING_RECIPE).stream()
+                        .filter(r -> r instanceof AdvancedLightningConcentratorRecipe).collect(Collectors.toList()),
+                AdvancedLightningConcentratorRecipeCategory.UID);
     }
 }
