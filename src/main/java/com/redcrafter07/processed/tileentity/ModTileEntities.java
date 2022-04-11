@@ -1,6 +1,7 @@
 package com.redcrafter07.processed.tileentity;
 
 import com.redcrafter07.processed.Processed;
+import com.redcrafter07.processed.blocks.AdvancedLightningConcentratorBlock;
 import com.redcrafter07.processed.blocks.ModBlocks;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -44,6 +45,10 @@ public class ModTileEntities {
     public static RegistryObject<TileEntityType<PowerstoneReceiverTile>> POWERSTONE_RECEIVER_TILE =
             TILE_ENTITIES.register("powerstone_receiver_tile", () -> TileEntityType.Builder.create(
                     PowerstoneReceiverTile::new, ModBlocks.POWERSTONE_RECEIVER.get()).build(null));
+
+    public static RegistryObject<TileEntityType<AdvancedLightningConcentratorTile>> ADVANCED_LIGHTNING_CONCENTRATOR_TILE =
+            TILE_ENTITIES.register("advanced_lightning_concentrator_tile", () -> TileEntityType.Builder.create(
+                    AdvancedLightningConcentratorTile::new, ModBlocks.ADVANCED_LIGHTNING_CONCENTRATOR.get()).build(null));
 
 
     public static void register(IEventBus eventBus) {
