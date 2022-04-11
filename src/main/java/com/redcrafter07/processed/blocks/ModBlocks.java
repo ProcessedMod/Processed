@@ -37,6 +37,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> LIGHTNING_CONCENTRATOR = registerBlock("lightning_concentrator", () -> new LightningConcentratorBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(1).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(1.0F, 6.0F)));
     public static final RegistryObject<Block> PROCESSOR_ASSEMBLER = registerBlock("processor_assembler", () -> new ProcessorAssemblerBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(1).harvestTool(ToolType.PICKAXE).notSolid().hardnessAndResistance(1.0F, 6.0F)));
     public static final RegistryObject<Block> POWERSTONE_RECEIVER = registerBlock("powerstone_receiver", () -> new PowerstoneReceiverBlock(AbstractBlock.Properties.from(POWERSTONE_CONVERTER.get())));
+    public static final RegistryObject<Block> ADVANCED_LIGHTNING_CONCENTRATOR = registerBlock("advanced_lightning_concentrator", () -> new AdvancedLightningConcentratorBlock(AbstractBlock.Properties.from(LIGHTNING_CONCENTRATOR.get())));
 
     public static <T extends Block>RegistryObject<T> registerBlock(String name, Supplier<T> block)  {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);
