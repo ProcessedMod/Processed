@@ -23,6 +23,7 @@ public class ModItems {
     public static final RegistryObject<Item> OVERLOAD_INGOT = ITEMS.register("overload_ingot", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
     public static final RegistryObject<Item> PROCESSING_UNIT = ITEMS.register("processing_unit", () -> new ProcessingUnit(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
     public static final RegistryObject<Item> OVERLOAD_BATTERY = ITEMS.register("overload_battery", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP).maxDamage(100)));
+    public static final RegistryObject<Item> CREATIVE_OVERLOAD_BATTERY = ITEMS.register("creative_overload_battery", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
