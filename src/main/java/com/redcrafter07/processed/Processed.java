@@ -73,6 +73,7 @@ public class Processed {
         ScreenManager.registerFactory(ModContainers.LIGHTNING_CONCENTRATOR_CONTAINER.get(), LightningConcentratorScreen::new);
         ScreenManager.registerFactory(ModContainers.PROCESSOR_ASSEMBLER_CONTAINER.get(), ProcessorAssemblerScreen::new);
         ScreenManager.registerFactory(ModContainers.POWERSTONE_ACCUMULATOR_CONTAINER.get(), PowerstoneAccumulatorScreen::new);
+        ScreenManager.registerFactory(ModContainers.ADVANCED_LIGHTNING_CONCENTRATOR_CONTAINER.get(), AdvancedLightningConcentratorScreen::new);
 
         RenderTypeLookup.setRenderLayer(ModBlocks.PROCESSOR_ASSEMBLER.get(), RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(ModBlocks.MOTHERBOARD.get(), RenderType.getCutout());
