@@ -35,6 +35,10 @@ public class PowerstoneAccumulatorContainer extends Container {
         }
     }
 
+    public int getFillState() {
+        return tileEntity.getTileData().getInt("FillState");
+    }
+
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
         return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()), playerIn, ModBlocks.POWERSTONE_ACCUMULATOR.get());
