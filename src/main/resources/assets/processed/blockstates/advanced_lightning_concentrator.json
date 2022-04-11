@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "processed:block/advanced_lightning_concentrator"
+    }
+  }
+}
