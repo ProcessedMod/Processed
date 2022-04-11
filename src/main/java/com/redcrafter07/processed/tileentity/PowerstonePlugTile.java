@@ -31,10 +31,15 @@ public class PowerstonePlugTile extends TileEntity implements ITickableTileEntit
     public void updateBlockState(BlockPos pos, World worldIn, BlockState state) {
         boolean powered = checkAccumulator(pos.getX(), pos.getY(), pos.getZ(), worldIn);
         BlockPos accumulatorPos = new BlockPos(pos.getX(), pos.getY() - 1, pos.getZ());
+        if(!powered) {
+            worldIn.setBlockState(pos, state.with(POWERED, Boolean.FALSE));
+            return;
+        }
         int fillState = getFillState(worldIn, accumulatorPos);
         if (powered && !worldIn.isBlockPowered(pos) && fillState > 0) {
             worldIn.setBlockState(pos, state.with(POWERED, Boolean.TRUE));
             setFillState(worldIn, accumulatorPos, fillState - 1);
+            worldIn.getTileEntity(accumulatorPos).markDirty();
         } else {
             worldIn.setBlockState(pos, state.with(POWERED, Boolean.FALSE));
         }
