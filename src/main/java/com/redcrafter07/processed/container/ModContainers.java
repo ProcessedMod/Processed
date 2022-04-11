@@ -49,6 +49,13 @@ public class ModContainers {
                 return new PowerstoneAccumulatorContainer(windowId, playerWorld, blockPosition, inv, inv.player);
             })));
 
+    public static final RegistryObject<ContainerType<AdvancedLightningConcentratorContainer>> ADVANCED_LIGHTNING_CONCENTRATOR_CONTAINER = CONTAINERS.register("advanced_lightning_concentrator_container",
+            () -> IForgeContainerType.create(((windowId, inv, data) -> {
+                BlockPos blockPosition = data.readBlockPos();
+                World playerWorld = inv.player.getEntityWorld();
+                return new AdvancedLightningConcentratorContainer(windowId, playerWorld, blockPosition, inv, inv.player);
+            })));
+
     public static void register(IEventBus eventBus) {
         CONTAINERS.register(eventBus);
     }
