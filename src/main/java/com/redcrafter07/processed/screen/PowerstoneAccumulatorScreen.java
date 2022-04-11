@@ -8,6 +8,7 @@ import com.redcrafter07.processed.container.PowerstoneAccumulatorContainer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.Color;
 import net.minecraft.util.text.ITextComponent;
 
 public class PowerstoneAccumulatorScreen extends ContainerScreen<PowerstoneAccumulatorContainer> {
@@ -31,5 +32,9 @@ public class PowerstoneAccumulatorScreen extends ContainerScreen<PowerstoneAccum
         int guiLeft = this.guiLeft;
         int guiTop = this.guiTop;
         this.blit(matrixStack, guiLeft, guiTop, 0, 0, this.xSize, this.ySize);
+        this.font.drawString(matrixStack,
+                container.getFillState() + "/1500 OU",
+                guiLeft + 10, guiTop + 20,
+                Color.fromHex("#555555").getColor());
     }
 }
