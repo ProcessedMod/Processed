@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -57,7 +58,7 @@ public class PowerstoneAccumulatorTile extends TileEntity implements ITickableTi
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 switch (slot) {
                     case 0:
-                        return stack.getItem() == ModItems.OVERLOAD_BATTERY.get();
+                        return stack.getItem() == ModItems.OVERLOAD_BATTERY.get() || stack.getItem() == ModItems.CREATIVE_OVERLOAD_BATTERY.get();
                     default:
                         return true;
                 }
@@ -92,10 +93,20 @@ public class PowerstoneAccumulatorTile extends TileEntity implements ITickableTi
     @Override
     public void tick() {
         int currentState = world.getTileEntity(pos).getTileData().getInt("FillState");
-        if(currentState > 0) world.setBlockState(pos,world.getBlockState(pos).with(PowerstoneAccumulatorBlock.FILLED, true));
-        else world.setBlockState(pos,world.getBlockState(pos).with(PowerstoneAccumulatorBlock.FILLED, false));
+        if (itemHandler.getStackInSlot(0).getItem() == ModItems.CREATIVE_OVERLOAD_BATTERY.get()) {
+            world.getTileEntity(pos).getTileData().putInt("FillState", 1500);
+            world.setBlockState(pos, world.getBlockState(pos).with(PowerstoneAccumulatorBlock.FILLED, true));
+            markDirty();
+            return;
+        }
+        if (currentState > 0)
+            world.setBlockState(pos, world.getBlockState(pos).with(PowerstoneAccumulatorBlock.FILLED, true));
+        else world.setBlockState(pos, world.getBlockState(pos).with(PowerstoneAccumulatorBlock.FILLED, false));
         markDirty();
-        if (itemHandler.getStackInSlot(0).getCount() > 0 && itemHandler.getStackInSlot(0).getDamage() < 100 && currentState < 1500) {
+        if (itemHandler.getStackInSlot(0).getCount() > 0 &&
+                itemHandler.getStackInSlot(0).getDamage() < 100 &&
+                currentState < 1500 &&
+                itemHandler.getStackInSlot(0).getItem() == ModItems.OVERLOAD_BATTERY.get()) {
             world.getTileEntity(pos).getTileData().putInt("FillState", currentState + 1);
             itemHandler.getStackInSlot(0).setDamage(itemHandler.getStackInSlot(0).getDamage() + 1);
         }
