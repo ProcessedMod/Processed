@@ -1,0 +1,23 @@
+{
+  "type": "processed:lightning",
+  "ingredients": [
+    {
+      "item": "processed:charged_overload_processor"
+    },
+    {
+      "item": "processed:charged_overload_processor"
+    },
+    {
+      "item": "processed:lightning_concentrator"
+    },
+    {
+      "item": "processed:charged_overload_processor"
+    },
+    {
+      "item": "processed:charged_overload_processor"
+    }
+  ],
+  "output": {
+    "item": "processed:advanced_lightning_concentrator"
+  }
+}
