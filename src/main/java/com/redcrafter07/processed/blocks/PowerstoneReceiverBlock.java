@@ -21,7 +21,7 @@ public class PowerstoneReceiverBlock extends Block {
 
     public PowerstoneReceiverBlock(Properties properties) {
         super(properties);
-        setDefaultState(getDefaultState().with(PLUGGED,true));
+        setDefaultState(getDefaultState().with(PLUGGED,false));
     }
 
     public static final VoxelShape SHAPE = Stream.of(
