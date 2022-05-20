@@ -43,7 +43,7 @@ public class AdvancedLightningConcentratorTile extends TileEntity implements ITi
 
     @Override
     public void read(BlockState blockState, CompoundNBT nbt) {
-        nbt.getInt("FillState");
+        fillState = nbt.getInt("FillState");
         itemHandler.deserializeNBT(nbt.getCompound("advancedLightningConcentratorContents"));
         super.read(blockState, nbt);
     }
@@ -65,7 +65,6 @@ public class AdvancedLightningConcentratorTile extends TileEntity implements ITi
             @Override
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 switch (slot) {
-                    case 0:
                     default:
                         return true;
                 }
@@ -97,9 +96,9 @@ public class AdvancedLightningConcentratorTile extends TileEntity implements ITi
         return super.getCapability(cap, side);
     }
 
-    private void lightning()    {
-        if(!this.world.isRemote()) {
-            EntityType.LIGHTNING_BOLT.spawn((ServerWorld)world, null, null, pos, SpawnReason.TRIGGERED, true, true);
+    private void lightning() {
+        if (!this.world.isRemote()) {
+            EntityType.LIGHTNING_BOLT.spawn((ServerWorld) world, null, null, pos, SpawnReason.TRIGGERED, true, true);
         }
     }
 
@@ -115,9 +114,9 @@ public class AdvancedLightningConcentratorTile extends TileEntity implements ITi
         recipe.ifPresent(iRecipe -> {
             ItemStack output = iRecipe.getRecipeOutput();
 
-            if(getTileData().getInt("FillState") >= 10000) {
+            if (getTileData().getInt("FillState") >= 10000) {
                 lightning();
-                getTileData().putInt("FillState", 0);
+                getTileData().putInt("FillState", getTileData().getInt("FillState") - 4000);
                 itemHandler.extractItem(0, 1, false);
                 itemHandler.insertItem(0, output, false);
             }
@@ -142,8 +141,8 @@ public class AdvancedLightningConcentratorTile extends TileEntity implements ITi
                 fillState < 10000)
             getTileData().putInt("FillState", fillState + 1);
 
-        if(!world.isRemote)
+        if (!world.isRemote)
 
-        craft();
+            craft();
     }
 }
