@@ -30,11 +30,9 @@ public class AdvancedLightningConcentratorScreen extends ContainerScreen<Advance
 
         float newState = fillState / 100;
 
-        int newState2 = (int) newState;
+        float newState2 = newState / 10;
 
-        float newState3 = newState / 10;
-
-        return newState3;
+        return newState2;
     }
 
     @Override
@@ -47,7 +45,14 @@ public class AdvancedLightningConcentratorScreen extends ContainerScreen<Advance
         boolean ready = container.isFull();
         boolean warmingUp = !ready && container.getFillState() > 1;
 
-        this.font.drawString(matrixStack, ready ? "Ready!" : warmingUp ? "Warming Up" : "Not Ready", guiLeft + 10, guiTop + 20, ready ? Color.fromHex("#00ff00").getColor() : warmingUp ? Color.fromHex("#ff9900").getColor() : Color.fromHex("#ff0000").getColor());
+        this.font.drawString(matrixStack,
+                ready ? "Ready!" : warmingUp ? "Warming Up" : "Not Ready",
+                guiLeft + 10,
+                guiTop + 20,
+                ready ? Color.fromHex("#00ff00").getColor() :
+                        warmingUp ? Color.fromHex("#ff9900").getColor() :
+                                Color.fromHex("#ff0000").getColor());
+
         this.font.drawString(matrixStack,
                 formatFillState() + "/10 PU",
                 guiLeft + 10, guiTop + 40,
