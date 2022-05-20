@@ -1,0 +1,11 @@
+{
+  "type": "processed:advanced_lightning",
+  "ingredients": [
+    {
+      "item": "processed:jar"
+    }
+  ],
+  "output": {
+    "item": "processed:lightning_jar"
+  }
+}
