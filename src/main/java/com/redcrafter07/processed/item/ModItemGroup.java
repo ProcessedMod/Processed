@@ -11,11 +11,4 @@ public class ModItemGroup {
             return new ItemStack(ModBlocks.OVERLOAD_STATION.get());
         }
     };
-
-    public static final ItemGroup TOOLS_GROUP = new ItemGroup("processedModTabTools") {
-        @Override
-        public ItemStack createIcon() {
-            return new ItemStack(ModItems.PROCESSOR_SWORD.get());
-        }
-    };
 }
