@@ -3,6 +3,7 @@ package com.redcrafter07.processed.tileentity;
 import com.redcrafter07.processed.Processed;
 import com.redcrafter07.processed.blocks.AdvancedLightningConcentratorBlock;
 import com.redcrafter07.processed.blocks.ModBlocks;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
@@ -49,6 +50,10 @@ public class ModTileEntities {
     public static RegistryObject<TileEntityType<AdvancedLightningConcentratorTile>> ADVANCED_LIGHTNING_CONCENTRATOR_TILE =
             TILE_ENTITIES.register("advanced_lightning_concentrator_tile", () -> TileEntityType.Builder.create(
                     AdvancedLightningConcentratorTile::new, ModBlocks.ADVANCED_LIGHTNING_CONCENTRATOR.get()).build(null));
+
+    public static RegistryObject<TileEntityType<ChargedCraftingTableTile>> CHARGED_CRAFTING_TABLE_TILE =
+            TILE_ENTITIES.register("charged_crafting_table_tile", () -> TileEntityType.Builder.create(
+                    ChargedCraftingTableTile::new, ModBlocks.CHARGED_CRAFTING_TABLE.get()).build(null));
 
 
     public static void register(IEventBus eventBus) {
