@@ -24,11 +24,12 @@ public class ProcessedJei implements IModPlugin {
     public void registerCategories(IRecipeCategoryRegistration registration) {
         registration.addRecipeCategories(
                 new CraftingStationRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
-
         registration.addRecipeCategories(
                 new LightningConcentratorRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(
                 new ProcessorAssemblerRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(
+                new AdvancedLightningConcentratorRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(
                 new AdvancedLightningConcentratorRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
     }
@@ -50,5 +51,8 @@ public class ProcessedJei implements IModPlugin {
         registration.addRecipes(rm.getRecipesForType(ModRecipeTypes.ADVANCED_LIGHTNING_RECIPE).stream()
                         .filter(r -> r instanceof AdvancedLightningConcentratorRecipe).collect(Collectors.toList()),
                 AdvancedLightningConcentratorRecipeCategory.UID);
+        registration.addRecipes(rm.getRecipesForType(ModRecipeTypes.CHARGED_CRAFTING_RECIPE).stream()
+                .filter(r -> r instanceof ChargedCraftingTableRecipe).collect(Collectors.toList()),
+                ChargedCraftingTableRecipeCategory.UID);
     }
 }
