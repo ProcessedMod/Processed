@@ -1,7 +1,7 @@
 # Processed
 ### Another Utility Mod with different features
 
-Processed is a mod which ads diffrent utilities based on processors. It's made for automation, block creation and more. 
+Processed is a mod which ads different utilities based on processors. It's made for automation, block creation and more. 
 
 ## Automation
 The automation won't be just one block, but in many steps for item processing. (Otherwise it would be too easy.)
