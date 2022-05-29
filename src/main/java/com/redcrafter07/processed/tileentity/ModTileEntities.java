@@ -51,6 +51,10 @@ public class ModTileEntities {
             TILE_ENTITIES.register("advanced_lightning_concentrator_tile", () -> TileEntityType.Builder.create(
                     AdvancedLightningConcentratorTile::new, ModBlocks.ADVANCED_LIGHTNING_CONCENTRATOR.get()).build(null));
 
+    public static RegistryObject<TileEntityType<BlockForgeTile>> BLOCK_FORGE_TILE =
+            TILE_ENTITIES.register("advanced_lightning_concentrator_tile", () -> TileEntityType.Builder.create(
+                    BlockForgeTile::new, ModBlocks.BLOCK_FORGE.get()).build(null));
+
     public static RegistryObject<TileEntityType<ChargedCraftingTableTile>> CHARGED_CRAFTING_TABLE_TILE =
             TILE_ENTITIES.register("charged_crafting_table_tile", () -> TileEntityType.Builder.create(
                     ChargedCraftingTableTile::new, ModBlocks.CHARGED_CRAFTING_TABLE.get()).build(null));

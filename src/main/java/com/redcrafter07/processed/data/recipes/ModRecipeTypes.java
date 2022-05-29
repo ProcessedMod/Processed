@@ -17,12 +17,14 @@ public class ModRecipeTypes {
     public static final RegistryObject<LightningConcentratorRecipe.Serializer> LIGHTNING_SERIALIZER = RECIPE_SERIALIZER.register("lightning", LightningConcentratorRecipe.Serializer::new);
     public static final RegistryObject<ProcessorAssemblerRecipe.Serializer> PROCESSOR_ASSEMBLY_SERIALIZER = RECIPE_SERIALIZER.register("processor_assembly", ProcessorAssemblerRecipe.Serializer::new);
     public static final RegistryObject<AdvancedLightningConcentratorRecipe.Serializer> ADVANCED_LIGHTNING_SERIALIZER = RECIPE_SERIALIZER.register("advanced_lightning", AdvancedLightningConcentratorRecipe.Serializer::new);
+    public static final RegistryObject<BlockForgeRecipe.Serializer> BLOCK_FORGE_SERIALIZER = RECIPE_SERIALIZER.register("block_forge", BlockForgeRecipe.Serializer::new);
     public static final RegistryObject<ChargedCraftingTableRecipe.Serializer> CHARGED_CRAFTING_SERIALIZER = RECIPE_SERIALIZER.register("charged_crafting", ChargedCraftingTableRecipe.Serializer::new);
 
     public static IRecipeType<CraftingStationRecipe> PROCESSOR_RECIPE = new CraftingStationRecipe.ProcessorRecipeType();
     public static IRecipeType<LightningConcentratorRecipe> LIGHTNING_RECIPE = new LightningConcentratorRecipe.LightningRecipeType();
     public static IRecipeType<ProcessorAssemblerRecipe> PROCESSOR_ASSEMBLY_RECIPE = new ProcessorAssemblerRecipe.ProcessorAssemblyRecipeType();
     public static IRecipeType<AdvancedLightningConcentratorRecipe> ADVANCED_LIGHTNING_RECIPE = new AdvancedLightningConcentratorRecipe.AdvancedLightningRecipeType();
+    public static IRecipeType<BlockForgeRecipe> BLOCK_FORGE_RECIPE = new BlockForgeRecipe.BlockForgeRecipeType();
     public static IRecipeType<ChargedCraftingTableRecipe> CHARGED_CRAFTING_RECIPE = new ChargedCraftingTableRecipe.ChargedCraftingTableRecipeType();
 
     public static void register(IEventBus eventBus) {

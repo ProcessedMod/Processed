@@ -1,0 +1,28 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "ibi",
+    "pcp",
+    "# #"
+  ],
+  "key": {
+    "#": {
+      "item": "processed:processor_core"
+    },
+    "i": {
+      "tag": "forge:ingots/iron"
+    },
+    "b": {
+      "item": "minecraft:dirt"
+    },
+    "p": {
+      "item": "minecraft:iron_pickaxe"
+    },
+    "c": {
+      "item": "minecraft:dirt"
+    }
+  },
+  "result": {
+    "item": "processed:block_forge"
+  }
+}

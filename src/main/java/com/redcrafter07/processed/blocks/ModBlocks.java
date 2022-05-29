@@ -42,6 +42,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> POWERSTONE_RECEIVER = registerBlock("powerstone_receiver", () -> new PowerstoneReceiverBlock(AbstractBlock.Properties.from(POWERSTONE_CONVERTER.get())));
     public static final RegistryObject<Block> ADVANCED_LIGHTNING_CONCENTRATOR = registerBlock("advanced_lightning_concentrator", () -> new AdvancedLightningConcentratorBlock(AbstractBlock.Properties.from(LIGHTNING_CONCENTRATOR.get())));
     public static final RegistryObject<Block> CHARGED_CRAFTING_TABLE = registerBlock("charged_crafting_table", () -> new ChargedCraftingTableBlock(AbstractBlock.Properties.from(CRAFTING_STATION.get())));
+    public static final RegistryObject<Block> BLOCK_FORGE = registerBlock("forge_block", () -> new BlockForgeBlock(AbstractBlock.Properties.create(Material.ROCK).setRequiresTool().harvestLevel(2).harvestTool(ToolType.PICKAXE).hardnessAndResistance(6.0F, 6.0F)));
 
     public static <T extends Block>RegistryObject<T> registerBlock(String name, Supplier<T> block)  {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);

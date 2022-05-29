@@ -68,6 +68,7 @@ public class Processed {
         // do something that can only be done on the client
         //LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().options);
 
+        ScreenManager.registerFactory(ModContainers.BLOCK_FORGE_CONTAINER.get(), BlockForgeScreen::new);
         ScreenManager.registerFactory(ModContainers.CRAFTING_STATION_CONTAINER.get(), CraftingStationScreen::new);
         ScreenManager.registerFactory(ModContainers.OVERLOAD_STATION_CONTAINER.get(), OverloadStationScreen::new);
         ScreenManager.registerFactory(ModContainers.LIGHTNING_CONCENTRATOR_CONTAINER.get(), LightningConcentratorScreen::new);

@@ -56,6 +56,13 @@ public class ModContainers {
                 return new AdvancedLightningConcentratorContainer(windowId, playerWorld, blockPosition, inv, inv.player);
             })));
 
+    public static final RegistryObject<ContainerType<BlockForgeContainer>> BLOCK_FORGE_CONTAINER = CONTAINERS.register("block_forge_container",
+            () -> IForgeContainerType.create(((windowId, inv, data) -> {
+                BlockPos blockPosition = data.readBlockPos();
+                World playerWorld = inv.player.getEntityWorld();
+                return new BlockForgeContainer(windowId, playerWorld, blockPosition, inv, inv.player);
+            })));
+
     public static final RegistryObject<ContainerType<ChargedCraftingTableContainer>> CHARGED_CRAFTIN_TABLE_CONTAINER = CONTAINERS.register("charged_crafting_table_container",
             () -> IForgeContainerType.create(((windowId, inv, data) -> {
                 BlockPos blockPosition = data.readBlockPos();
