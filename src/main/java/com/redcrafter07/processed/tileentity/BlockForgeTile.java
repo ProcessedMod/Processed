@@ -33,20 +33,20 @@ public class BlockForgeTile extends TileEntity implements ITickableTileEntity {
     }
 
     public BlockForgeTile() {
-        this(ModTileEntities.ADVANCED_LIGHTNING_CONCENTRATOR_TILE.get());
+        this(ModTileEntities.BLOCK_FORGE_TILE.get());
     }
 
     @Override
     public void read(BlockState blockState, CompoundNBT nbt) {
         fillState = nbt.getInt("FillState");
-        itemHandler.deserializeNBT(nbt.getCompound("BlockForgeContents"));
+        itemHandler.deserializeNBT(nbt.getCompound("blockforgeContents"));
         super.read(blockState, nbt);
     }
 
     @Override
     public CompoundNBT write(CompoundNBT nbt) {
         nbt.putInt("FillState", fillState);
-        nbt.put("BlockForgeContents", itemHandler.serializeNBT());
+        nbt.put("blockforgeContents", itemHandler.serializeNBT());
         return super.write(nbt);
     }
 
