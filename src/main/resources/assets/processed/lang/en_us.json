@@ -51,5 +51,6 @@
   "info.processed.environmental_processor": "\u00A77Simplifies the process of crafting with the Lightning Concentrator.",
   "info.processed.motherboard": "\u00A77Required for advanced processing tasks.",
   "info.processed.processing_unit": "\u00A77A real processor! Is required by the Motherboard to get a function.",
-  "info.processed.environmental_suppressor": "\u00A77More crafting! This block allows you to use the Lightning Concentrator at any time when placed in a 15 block radius."
+  "info.processed.environmental_suppressor": "\u00A77More crafting! This block allows you to use the Lightning Concentrator at any time when placed in a 15 block radius.",
+  "processed.credits": "?suggested_by=Fishi&implemented_by=Wolfi+RedCrafter07+Fishi"
 }

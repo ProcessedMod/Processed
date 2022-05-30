@@ -54,7 +54,7 @@ public class OverloadStationTile extends TileEntity implements ITickableTileEnti
                     case 0:
                         return stack.getItem() == ModItems.OVERLOAD_PROCESSOR.get() || stack.getItem() == ModItems.POWERED_OVERLOAD_PROCESSOR.get();
                     case 1:
-                        return stack.getItem() == ModItems.PROCESSOR_SWORD.get();
+                        return false; //stack.getItem() == ModItems.PROCESSOR_SWORD.get();
                     default: return true;
                 }
             }

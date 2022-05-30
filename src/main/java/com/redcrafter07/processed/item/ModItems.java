@@ -12,7 +12,8 @@ public class ModItems {
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, Processed.MOD_ID);
 
-    public static final RegistryObject<Item> PROCESSOR_SWORD = ITEMS.register("processor_sword", () -> new ProcessorSwordItem(ModItemTier.PROCESSOR, 450, 20f, new Item.Properties().group(ModItemGroup.MAIN_GROUP).maxStackSize(1).isImmuneToFire()));
+    // TODO: add functionality
+    // public static final RegistryObject<Item> PROCESSOR_SWORD = ITEMS.register("processor_sword", () -> new ProcessorSwordItem(ModItemTier.PROCESSOR, 15f, 1f, new Item.Properties().group(ModItemGroup.MAIN_GROUP).maxStackSize(1).isImmuneToFire()));
 
     public static final RegistryObject<Item> CRAFTING_PROCESSOR = ITEMS.register("crafting_processor", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
     public static final RegistryObject<Item> PROCESSOR_CORE = ITEMS.register("processor_core", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
@@ -27,8 +28,6 @@ public class ModItems {
     public static final RegistryObject<Item> CREATIVE_OVERLOAD_BATTERY = ITEMS.register("creative_overload_battery", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
     public static final RegistryObject<Item> LIGHTNING_JAR = ITEMS.register("lightning_jar", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
     public static final RegistryObject<Item> JAR = ITEMS.register("jar", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
-    public static final RegistryObject<Item> FISHI_STAFF = ITEMS.register("fishi_staff", () -> new FishiStaff(new Item.Properties()));
-
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

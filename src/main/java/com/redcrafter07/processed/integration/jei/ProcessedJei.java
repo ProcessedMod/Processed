@@ -31,8 +31,6 @@ public class ProcessedJei implements IModPlugin {
         registration.addRecipeCategories(
                 new AdvancedLightningConcentratorRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(
-                new AdvancedLightningConcentratorRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
-        registration.addRecipeCategories(
                 new BlockForgeRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
