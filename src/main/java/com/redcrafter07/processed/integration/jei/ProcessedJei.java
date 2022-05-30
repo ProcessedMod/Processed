@@ -1,12 +1,15 @@
 package com.redcrafter07.processed.integration.jei;
 
 import com.redcrafter07.processed.Processed;
+import com.redcrafter07.processed.blocks.ModBlocks;
 import com.redcrafter07.processed.data.recipes.*;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -57,5 +60,11 @@ public class ProcessedJei implements IModPlugin {
         registration.addRecipes(rm.getRecipesForType(ModRecipeTypes.BLOCK_FORGE_RECIPE).stream()
                         .filter(r -> r instanceof BlockForgeRecipe).collect(Collectors.toList()),
                 BlockForgeRecipeCategory.UID);
+    }
+
+
+    @Override
+    public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
+        registration.addRecipeCatalyst(new ItemStack(()->ModBlocks.BLOCK_FORGE.get().asItem()), BlockForgeRecipeCategory.UID);
     }
 }
