@@ -20,6 +20,7 @@
     }
   },
   "result": {
-    "item": "processed:powerstone_receiver"
+    "item": "processed:powerstone_receiver",
+    "count": 4
   }
 }
