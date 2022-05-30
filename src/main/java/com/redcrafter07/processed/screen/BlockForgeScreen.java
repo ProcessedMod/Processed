@@ -42,16 +42,6 @@ public class BlockForgeScreen extends ContainerScreen<BlockForgeContainer> {
         int guiLeft = this.guiLeft;
         int guiTop = this.guiTop;
         this.blit(matrixStack, guiLeft, guiTop, 0, 0, this.xSize, this.ySize);
-        boolean ready = container.isFull();
-        boolean warmingUp = !ready && container.getFillState() > 1;
-
-        this.font.drawString(matrixStack,
-                ready ? "Ready!" : warmingUp ? "Warming Up" : "Not Ready",
-                guiLeft + 10,
-                guiTop + 20,
-                ready ? Color.fromHex("#00ff00").getColor() :
-                        warmingUp ? Color.fromHex("#ff9900").getColor() :
-                                Color.fromHex("#ff0000").getColor());
 
         this.font.drawString(matrixStack,
                 formatFillState() + "/10 PU",

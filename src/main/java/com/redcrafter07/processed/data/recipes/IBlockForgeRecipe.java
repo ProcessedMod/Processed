@@ -9,7 +9,7 @@ import net.minecraft.util.registry.Registry;
 
 public interface IBlockForgeRecipe extends IRecipe<Inventory> {
     //Credit: Kaupenjoe
-    ResourceLocation TYPE_ID = new ResourceLocation(Processed.MOD_ID, "block_forge");
+    ResourceLocation TYPE_ID = new ResourceLocation(Processed.MOD_ID, "block_forging");
 
     @Override
     default IRecipeType<?> getType(){

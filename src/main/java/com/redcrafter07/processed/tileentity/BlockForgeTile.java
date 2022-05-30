@@ -1,8 +1,10 @@
 package com.redcrafter07.processed.tileentity;
 
+import com.redcrafter07.processed.Processed;
 import com.redcrafter07.processed.blocks.ModBlocks;
 import com.redcrafter07.processed.blocks.PowerstoneReceiverBlock;
 import com.redcrafter07.processed.data.recipes.AdvancedLightningConcentratorRecipe;
+import com.redcrafter07.processed.data.recipes.BlockForgeRecipe;
 import com.redcrafter07.processed.data.recipes.ModRecipeTypes;
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.Inventory;
@@ -18,6 +20,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,7 +70,7 @@ public class BlockForgeTile extends TileEntity implements ITickableTileEntity {
 
             @Override
             public int getSlotLimit(int slot) {
-                return 1;
+                return 64;
             }
 
             @Nonnull
@@ -97,16 +100,16 @@ public class BlockForgeTile extends TileEntity implements ITickableTileEntity {
             inv.setInventorySlotContents(i, itemHandler.getStackInSlot(i));
         }
 
-        Optional<AdvancedLightningConcentratorRecipe> recipe = world.getRecipeManager()
-                .getRecipe(ModRecipeTypes.ADVANCED_LIGHTNING_RECIPE, inv, world);
+        Optional<BlockForgeRecipe> recipe = world.getRecipeManager()
+                .getRecipe(ModRecipeTypes.BLOCK_FORGE_RECIPE, inv, world);
 
         recipe.ifPresent(iRecipe -> {
             ItemStack output = iRecipe.getRecipeOutput();
 
-            if (getTileData().getInt("FillState") >= 10000) {
-                getTileData().putInt("FillState", getTileData().getInt("FillState") - 4000);
+            if (getTileData().getInt("FillState") >= 10) {
+                getTileData().putInt("FillState", getTileData().getInt("FillState") - 10);
                 itemHandler.extractItem(0, 1, false);
-                itemHandler.insertItem(0, output, false);
+                itemHandler.insertItem(1, output, false);
             }
 
             markDirty();

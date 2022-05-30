@@ -17,7 +17,7 @@ public class ModRecipeTypes {
     public static final RegistryObject<LightningConcentratorRecipe.Serializer> LIGHTNING_SERIALIZER = RECIPE_SERIALIZER.register("lightning", LightningConcentratorRecipe.Serializer::new);
     public static final RegistryObject<ProcessorAssemblerRecipe.Serializer> PROCESSOR_ASSEMBLY_SERIALIZER = RECIPE_SERIALIZER.register("processor_assembly", ProcessorAssemblerRecipe.Serializer::new);
     public static final RegistryObject<AdvancedLightningConcentratorRecipe.Serializer> ADVANCED_LIGHTNING_SERIALIZER = RECIPE_SERIALIZER.register("advanced_lightning", AdvancedLightningConcentratorRecipe.Serializer::new);
-    public static final RegistryObject<BlockForgeRecipe.Serializer> BLOCK_FORGE_SERIALIZER = RECIPE_SERIALIZER.register("block_forge", BlockForgeRecipe.Serializer::new);
+    public static final RegistryObject<BlockForgeRecipe.Serializer> BLOCK_FORGE_SERIALIZER = RECIPE_SERIALIZER.register("block_forging", BlockForgeRecipe.Serializer::new);
     public static final RegistryObject<ChargedCraftingTableRecipe.Serializer> CHARGED_CRAFTING_SERIALIZER = RECIPE_SERIALIZER.register("charged_crafting", ChargedCraftingTableRecipe.Serializer::new);
 
     public static IRecipeType<CraftingStationRecipe> PROCESSOR_RECIPE = new CraftingStationRecipe.ProcessorRecipeType();
