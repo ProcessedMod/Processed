@@ -33,6 +33,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> ENVIRONMENTAL_SUPPRESSOR = registerBlock("environmental_suppressor", () -> new EnvironmentalSuppressorBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(1).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(1.0F,3.0F).notSolid().setLightLevel(value -> 14)));
     public static final RegistryObject<Block> POWERSTONE_CONVERTER = registerBlock("powerstone_converter", () -> new PowerstoneConverterBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(2).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(0.5F, 3F).notSolid()));
     public static final RegistryObject<Block> POWERSTONE_ACCUMULATOR = registerBlock("powerstone_accumulator", () -> new PowerstoneAccumulatorBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(2).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(0.5F, 3F)));
+    public static final RegistryObject<Block> TESLA_COIL = registerBlock("tesla_coil", () -> new TeslaCoilBlock(AbstractBlock.Properties.create(Material.IRON).harvestLevel(2).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(0.5F, 3F)));
 
 //    TILE ENTITIES
     public static final RegistryObject<Block> CRAFTING_STATION = registerBlock("crafting_station", () -> new CraftingStationBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(1).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(1.0F, 6.0F)));
