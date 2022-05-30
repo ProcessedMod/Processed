@@ -29,6 +29,8 @@ public class ModItems {
     public static final RegistryObject<Item> JAR = ITEMS.register("jar", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
     public static final RegistryObject<Item> MODULE_CORE = ITEMS.register("module_core", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP).maxStackSize(4)));
     public static final RegistryObject<Item> EFFICIENCY_UPGRADE = ITEMS.register("efficiency_upgrade", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP).maxStackSize(4)));
+    public static final RegistryObject<Item> CIRCUIT_BOARD = ITEMS.register("circuit_board", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
+    public static final RegistryObject<Item> ADVANCED_CIRCUIT_BOARD = ITEMS.register("advanced_circuit_board", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
