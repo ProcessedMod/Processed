@@ -27,7 +27,7 @@ public class ModItem extends Item {
         this.itemID = itemID;
     }
 
-    private ModItem(Properties props) {
+    public ModItem(Properties props) {
         super(props);
     }
 
