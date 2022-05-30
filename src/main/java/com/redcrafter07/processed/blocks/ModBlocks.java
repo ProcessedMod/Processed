@@ -38,15 +38,15 @@ public class ModBlocks {
     public static final RegistryObject<Block> TESLA_COIL = registerBlock("tesla_coil", () -> new TeslaCoilBlock(AbstractBlock.Properties.create(Material.IRON).harvestLevel(2).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(0.5F, 3F)));
 
     //    TILE ENTITIES
-    public static final RegistryObject<Block> CRAFTING_STATION = registerBlock("crafting_station", () -> new CraftingStationBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(1).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(1.0F, 6.0F)));
-    public static final RegistryObject<Block> OVERLOAD_STATION = registerBlock("overload_station", () -> new OverloadStationBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(1).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(1.0F, 6.0F)));
-    public static final RegistryObject<Block> LIGHTNING_CONCENTRATOR = registerBlock("lightning_concentrator", () -> new LightningConcentratorBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(1).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(1.0F, 6.0F)));
-    public static final RegistryObject<Block> PROCESSOR_ASSEMBLER = registerBlock("processor_assembler", () -> new ProcessorAssemblerBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(1).harvestTool(ToolType.PICKAXE).notSolid().hardnessAndResistance(1.0F, 6.0F)));
+    public static final RegistryObject<Block> OVERLOAD_STATION = registerBlock("overload_station", () -> new OverloadStationBlock(AbstractBlock.Properties.create(Material.ROCK).notSolid().harvestLevel(1).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(1.0F, 6.0F)));
+    public static final RegistryObject<Block> CRAFTING_STATION = registerBlock("crafting_station", () -> new CraftingStationBlock(AbstractBlock.Properties.create(Material.ROCK).notSolid().harvestLevel(1).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(1.0F, 6.0F)));
+    public static final RegistryObject<Block> LIGHTNING_CONCENTRATOR = registerBlock("lightning_concentrator", () -> new LightningConcentratorBlock(AbstractBlock.Properties.create(Material.ROCK).notSolid().harvestLevel(1).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(1.0F, 6.0F)));
+    public static final RegistryObject<Block> PROCESSOR_ASSEMBLER = registerBlock("processor_assembler", () -> new ProcessorAssemblerBlock(AbstractBlock.Properties.create(Material.ROCK).notSolid().harvestLevel(1).harvestTool(ToolType.PICKAXE).notSolid().hardnessAndResistance(1.0F, 6.0F)));
     public static final RegistryObject<Block> POWERSTONE_RECEIVER = registerBlock("powerstone_receiver", () -> new PowerstoneReceiverBlock(AbstractBlock.Properties.from(POWERSTONE_CONVERTER.get())));
     public static final RegistryObject<Block> ADVANCED_LIGHTNING_CONCENTRATOR = registerBlock("advanced_lightning_concentrator", () -> new AdvancedLightningConcentratorBlock(AbstractBlock.Properties.from(LIGHTNING_CONCENTRATOR.get())));
     public static final RegistryObject<Block> CHARGED_CRAFTING_TABLE = registerBlock("charged_crafting_table", () -> new ChargedCraftingTableBlock(AbstractBlock.Properties.from(CRAFTING_STATION.get())));
     public static final RegistryObject<Block> BLOCK_FORGE = registerBlock("block_forge",
-            () -> new BlockForgeBlock(AbstractBlock.Properties.create(Material.ROCK).setRequiresTool()
+            () -> new BlockForgeBlock(AbstractBlock.Properties.create(Material.ROCK).notSolid().setRequiresTool()
                     .harvestLevel(2).harvestTool(ToolType.PICKAXE).hardnessAndResistance(6.0F, 6.0F))
     );
 
