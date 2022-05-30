@@ -6,6 +6,7 @@ import com.redcrafter07.processed.blocks.PowerstoneReceiverBlock;
 import com.redcrafter07.processed.data.recipes.AdvancedLightningConcentratorRecipe;
 import com.redcrafter07.processed.data.recipes.BlockForgeRecipe;
 import com.redcrafter07.processed.data.recipes.ModRecipeTypes;
+import com.redcrafter07.processed.item.ModItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -54,10 +55,15 @@ public class BlockForgeTile extends TileEntity implements ITickableTileEntity {
     }
 
     private ItemStackHandler createHandler() {
-        return new ItemStackHandler(1) {
+        ItemStackHandler h = new ItemStackHandler(2) {
             @Override
             protected void onContentsChanged(int slot) {
                 markDirty();
+            }
+
+            @Override
+            public int getSlotLimit(int slot) {
+                return 64;
             }
 
             @Override
@@ -68,21 +74,16 @@ public class BlockForgeTile extends TileEntity implements ITickableTileEntity {
                 }
             }
 
-            @Override
-            public int getSlotLimit(int slot) {
-                return 64;
-            }
-
             @Nonnull
             @Override
             public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-                if (!isItemValid(slot, stack)) {
+                if(!isItemValid(slot, stack))
                     return stack;
-                }
 
                 return super.insertItem(slot, stack, simulate);
             }
         };
+        return h;
     }
 
     @Nonnull
@@ -106,7 +107,7 @@ public class BlockForgeTile extends TileEntity implements ITickableTileEntity {
         recipe.ifPresent(iRecipe -> {
             ItemStack output = iRecipe.getRecipeOutput();
 
-            if (getTileData().getInt("FillState") >= 10) {
+            if (getTileData().getInt("FillState") >= 10 && TileHelper.canItemBePutInSlot(itemHandler, 1, output)) {
                 getTileData().putInt("FillState", getTileData().getInt("FillState") - 10);
                 itemHandler.extractItem(0, 1, false);
                 itemHandler.insertItem(1, output, false);
@@ -131,6 +132,9 @@ public class BlockForgeTile extends TileEntity implements ITickableTileEntity {
                 && upperBlockState.get(PowerstoneReceiverBlock.PLUGGED) &&
                 fillState < 10000)
             getTileData().putInt("FillState", fillState + 1);
+
+        if (itemHandler.getSlots() < 2)
+            itemHandler.setSize(2);
 
         if (!world.isRemote)
 

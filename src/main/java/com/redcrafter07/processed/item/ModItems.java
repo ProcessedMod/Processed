@@ -2,6 +2,7 @@ package com.redcrafter07.processed.item;
 
 import com.redcrafter07.processed.Processed;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -26,6 +27,7 @@ public class ModItems {
     public static final RegistryObject<Item> CREATIVE_OVERLOAD_BATTERY = ITEMS.register("creative_overload_battery", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
     public static final RegistryObject<Item> LIGHTNING_JAR = ITEMS.register("lightning_jar", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
     public static final RegistryObject<Item> JAR = ITEMS.register("jar", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
+    public static final RegistryObject<Item> FISHI_STAFF = ITEMS.register("fishi_staff", () -> new FishiStaff(new Item.Properties()));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

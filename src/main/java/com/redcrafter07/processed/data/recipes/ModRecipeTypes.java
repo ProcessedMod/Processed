@@ -35,5 +35,6 @@ public class ModRecipeTypes {
         Registry.register(Registry.RECIPE_TYPE, ProcessorAssemblerRecipe.TYPE_ID, PROCESSOR_ASSEMBLY_RECIPE);
         Registry.register(Registry.RECIPE_TYPE, AdvancedLightningConcentratorRecipe.TYPE_ID, ADVANCED_LIGHTNING_RECIPE);
         Registry.register(Registry.RECIPE_TYPE, ChargedCraftingTableRecipe.TYPE_ID, CHARGED_CRAFTING_RECIPE);
+        Registry.register(Registry.RECIPE_TYPE, BlockForgeRecipe.TYPE_ID, BLOCK_FORGE_RECIPE);
     }
 }

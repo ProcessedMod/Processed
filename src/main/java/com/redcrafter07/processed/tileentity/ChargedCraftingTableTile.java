@@ -3,6 +3,7 @@ package com.redcrafter07.processed.tileentity;
 import com.redcrafter07.processed.data.recipes.ChargedCraftingTableRecipe;
 import com.redcrafter07.processed.data.recipes.ModRecipeTypes;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.CraftingTableBlock;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;

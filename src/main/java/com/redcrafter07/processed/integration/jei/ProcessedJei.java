@@ -32,6 +32,8 @@ public class ProcessedJei implements IModPlugin {
                 new AdvancedLightningConcentratorRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(
                 new AdvancedLightningConcentratorRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(
+                new BlockForgeRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
@@ -54,5 +56,8 @@ public class ProcessedJei implements IModPlugin {
         registration.addRecipes(rm.getRecipesForType(ModRecipeTypes.CHARGED_CRAFTING_RECIPE).stream()
                 .filter(r -> r instanceof ChargedCraftingTableRecipe).collect(Collectors.toList()),
                 ChargedCraftingTableRecipeCategory.UID);
+        registration.addRecipes(rm.getRecipesForType(ModRecipeTypes.BLOCK_FORGE_RECIPE).stream()
+                        .filter(r -> r instanceof BlockForgeRecipe).collect(Collectors.toList()),
+                BlockForgeRecipeCategory.UID);
     }
 }
