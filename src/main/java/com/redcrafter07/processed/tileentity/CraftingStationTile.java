@@ -29,7 +29,7 @@ public class CraftingStationTile extends TileEntity implements ITickableTileEnti
         super(tileEntityType);
     }
 
-    public CraftingStationTile()    {
+    public CraftingStationTile() {
         this(ModTileEntities.CRAFTING_STATION_TILE.get());
     }
 
@@ -45,7 +45,7 @@ public class CraftingStationTile extends TileEntity implements ITickableTileEnti
         return super.write(nbt);
     }
 
-    private ItemStackHandler createHandler()    {
+    private ItemStackHandler createHandler() {
         return new ItemStackHandler(3) {
             @Override
             protected void onContentsChanged(int slot) {
@@ -54,25 +54,28 @@ public class CraftingStationTile extends TileEntity implements ITickableTileEnti
 
             @Override
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-                switch (slot)   {
+                switch (slot) {
                     case 0:
                         return stack.getItem() == ModItems.PROCESSOR_CORE.get();
-                    case 1:
-                    case 2:
-                        return stack.getItem() != ModItems.PROCESSOR_CORE.get();
-                    default: return true;
+                    default:
+                        return true;
                 }
             }
 
             @Override
             public int getSlotLimit(int slot) {
-                return 1;
+                switch (slot) {
+                    case 2:
+                        return 1;
+                    default:
+                        return 64;
+                }
             }
 
             @Nonnull
             @Override
             public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-                if(!isItemValid(slot, stack))   {
+                if (!isItemValid(slot, stack)) {
                     return stack;
                 }
 
@@ -84,14 +87,14 @@ public class CraftingStationTile extends TileEntity implements ITickableTileEnti
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)    {
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return handler.cast();
         }
         return super.getCapability(cap, side);
     }
 
     public void craft() {
-         Inventory inv = new Inventory(itemHandler.getSlots());
+        Inventory inv = new Inventory(itemHandler.getSlots());
         for (int i = 0; i < itemHandler.getSlots(); i++) {
             inv.setInventorySlotContents(i, itemHandler.getStackInSlot(i));
         }
@@ -104,7 +107,7 @@ public class CraftingStationTile extends TileEntity implements ITickableTileEnti
 
 //            System.out.println(itemHandler.getStackInSlot(2).getCount());
 
-            if(itemHandler.getStackInSlot(2).getCount() < 1)   {
+            if (itemHandler.getStackInSlot(2).getCount() < 1) {
                 itemHandler.extractItem(0, 1, false);
                 itemHandler.extractItem(1, 1, false);
                 itemHandler.insertItem(2, output, false);
@@ -117,7 +120,7 @@ public class CraftingStationTile extends TileEntity implements ITickableTileEnti
 
     @Override
     public void tick() {
-        if(world.isRemote)  return;
+        if (world.isRemote) return;
 
 
         craft();
