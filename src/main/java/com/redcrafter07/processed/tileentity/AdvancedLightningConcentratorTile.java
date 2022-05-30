@@ -5,6 +5,8 @@ import com.redcrafter07.processed.blocks.PowerstoneReceiverBlock;
 import com.redcrafter07.processed.data.recipes.AdvancedLightningConcentratorRecipe;
 import com.redcrafter07.processed.data.recipes.LightningConcentratorRecipe;
 import com.redcrafter07.processed.data.recipes.ModRecipeTypes;
+import com.redcrafter07.processed.item.ModItem;
+import com.redcrafter07.processed.item.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
@@ -56,7 +58,7 @@ public class AdvancedLightningConcentratorTile extends TileEntity implements ITi
     }
 
     private ItemStackHandler createHandler() {
-        return new ItemStackHandler(1) {
+        return new ItemStackHandler(3) {
             @Override
             protected void onContentsChanged(int slot) {
                 markDirty();
@@ -65,6 +67,9 @@ public class AdvancedLightningConcentratorTile extends TileEntity implements ITi
             @Override
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 switch (slot) {
+                    case 1:
+                    case 2:
+                        return stack.getItem() == ModItems.EFFICIENCY_UPGRADE.get();
                     default:
                         return true;
                 }
@@ -72,7 +77,12 @@ public class AdvancedLightningConcentratorTile extends TileEntity implements ITi
 
             @Override
             public int getSlotLimit(int slot) {
-                return 1;
+                switch (slot) {
+                    case 0:
+                        return 1;
+                    default:
+                        return 64;
+                }
             }
 
             @Nonnull
@@ -115,8 +125,11 @@ public class AdvancedLightningConcentratorTile extends TileEntity implements ITi
             ItemStack output = iRecipe.getRecipeOutput();
 
             if (getTileData().getInt("FillState") >= 10000) {
+                boolean craftingEfficiency = itemHandler.getStackInSlot(1).getItem() == ModItems.EFFICIENCY_UPGRADE.get();
+                int craftingEfficiencyCount = craftingEfficiency ? itemHandler.getStackInSlot(1).getCount() * 2 : 0;
+
                 lightning();
-                getTileData().putInt("FillState", getTileData().getInt("FillState") - 4000);
+                getTileData().putInt("FillState", getTileData().getInt("FillState") - (4000 / (craftingEfficiencyCount > 0 ? craftingEfficiencyCount : 1)));
                 itemHandler.extractItem(0, 1, false);
                 itemHandler.insertItem(0, output, false);
             }
@@ -135,14 +148,15 @@ public class AdvancedLightningConcentratorTile extends TileEntity implements ITi
 
         BlockState upperBlockState = world.getBlockState(new BlockPos(x, y + 1, z));
 
+        boolean powerEfficiency = itemHandler.getStackInSlot(2).getItem() == ModItems.EFFICIENCY_UPGRADE.get();
+        int powerEfficiencyCount = powerEfficiency ? itemHandler.getStackInSlot(2).getCount() * 2 : 0;
+
         if (upperBlockState.getBlock() ==
                 ModBlocks.POWERSTONE_RECEIVER.get().getBlock()
                 && upperBlockState.get(PowerstoneReceiverBlock.PLUGGED) &&
                 fillState < 10000)
-            getTileData().putInt("FillState", fillState + 1);
+            getTileData().putInt("FillState", fillState + (powerEfficiency ? powerEfficiencyCount * 2 : 1));
 
-        if (!world.isRemote)
-
-            craft();
+        if (!world.isRemote) craft();
     }
 }
