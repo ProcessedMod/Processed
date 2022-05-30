@@ -11,9 +11,16 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class ModItem extends Item {
+public class ModItem extends Item {
 
     private String itemID;
+
+    private boolean showDescription=false;
+
+    public ModItem(Properties props, String itemID, boolean showDescription) {
+        this(props, itemID);
+        this.showDescription=showDescription;
+    }
 
     public ModItem(Properties p_i48487_1_, String itemID) {
         this(p_i48487_1_);
@@ -29,6 +36,8 @@ public abstract class ModItem extends Item {
         if (Screen.hasShiftDown()) {
             tooltip.add(new TranslationTextComponent("info.processed." + this.itemID));
         } else {
+            if(this.showDescription)
+                tooltip.add(new TranslationTextComponent("item.processed." + this.itemID));
             tooltip.add(new TranslationTextComponent("info.processed.shift"));
         }
 
