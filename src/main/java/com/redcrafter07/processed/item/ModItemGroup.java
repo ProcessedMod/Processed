@@ -8,7 +8,7 @@ public class ModItemGroup {
     public static final ItemGroup MAIN_GROUP = new ItemGroup("processedModTab") {
         @Override
         public ItemStack createIcon() {
-            return new ItemStack(ModBlocks.OVERLOAD_STATION.get());
+            return new ItemStack(ModBlocks.MOTHERBOARD.get());
         }
     };
 }
