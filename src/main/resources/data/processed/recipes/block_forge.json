@@ -1,25 +1,19 @@
 {
   "type": "crafting_shaped",
   "pattern": [
-    "ibi",
-    "pcp",
-    "# #"
+    "   ",
+    "XXX",
+    "#O#"
   ],
   "key": {
     "#": {
       "item": "processed:processor_core"
     },
-    "i": {
-      "tag": "forge:ingots/iron"
+    "X": {
+      "item": "processed:carbon_reinforced_saw_blade"
     },
-    "b": {
-      "item": "minecraft:dirt"
-    },
-    "p": {
-      "item": "minecraft:iron_pickaxe"
-    },
-    "c": {
-      "item": "minecraft:dirt"
+    "O": {
+      "item": "processed:machine_casing"
     }
   },
   "result": {
