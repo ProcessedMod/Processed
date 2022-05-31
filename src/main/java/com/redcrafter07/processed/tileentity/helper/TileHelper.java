@@ -6,7 +6,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class TileHelper {
     public static boolean canItemAmountBePutInSlot(ItemStackHandler h, int slot, ItemStack i, int stackSize) {
-        if(i.isEmpty()) return true;
+        if(h.getStackInSlot(slot).isEmpty()) return true;
         Processed.getLOGGER().debug("Checking if slot is inbound");
         if(h.getSlots() <= slot) return false;
         Processed.getLOGGER().debug("Checking if item amount can be put in");

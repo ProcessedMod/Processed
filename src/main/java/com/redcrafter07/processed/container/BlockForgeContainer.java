@@ -1,6 +1,7 @@
 package com.redcrafter07.processed.container;
 
 import com.redcrafter07.processed.blocks.ModBlocks;
+import com.redcrafter07.processed.tileentity.BlockForgeTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -16,13 +17,13 @@ import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class BlockForgeContainer extends Container {
-    private final TileEntity tileEntity;
+    private final BlockForgeTile tileEntity;
     private final PlayerEntity playerEntity;
     private final IItemHandler playerInventory;
 
     public BlockForgeContainer(int containerId, World world, BlockPos blockPos, PlayerInventory inv, PlayerEntity playerEntity) {
         super(ModContainers.BLOCK_FORGE_CONTAINER.get(), containerId);
-        this.tileEntity = world.getTileEntity(blockPos);
+        this.tileEntity = (BlockForgeTile) world.getTileEntity(blockPos);
         this.playerEntity = playerEntity;
         this.playerInventory = new InvWrapper(inv);
 
@@ -37,7 +38,7 @@ public class BlockForgeContainer extends Container {
     }
 
     public int getFillState() {
-        return tileEntity.getTileData().getInt("FillState");
+        return tileEntity.energy.getFillState();
     }
 
     public boolean isFull() {

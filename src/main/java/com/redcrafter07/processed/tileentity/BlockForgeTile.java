@@ -1,5 +1,6 @@
 package com.redcrafter07.processed.tileentity;
 
+import com.redcrafter07.processed.Processed;
 import com.redcrafter07.processed.blocks.ModBlocks;
 import com.redcrafter07.processed.blocks.PowerstoneReceiverBlock;
 import com.redcrafter07.processed.data.recipes.BlockForgeRecipe;
@@ -27,7 +28,6 @@ import java.util.Optional;
 
 public class BlockForgeTile extends TileEntity implements ITickableTileEntity {
     private InventoryContainer inventoryContainer = createHandler();
-    private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> inventoryContainer.getHandler());
     public EnergyContainer energy = new EnergyContainer(10000, "bforgein");
 
     public BlockForgeTile(TileEntityType<?> tileEntityType) {
@@ -61,7 +61,7 @@ public class BlockForgeTile extends TileEntity implements ITickableTileEntity {
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return handler.cast();
+            return LazyOptional.of(() -> inventoryContainer.getHandler()).cast();
         }
         return super.getCapability(cap, side);
     }
@@ -83,6 +83,9 @@ public class BlockForgeTile extends TileEntity implements ITickableTileEntity {
                     inventoryContainer.getHandler().extractItem(0, 1, false);
                     inventoryContainer.getHandler().insertItem(1, output, false);
                 }
+                else {
+                    Processed.getLOGGER().debug("Couldn't remove 10 from the energy");
+                }
             }
 
             markDirty();
@@ -103,7 +106,7 @@ public class BlockForgeTile extends TileEntity implements ITickableTileEntity {
                 ModBlocks.POWERSTONE_RECEIVER.get().getBlock()
                 && upperBlockState.get(PowerstoneReceiverBlock.PLUGGED) &&
                 fillState < 10000)
-            getTileData().putInt("FillState", fillState + 1);
+            energy.increaseFillState(1);
 
         if (!world.isRemote)
 
