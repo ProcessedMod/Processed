@@ -31,6 +31,9 @@ public class ModItems {
     public static final RegistryObject<Item> EFFICIENCY_UPGRADE = ITEMS.register("efficiency_upgrade", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP).maxStackSize(4)));
     public static final RegistryObject<Item> CIRCUIT_BOARD = ITEMS.register("circuit_board", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
     public static final RegistryObject<Item> ADVANCED_CIRCUIT_BOARD = ITEMS.register("advanced_circuit_board", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
+    public static final RegistryObject<Item> BLADE = ITEMS.register("blade", () -> new Item(new Item.Properties().group(ModItemGroup.MAIN_GROUP)));
+    public static final RegistryObject<Item> SAW_BLADE = ITEMS.register("saw_blade", () -> new SawBladeItem(new Item.Properties().group(ModItemGroup.MAIN_GROUP), "saw_blade", 1.5F));
+    public static final RegistryObject<Item> CARBON_REINFORCED_SAW_BLADE = ITEMS.register("carbon_reinforced_saw_blade", () -> new SawBladeItem(new Item.Properties().group(ModItemGroup.MAIN_GROUP), "carbon_reinforced_saw_blade", 3F));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
