@@ -20,6 +20,7 @@
     }
   },
   "result": {
-    "item": "processed:module_core"
+    "item": "processed:module_core",
+    "count": 4
   }
 }
