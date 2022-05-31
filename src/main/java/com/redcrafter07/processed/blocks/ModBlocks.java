@@ -28,6 +28,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> POWERSTONE_PLUG = registerBlock("powerstone_plug", () -> new PowerstonePlugBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(3).harvestTool(ToolType.PICKAXE).setRequiresTool().hardnessAndResistance(1.5F, 6.0F).notSolid()));
     public static final RegistryObject<Block> OVERLOADED_QUERY = registerBlock("overloaded_query", () -> new OverloadedQueryBlock(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(10, 10)
             .noDrops().tickRandomly()));
+    public static final RegistryObject<Block> MACHINE_CASING = registerBlock("machine_casing", () -> new Block(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(3).harvestTool(ToolType.PICKAXE).setRequiresTool().setLightLevel(value -> 5).hardnessAndResistance(1.0F, 6.0F)));
 
     //    MODIFIED BLOCKS
     public static final RegistryObject<Block> OVERLOAD_BLOCK = registerBlock("overload_block", () -> new OverloadBlock(AbstractBlock.Properties.create(Material.ROCK).harvestLevel(3).harvestTool(ToolType.PICKAXE).setRequiresTool().setLightLevel(value -> 5).hardnessAndResistance(1.0F, 6.0F)));
