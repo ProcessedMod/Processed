@@ -2,7 +2,8 @@
 	"credit": "Made by RedCrafter07",
 	"texture_size": [64, 64],
 	"textures": {
-		"1": "processed:block/machine_casing"
+		"1": "processed:block/machine_casing",
+		"particle": "processed:block/machine_casing"
 	},
 	"elements": [
 		{
