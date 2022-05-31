@@ -65,6 +65,10 @@ public class ProcessedJei implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
+        registration.addRecipeCatalyst(new ItemStack(()->ModBlocks.CRAFTING_STATION.get().asItem()), CraftingStationRecipeCategory.UID);
+        registration.addRecipeCatalyst(new ItemStack(()->ModBlocks.LIGHTNING_CONCENTRATOR.get().asItem()), LightningConcentratorRecipeCategory.UID);
+        registration.addRecipeCatalyst(new ItemStack(()->ModBlocks.PROCESSOR_ASSEMBLER.get().asItem()), ProcessorAssemblerRecipeCategory.UID);
+        registration.addRecipeCatalyst(new ItemStack(()->ModBlocks.ADVANCED_LIGHTNING_CONCENTRATOR.get().asItem()), AdvancedLightningConcentratorRecipeCategory.UID);
         registration.addRecipeCatalyst(new ItemStack(()->ModBlocks.BLOCK_FORGE.get().asItem()), BlockForgeRecipeCategory.UID);
     }
 }
