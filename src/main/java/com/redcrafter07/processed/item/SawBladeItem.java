@@ -29,11 +29,13 @@ public class SawBladeItem extends ModItem {
         if(isSelected) {
             entityIn.performHurtAnimation();
 
+            Item item = stack.getItem();
+
             stack.shrink(1);
 
-            entityIn.entityDropItem(new ItemStack(ModItems.SAW_BLADE.get(), 1), 3F);
+            entityIn.entityDropItem(new ItemStack(item, 1), 3F);
 
-            entityIn.attackEntityFrom(new DamageSource("BLADE"), 3F);
+            entityIn.attackEntityFrom(new DamageSource("BLADE"), damageWhenHeld);
 
         }
     }
