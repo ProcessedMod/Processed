@@ -60,6 +60,6 @@
   "info.processed.processing_unit": "\u00A77A real processor! Is required by the Motherboard to get a function.",
   "info.processed.environmental_suppressor": "\u00A77More crafting! This block allows you to use the Lightning Concentrator at any time when placed in a 15 block radius.",
   "processed.credits": "?suggested_by=Fishi&implemented_by=Wolfi+RedCrafter07+Fishi",
-  "info.processed.saw_blade": "Don't touch that! The saw will deal damage to you when held in your main hand. It's also used in the Block Forge for crafting different items.",
-  "info.processed.carbon_reinforced_saw_blade": "Don't touch that! The saw will deal damage to you when held in your main hand. It's also used in the Block Forge for crafting different items."
+  "info.processed.saw_blade": "\u00A77Don't touch that! The saw will deal damage to you when held in your main hand. It's also used in the Block Forge for crafting different items.",
+  "info.processed.carbon_reinforced_saw_blade": "\u00A77Don't touch that! The saw will deal damage to you when held in your main hand. It's also used in the Block Forge for crafting different items."
 }
