@@ -1,12 +1,12 @@
 package com.redcrafter07.processed.tileentity;
 
-import com.redcrafter07.processed.Processed;
 import com.redcrafter07.processed.blocks.ModBlocks;
 import com.redcrafter07.processed.blocks.PowerstoneReceiverBlock;
-import com.redcrafter07.processed.data.recipes.AdvancedLightningConcentratorRecipe;
 import com.redcrafter07.processed.data.recipes.BlockForgeRecipe;
 import com.redcrafter07.processed.data.recipes.ModRecipeTypes;
-import com.redcrafter07.processed.item.ModItems;
+import com.redcrafter07.processed.tileentity.helper.EnergyContainer;
+import com.redcrafter07.processed.tileentity.helper.InventoryContainer;
+import com.redcrafter07.processed.tileentity.helper.TileHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -20,17 +20,15 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class BlockForgeTile extends TileEntity implements ITickableTileEntity {
-    private final ItemStackHandler itemHandler = createHandler();
-    private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> itemHandler);
-    public int fillState;
+    private InventoryContainer inventoryContainer = createHandler();
+    private final LazyOptional<IItemHandler> handler = LazyOptional.of(() -> inventoryContainer.getHandler());
+    public EnergyContainer energy = new EnergyContainer(10000, "bforgein");
 
     public BlockForgeTile(TileEntityType<?> tileEntityType) {
         super(tileEntityType);
@@ -42,48 +40,21 @@ public class BlockForgeTile extends TileEntity implements ITickableTileEntity {
 
     @Override
     public void read(BlockState blockState, CompoundNBT nbt) {
-        fillState = nbt.getInt("FillState");
-        itemHandler.deserializeNBT(nbt.getCompound("blockforgeContents"));
+        energy.read(nbt);
+        inventoryContainer.read(nbt);
         super.read(blockState, nbt);
     }
 
     @Override
     public CompoundNBT write(CompoundNBT nbt) {
-        nbt.putInt("FillState", fillState);
-        nbt.put("blockforgeContents", itemHandler.serializeNBT());
+        nbt = energy.write(nbt);
+        nbt = inventoryContainer.write(nbt);
         return super.write(nbt);
     }
 
-    private ItemStackHandler createHandler() {
-        ItemStackHandler h = new ItemStackHandler(2) {
-            @Override
-            protected void onContentsChanged(int slot) {
-                markDirty();
-            }
-
-            @Override
-            public int getSlotLimit(int slot) {
-                return 64;
-            }
-
-            @Override
-            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-                switch (slot) {
-                    default:
-                        return true;
-                }
-            }
-
-            @Nonnull
-            @Override
-            public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-                if(!isItemValid(slot, stack))
-                    return stack;
-
-                return super.insertItem(slot, stack, simulate);
-            }
-        };
-        return h;
+    private InventoryContainer createHandler() {
+        InventoryContainer c = new InventoryContainer(2, "bforgeio", (slot)->64, (slot)->true);
+        return c;
     }
 
     @Nonnull
@@ -96,9 +67,9 @@ public class BlockForgeTile extends TileEntity implements ITickableTileEntity {
     }
 
     public void craft() {
-        Inventory inv = new Inventory(itemHandler.getSlots());
-        for (int i = 0; i < itemHandler.getSlots(); i++) {
-            inv.setInventorySlotContents(i, itemHandler.getStackInSlot(i));
+        Inventory inv = new Inventory(inventoryContainer.getHandler().getSlots());
+        for (int i = 0; i < inventoryContainer.getHandler().getSlots(); i++) {
+            inv.setInventorySlotContents(i, inventoryContainer.getHandler().getStackInSlot(i));
         }
 
         Optional<BlockForgeRecipe> recipe = world.getRecipeManager()
@@ -107,10 +78,11 @@ public class BlockForgeTile extends TileEntity implements ITickableTileEntity {
         recipe.ifPresent(iRecipe -> {
             ItemStack output = iRecipe.getRecipeOutput();
 
-            if (getTileData().getInt("FillState") >= 10 && TileHelper.canItemBePutInSlot(itemHandler, 1, output)) {
-                getTileData().putInt("FillState", getTileData().getInt("FillState") - 10);
-                itemHandler.extractItem(0, 1, false);
-                itemHandler.insertItem(1, output, false);
+            if (TileHelper.canItemBePutInSlot(inventoryContainer.getHandler(), 1, output)) {
+                if (energy.decreaseFillState(10)==10) {
+                    inventoryContainer.getHandler().extractItem(0, 1, false);
+                    inventoryContainer.getHandler().insertItem(1, output, false);
+                }
             }
 
             markDirty();
@@ -132,9 +104,6 @@ public class BlockForgeTile extends TileEntity implements ITickableTileEntity {
                 && upperBlockState.get(PowerstoneReceiverBlock.PLUGGED) &&
                 fillState < 10000)
             getTileData().putInt("FillState", fillState + 1);
-
-        if (itemHandler.getSlots() < 2)
-            itemHandler.setSize(2);
 
         if (!world.isRemote)
 
