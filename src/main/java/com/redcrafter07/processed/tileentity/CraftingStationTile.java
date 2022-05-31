@@ -65,8 +65,6 @@ public class CraftingStationTile extends TileEntity implements ITickableTileEnti
             @Override
             public int getSlotLimit(int slot) {
                 switch (slot) {
-                    case 2:
-                        return 1;
                     default:
                         return 64;
                 }
@@ -107,7 +105,7 @@ public class CraftingStationTile extends TileEntity implements ITickableTileEnti
 
 //            System.out.println(itemHandler.getStackInSlot(2).getCount());
 
-            if (itemHandler.getStackInSlot(2).getCount() < 1) {
+            if (itemHandler.getStackInSlot(2).getCount() < 1 || itemHandler.getStackInSlot(2).getCount() > 0 && itemHandler.getStackInSlot(2).getItem() == output.getItem()) {
                 itemHandler.extractItem(0, 1, false);
                 itemHandler.extractItem(1, 1, false);
                 itemHandler.insertItem(2, output, false);
