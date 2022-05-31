@@ -17,6 +17,9 @@
   "item.processed.lightning_jar": "Lightning Jar",
   "item.processed.circuit_board": "Circuit Board",
   "item.processed.advanced_circuit_board": "Advanced Circuit Board",
+  "item.processed.blade": "Blade",
+  "item.processed.saw_blade": "Saw Blade",
+  "item.processed.carbon_reinforced_saw_blade": "Carbon Reinforced Saw Blade",
   "block.processed.block_forge": "Block Forge",
   "block.processed.environmental_suppressor": "Environmental Suppressor",
   "block.processed.overload_ore": "Overload Ore",
@@ -56,5 +59,7 @@
   "info.processed.motherboard": "\u00A77Required for advanced processing tasks.",
   "info.processed.processing_unit": "\u00A77A real processor! Is required by the Motherboard to get a function.",
   "info.processed.environmental_suppressor": "\u00A77More crafting! This block allows you to use the Lightning Concentrator at any time when placed in a 15 block radius.",
-  "processed.credits": "?suggested_by=Fishi&implemented_by=Wolfi+RedCrafter07+Fishi"
+  "processed.credits": "?suggested_by=Fishi&implemented_by=Wolfi+RedCrafter07+Fishi",
+  "info.processed.saw_blade": "Don't touch that! The saw will deal damage to you when held in your main hand. It's also used in the Block Forge for crafting different items.",
+  "info.processed.carbon_reinforced_saw_blade": "Don't touch that! The saw will deal damage to you when held in your main hand. It's also used in the Block Forge for crafting different items."
 }
