@@ -45,7 +45,7 @@
   "screen.processed.charged_crafting_table": "Charged Crafting Table",
   "info.processed.shift": "\u00A78Hold \u00A72\u00A7lSHIFT\u00A7r\u00A78 for info",
   "info.processed.fishi_staff": "The staff of true Superiority",
-  "info.processed.block_forge": "\u00A77This block forges a block to create another Variant of it",
+  "info.processed.block_forge": "\u00A77This block forges a block to create another variant of it",
   "info.processed.lightning_concentrator": "\u00A77This block causes a lightning, which allows to craft new items.\nThis only works when the weather is thunder or a Environmental Suppressor is nearby.",
   "info.processed.crafting_station": "\u00A77Use an processor core and an additional item to craft new processors!",
   "info.processed.overload_station": "\u00A77This block allows you to charge Overload Tools!",
