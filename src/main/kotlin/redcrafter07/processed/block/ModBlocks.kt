@@ -1,0 +1,86 @@
+package redcrafter07.processed.block
+
+import net.minecraft.world.item.Item
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.state.BlockBehaviour
+import net.neoforged.neoforge.registries.DeferredBlock
+import net.neoforged.neoforge.registries.DeferredItem
+import net.neoforged.neoforge.registries.DeferredRegister
+import redcrafter07.processed.ProcessedMod
+import redcrafter07.processed.block.machine_abstractions.ProcessedTier
+import redcrafter07.processed.block.machine_abstractions.TieredProcessedBlock
+import redcrafter07.processed.items.ModItems
+import redcrafter07.processed.materials.Material
+import redcrafter07.processed.materials.MaterialBlock
+import redcrafter07.processed.materials.MaterialBlockItem
+import redcrafter07.processed.materials.Materials
+import java.util.function.BiFunction
+import java.util.function.Function
+import java.util.function.Supplier
+import java.util.stream.Collectors
+
+object ModBlocks {
+    val BLOCKS: DeferredRegister.Blocks = DeferredRegister.createBlocks(ProcessedMod.ID)
+
+    val BLITZ_ORE = registerBlock("blitz_ore") {
+        val props = BlockBehaviour.Properties.ofFullCopy(Blocks.DIAMOND_ORE).explosionResistance(1200f)
+        Block(props)
+    }
+    val FLUID_TANK = registerBlock("fluid_tank", ::FluidTankBlock)
+    val BLOCKS_POWERED_FURNACE = registerTieredBlock("powered_furnace", ProcessedTier.TIERS, ::PoweredFurnaceBlock)
+
+    val MATERIAL_BLOCK_ITEMS = ArrayList<DeferredItem<MaterialBlockItem>>()
+
+    var METAL_BLOCKS = registerMaterialBlock(
+        Materials.MATERIALS,
+        Material::metalBlockPath,
+        { MaterialBlock.MetalBlock(it) },
+        { block, material -> MaterialBlockItem.MetalBlockItem(material, block) })
+
+    var STONE_ORE_BLOCKS = registerMaterialBlock(
+        Materials.MATERIALS,
+        Material::oreBlockPath,
+        { MaterialBlock.OreBlock(it) },
+        { block, material -> MaterialBlockItem.OreBlockItem(material, block) })
+
+
+    private fun <T : Block> registerBlock(id: String, block: Supplier<T>): DeferredBlock<T> {
+        val regBlock = BLOCKS.register(id, block)
+        ModItems.registerItem(id) { ModBlockItem(regBlock.get(), Item.Properties(), id) }
+        return regBlock
+    }
+
+    fun <T : MaterialBlock> registerMaterialBlock(
+        materials: List<Material>,
+        nameSupplier: Function<Material, String>,
+        blockConstructor: Function<Material, T>,
+        itemConstructor: BiFunction<Block, Material, MaterialBlockItem>
+    ): List<DeferredBlock<T>> {
+        val list = ArrayList<DeferredBlock<T>>()
+
+        for (material in materials) {
+            val name = nameSupplier.apply(material)
+            val regBlock = BLOCKS.register(name, Supplier { blockConstructor.apply(material) })
+            list.add(regBlock)
+            val item = ModItems.registerItem(name) { itemConstructor.apply(regBlock.get(), material) }
+            MATERIAL_BLOCK_ITEMS.add(item)
+        }
+
+        return list
+    }
+
+    private fun <T : TieredProcessedBlock> registerTieredBlock(
+        id: String, tiers: List<ProcessedTier>, block: TieredBlockProvider<T>
+    ): Set<DeferredBlock<T>> {
+        return tiers.stream().map { tier ->
+            val regBlock = BLOCKS.register("${id}_${tier.named}", Supplier { block.provide(tier) })
+            ModItems.registerItem("${id}_${tier.named}") { TieredModBlockItem(regBlock.get(), Item.Properties()) }
+            regBlock
+        }.collect(Collectors.toSet())
+    }
+
+    fun interface TieredBlockProvider<T> {
+        fun provide(tier: ProcessedTier): T
+    }
+}
