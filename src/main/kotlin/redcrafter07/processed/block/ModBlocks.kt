@@ -15,6 +15,7 @@ import redcrafter07.processed.materials.Material
 import redcrafter07.processed.materials.MaterialBlock
 import redcrafter07.processed.materials.MaterialBlockItem
 import redcrafter07.processed.materials.Materials
+import redcrafter07.processed.multiblock.CasingBlock
 import java.util.function.BiFunction
 import java.util.function.Function
 import java.util.function.Supplier
@@ -29,6 +30,8 @@ object ModBlocks {
     }
     val FLUID_TANK = registerBlock("fluid_tank", ::FluidTankBlock)
     val BLOCKS_POWERED_FURNACE = registerTieredBlock("powered_furnace", ProcessedTier.TIERS, ::PoweredFurnaceBlock)
+    val BASIC_CASING = registerBlock("basic_casing") { CasingBlock(BlockBehaviour.Properties.of()) }
+    val BIG_SMELTER = registerBlock("big_smelter", ::BigSmelterBlock)
 
     val MATERIAL_BLOCK_ITEMS = ArrayList<DeferredItem<MaterialBlockItem>>()
 

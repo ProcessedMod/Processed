@@ -2,7 +2,6 @@ package redcrafter07.processed.datagen
 
 import net.minecraft.data.PackOutput
 import net.minecraft.resources.ResourceLocation
-import net.neoforged.neoforge.client.model.generators.BlockModelBuilder
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider
 import net.neoforged.neoforge.client.model.generators.ModelFile
 import net.neoforged.neoforge.client.model.generators.ModelFile.ExistingModelFile
@@ -36,19 +35,23 @@ class ModBlockStateProvider(output: PackOutput, existingFileHelper: ExistingFile
             }.end()
 
         for (block in ModBlocks.METAL_BLOCKS) {
-            val blockRL = block.id
-            val modelRL = ResourceLocation.fromNamespaceAndPath(blockRL.namespace, "block/${blockRL.path}")
-            val model: BlockModelBuilder = models().withExistingParent(modelRL.path, rl("block/metal_block"))
+            val modelRL = rl("block/metal_block")
+            val model = models().getExistingFile(modelRL)
             simpleBlock(block.get(), model)
-            itemModels().withExistingParent("item/${block.id.path}", modelRL)
+            itemModels().withExistingParent(block.id.path, modelRL)
         }
 
         for (block in ModBlocks.STONE_ORE_BLOCKS) {
-            val blockRL = block.id
-            val modelRL = ResourceLocation.fromNamespaceAndPath(blockRL.namespace, "block/${blockRL.path}")
-            val model: BlockModelBuilder = models().withExistingParent(modelRL.path, rl("block/ore_block"))
+            val modelRL = rl("block/ore_block")
+            val model = models().getExistingFile(modelRL)
             simpleBlock(block.get(), model)
-            itemModels().withExistingParent("item/${block.id.path}", modelRL)
+            itemModels().withExistingParent(block.id.path, modelRL)
+        }
+
+        for (block in ModBlocks.BLOCKS_POWERED_FURNACE) {
+            val modelRL = ResourceLocation.withDefaultNamespace("block/blast_furnace")
+            simpleBlock(block.get(), models().getExistingFile(modelRL))
+            itemModels().withExistingParent(block.id.path, modelRL)
         }
     }
 

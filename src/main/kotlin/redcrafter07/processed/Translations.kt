@@ -45,6 +45,7 @@ object Translations {
 
     inline fun tieredMachineInfo(maxPower: C, nameColored: C) = t("processed.tiered_machine_info", maxPower, nameColored)
     inline fun poweredFurnaceName(tier: ProcessedTier) = t("block.processed.powered_furnace", tier)
+    inline fun bigSmelterName() = t("block.processed.big_smelter")
 }
 
 inline fun t(key: String): MC = C.translatable(key)

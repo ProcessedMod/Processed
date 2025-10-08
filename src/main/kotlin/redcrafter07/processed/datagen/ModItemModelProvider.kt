@@ -11,43 +11,29 @@ import redcrafter07.processed.rl
 
 class ModItemModelProvider(output: PackOutput, existingFileHelper: ExistingFileHelper) :
     ItemModelProvider(output, ProcessedMod.ID, existingFileHelper) {
+    val generatedItemModel: ResourceLocation = ResourceLocation.withDefaultNamespace("item/generated")
+
     public override fun registerModels() {
         simpleItem(ModItems.BLITZ_ORB)
         simpleItem(ModItems.WRENCH)
 
-        for (dustItem in ModItems.DUST_ITEMS) {
-            withExistingParent(
-                dustItem.id.path,
-                ResourceLocation.withDefaultNamespace("item/generated")
-            ).texture("layer0", rl("item/dust"))
-        }
+        val dustModel = simpleModel("dust_item", "item/dust")
+        val ingotModel = simpleModel("ingot_item", "item/ingot")
+        val nuggetModel = simpleModel("nugget_item", "item/nugget")
+        val rawModel = simpleModel("raw_item", "item/raw_metal")
 
-        for (dustItem in ModItems.INGOT_ITEMS) {
-            withExistingParent(
-                dustItem.id.path,
-                ResourceLocation.withDefaultNamespace("item/generated")
-            ).texture("layer0", rl("item/ingot"))
-        }
-
-        for (dustItem in ModItems.NUGGET_ITEMS) {
-            withExistingParent(
-                dustItem.id.path,
-                ResourceLocation.withDefaultNamespace("item/generated")
-            ).texture("layer0", rl("item/nugget"))
-        }
-
-        for (dustItem in ModItems.RAW_ITEMS) {
-            withExistingParent(
-                dustItem.id.path,
-                ResourceLocation.withDefaultNamespace("item/generated")
-            ).texture("layer0", rl("item/raw_metal"))
-        }
+        for (dustItem in ModItems.DUST_ITEMS) withExistingParent(dustItem.id.path, dustModel)
+        for (dustItem in ModItems.INGOT_ITEMS) withExistingParent(dustItem.id.path, ingotModel)
+        for (dustItem in ModItems.NUGGET_ITEMS) withExistingParent(dustItem.id.path, nuggetModel)
+        for (dustItem in ModItems.RAW_ITEMS) withExistingParent(dustItem.id.path, rawModel)
     }
 
     private fun simpleItem(item: DeferredItem<*>) {
         withExistingParent(
-            item.getId().getPath(),
-            ResourceLocation.withDefaultNamespace("item/generated")
+            item.id.path, generatedItemModel
         ).texture("layer0", rl("item/${item.id.path}"))
     }
+
+    private fun simpleModel(path: String, texture: String): ResourceLocation =
+        withExistingParent(path, generatedItemModel).texture("layer0", rl(texture)).location
 }

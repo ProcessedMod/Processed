@@ -1,6 +1,5 @@
 package redcrafter07.processed.block.machine_abstractions
 
-import com.mojang.serialization.Codec
 import io.netty.buffer.ByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.network.codec.ByteBufCodecs
@@ -20,7 +19,6 @@ enum class IoState(val id: Int, val stateName: String) : StringRepresentable, Tr
     companion object {
         val BY_ID: IntFunction<IoState> =
             ByIdMap.continuous(IoState::id, IoState.entries.toTypedArray(), ByIdMap.OutOfBoundsStrategy.WRAP)
-        val CODEC: Codec<IoState> = StringRepresentable.fromValues(IoState::values)
         val STREAM_CODEC: StreamCodec<ByteBuf, IoState> = ByteBufCodecs.idMapper(BY_ID, IoState::id)
     }
 

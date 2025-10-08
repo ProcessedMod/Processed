@@ -9,24 +9,24 @@ import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.block.ModBlocks
-import java.util.*
 import java.util.function.Supplier
 
 object ModTileEntities {
-    val BLOCK_TYPES: DeferredRegister<BlockEntityType<*>> = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, ProcessedMod.ID)
+    val BLOCK_TYPES: DeferredRegister<BlockEntityType<*>> =
+        DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, ProcessedMod.ID)
 
     val POWERED_FURNACE =
         register("powered_furnace", ::PoweredFurnaceBlockEntity, *ModBlocks.BLOCKS_POWERED_FURNACE.toTypedArray())
     val FLUID_TANK = register("fluid_tank", ::FluidTankBlockEntity, ModBlocks.FLUID_TANK)
+    val BIG_SMELTER = register("big_smelter", ::BigSmelterBlockEntity, ModBlocks.BIG_SMELTER)
 
     private fun <T : BlockEntity> register(
         name: String, blockEntity: BlockEntitySupplier<T>, vararg blocks: DeferredBlock<*>
     ): DeferredHolder<BlockEntityType<*>, BlockEntityType<T>> {
         return BLOCK_TYPES.register(
             name, Supplier {
-                BlockEntityType.Builder.of<T>(
-                    blockEntity,
-                    *Arrays.stream(blocks).map { it.get() }.toArray { arrayOfNulls(it) }).build(null)
+                @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+                BlockEntityType(blockEntity, blocks.map { it.get() }.toSet(), null)
             })
     }
 }

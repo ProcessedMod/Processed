@@ -1,6 +1,5 @@
 package redcrafter07.processed.block.machine_abstractions
 
-import com.mojang.serialization.Codec
 import io.netty.buffer.ByteBuf
 import net.minecraft.core.Direction
 import net.minecraft.network.chat.Component
@@ -34,7 +33,6 @@ enum class BlockSide(val id: Int, val sideName: String) : StringRepresentable, T
     companion object {
         val BY_ID: IntFunction<BlockSide> =
             ByIdMap.continuous(BlockSide::id, BlockSide.entries.toTypedArray(), ByIdMap.OutOfBoundsStrategy.WRAP)
-        val CODEC: Codec<BlockSide> = StringRepresentable.fromValues(BlockSide::values)
         val STREAM_CODEC: StreamCodec<ByteBuf, BlockSide> = ByteBufCodecs.idMapper(BY_ID, BlockSide::id)
 
 
