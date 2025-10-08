@@ -1,0 +1,1 @@
+Dynamic Datapacks are generated on load. This should hopefully massively reduce the disk usage, as there won't be a ton of *_ore, *_dust, ... models and blockstates
