@@ -4,6 +4,7 @@ import net.minecraft.tags.TagKey
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockBehaviour
 import redcrafter07.processed.gui.RenderUtils
+import redcrafter07.processed.toSubscript
 
 class MaterialInfo(
     var types: Types,
@@ -12,7 +13,7 @@ class MaterialInfo(
     val identifier: String,
     var chemicalDescription: String
 ) {
-    constructor(identifier: String) : this(Types.None, NuggetVariant.LongHoriz, 0, identifier, "");
+    constructor(identifier: String) : this(Types.None, NuggetVariant.LongHoriz, 0, identifier, "")
 
     fun addType(type: Types): MaterialInfo {
         types = types and type
@@ -20,7 +21,7 @@ class MaterialInfo(
     }
 
     fun nuggetVariant(value: NuggetVariant): MaterialInfo {
-        nuggetVariant = value;
+        nuggetVariant = value
         return this
     }
 
@@ -28,7 +29,19 @@ class MaterialInfo(
         color = newColor
         return this
     }
+
     fun color(r: Int, g: Int, b: Int): MaterialInfo = color(RenderUtils.color(r, g, b))
+
+    /** Gets the chemical description based on the makeup of the material */
+    fun ofMaterials(vararg materials: Pair<Material, Int>): MaterialInfo {
+        var builder = StringBuilder()
+        for (material in materials) {
+            builder.append(material.first.info.chemicalDescription)
+            if (material.second != 1) builder.append(toSubscript(material.second.toString()))
+        }
+        this.chemicalDescription = builder.toString()
+        return this
+    }
 
     fun chemicalDescription(chemicalDescription: String): MaterialInfo {
         this.chemicalDescription = chemicalDescription

@@ -67,6 +67,8 @@
   "processed.material.aluminium": "Aluminium",
   "processed.material.titanium": "Titanium",
   "processed.material.nickel": "Nickel",
+  "processed.material.uranium": "Uranium",
+  "processed.material.nickle_titanium": "Nitinol",
 
   "processed.tier_0": "Rudimentary",
   "processed.tier_1": "Basic",

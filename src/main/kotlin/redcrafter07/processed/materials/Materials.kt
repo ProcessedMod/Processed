@@ -2,7 +2,6 @@ package redcrafter07.processed.materials
 
 import net.minecraft.tags.BlockTags
 import net.minecraft.tags.TagKey
-import net.minecraft.util.FastColor
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.state.BlockBehaviour
@@ -52,6 +51,16 @@ object Materials {
                     .requiresCorrectToolForDrops(),
                 BlockBehaviour.Properties.of().sound(SoundType.STONE).strength(5f, 10f).requiresCorrectToolForDrops(),
             )
+    val NICKEL_TITANIUM = MaterialInfo("nickle_titanium").color(0x8f, 0xa3, 0xa9).ofMaterials(
+        Pair(TITANIUM, 2),
+        Pair(NICKEL, 4),
+    ).addType(MaterialInfo.Types.Dust).addType(MaterialInfo.Types.IngotLike).addType(MaterialInfo.Types.MetalBlock)
+        .register(
+            BlockTags.NEEDS_DIAMOND_TOOL,
+            BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.BASEDRUM).strength(5f, 10f)
+                .requiresCorrectToolForDrops(),
+            BlockBehaviour.Properties.of().sound(SoundType.STONE).strength(5f, 10f).requiresCorrectToolForDrops(),
+        )
 
 
     fun register(
