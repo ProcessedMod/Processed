@@ -27,26 +27,11 @@ class ModBlockStateProvider(output: PackOutput, existingFileHelper: ExistingFile
 
         models().withExistingParent("block/ore_block", ResourceLocation.withDefaultNamespace("block/block"))
             .texture("layer0", rl("block/ore")).texture("layer1", rl("block/ore_overlay"))
-            .texture("particle", "#layer0").renderType("cutout").element().cube("#layer0")
-            .faces { dir, builder ->
+            .texture("particle", "#layer0").renderType("cutout").element().cube("#layer0").faces { dir, builder ->
                 builder.uvs(0f, 0f, 16f, 16f).cullface(dir).end()
             }.end().element().cube("#layer1").faces { dir, builder ->
                 builder.uvs(0f, 0f, 16f, 16f).cullface(dir).tintindex(1).end()
             }.end()
-
-        for (block in ModBlocks.METAL_BLOCKS) {
-            val modelRL = rl("block/metal_block")
-            val model = models().getExistingFile(modelRL)
-            simpleBlock(block.get(), model)
-            itemModels().withExistingParent(block.id.path, modelRL)
-        }
-
-        for (block in ModBlocks.STONE_ORE_BLOCKS) {
-            val modelRL = rl("block/ore_block")
-            val model = models().getExistingFile(modelRL)
-            simpleBlock(block.get(), model)
-            itemModels().withExistingParent(block.id.path, modelRL)
-        }
 
         for (block in ModBlocks.BLOCKS_POWERED_FURNACE) {
             val modelRL = ResourceLocation.withDefaultNamespace("block/blast_furnace")

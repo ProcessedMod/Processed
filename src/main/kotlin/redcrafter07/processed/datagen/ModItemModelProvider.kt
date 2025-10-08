@@ -17,15 +17,10 @@ class ModItemModelProvider(output: PackOutput, existingFileHelper: ExistingFileH
         simpleItem(ModItems.BLITZ_ORB)
         simpleItem(ModItems.WRENCH)
 
-        val dustModel = simpleModel("dust_item", "item/dust")
-        val ingotModel = simpleModel("ingot_item", "item/ingot")
-        val nuggetModel = simpleModel("nugget_item", "item/nugget")
-        val rawModel = simpleModel("raw_item", "item/raw_metal")
-
-        for (dustItem in ModItems.DUST_ITEMS) withExistingParent(dustItem.id.path, dustModel)
-        for (dustItem in ModItems.INGOT_ITEMS) withExistingParent(dustItem.id.path, ingotModel)
-        for (dustItem in ModItems.NUGGET_ITEMS) withExistingParent(dustItem.id.path, nuggetModel)
-        for (dustItem in ModItems.RAW_ITEMS) withExistingParent(dustItem.id.path, rawModel)
+        simpleModel("dust_item", "item/dust")
+        simpleModel("ingot_item", "item/ingot")
+        simpleModel("nugget_item", "item/nugget")
+        simpleModel("raw_item", "item/raw_metal")
     }
 
     private fun simpleItem(item: DeferredItem<*>) {
