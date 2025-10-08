@@ -30,12 +30,19 @@ object DynPackBuilder {
     fun addMaterialItems() {
         val dustModel = DelegatedModel(rl("item/dust_item")).get()
         val ingotModel = DelegatedModel(rl("item/ingot_item")).get()
-        val nuggetModel = DelegatedModel(rl("item/nugget_item")).get()
         val rawModel = DelegatedModel(rl("item/raw_item")).get()
+        val nuggetModels = listOf(
+            DelegatedModel(rl("item/nugget_item0")).get(),
+            DelegatedModel(rl("item/nugget_item1")).get(),
+            DelegatedModel(rl("item/nugget_item2")).get(),
+            DelegatedModel(rl("item/nugget_item3")).get(),
+        )
 
         for (item in ModItems.DUST_ITEMS) DynPackResources.addItemModel(item.id, dustModel)
         for (item in ModItems.INGOT_ITEMS) DynPackResources.addItemModel(item.id, ingotModel)
-        for (item in ModItems.NUGGET_ITEMS) DynPackResources.addItemModel(item.id, nuggetModel)
+        for (item in ModItems.NUGGET_ITEMS) DynPackResources.addItemModel(
+            item.id, nuggetModels[item.get().material.info.nuggetVariant.index]
+        )
         for (item in ModItems.RAW_ITEMS) DynPackResources.addItemModel(item.id, rawModel)
     }
 

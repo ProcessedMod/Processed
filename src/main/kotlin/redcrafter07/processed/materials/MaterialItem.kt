@@ -15,7 +15,7 @@ abstract class MaterialItem(val material: Material) : Item(DEFAULT_PROPERTIES) {
     override fun appendHoverText(
         stack: ItemStack, context: TooltipContext, tooltip: MutableList<Component?>, tooltipFlag: TooltipFlag
     ) {
-        tooltip.add(Component.literal(material.chemicalDescription).withStyle(ChatFormatting.YELLOW))
+        tooltip.add(Component.literal(material.info.chemicalDescription).withStyle(ChatFormatting.YELLOW))
         super.appendHoverText(stack, context, tooltip, tooltipFlag)
     }
 

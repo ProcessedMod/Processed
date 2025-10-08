@@ -31,8 +31,8 @@ object RegisterColorEvent {
         override fun getColor(stack: ItemStack, tintIndex: Int): Int {
             return when (val item = stack.item) {
                 is ItemColor -> item.getColor(stack, tintIndex)
-                is MaterialItem -> item.material.color
-                is MaterialBlockItem -> item.material.color
+                is MaterialItem -> item.material.info.color
+                is MaterialBlockItem -> item.material.info.color
                 else -> 0xFFFFFF
             }
         }
@@ -53,7 +53,7 @@ object RegisterColorEvent {
             ProcessedMod.LOG.info("BlockColorProvider: {}", state.block)
             return when (val block = state.block) {
                 is BlockColor -> block.getColor(state, level, pos, tintIndex)
-                is MaterialBlock -> block.material.color
+                is MaterialBlock -> block.material.info.color
                 else -> 0xFFFFFF
             }
         }

@@ -13,7 +13,12 @@ import redcrafter07.processed.block.machine_abstractions.TieredProcessedBlock
 import redcrafter07.processed.items.ModItems
 import redcrafter07.processed.materials.Material
 import redcrafter07.processed.materials.MaterialBlock
+import redcrafter07.processed.materials.MaterialBlock.MetalBlock
+import redcrafter07.processed.materials.MaterialBlock.OreBlock
 import redcrafter07.processed.materials.MaterialBlockItem
+import redcrafter07.processed.materials.MaterialBlockItem.MetalBlockItem
+import redcrafter07.processed.materials.MaterialBlockItem.OreBlockItem
+import redcrafter07.processed.materials.MaterialInfo
 import redcrafter07.processed.materials.Materials
 import redcrafter07.processed.multiblock.CasingBlock
 import java.util.function.BiFunction
@@ -36,16 +41,12 @@ object ModBlocks {
     val MATERIAL_BLOCK_ITEMS = ArrayList<DeferredItem<MaterialBlockItem>>()
 
     var METAL_BLOCKS = registerMaterialBlock(
-        Materials.MATERIALS,
-        Material::metalBlockPath,
-        { MaterialBlock.MetalBlock(it) },
-        { block, material -> MaterialBlockItem.MetalBlockItem(material, block) })
+        Materials.MATERIALS, Material::metalBlockPath, ::MetalBlock, ::MetalBlockItem, MaterialInfo.Types.MetalBlock
+    )
 
     var STONE_ORE_BLOCKS = registerMaterialBlock(
-        Materials.MATERIALS,
-        Material::oreBlockPath,
-        { MaterialBlock.OreBlock(it) },
-        { block, material -> MaterialBlockItem.OreBlockItem(material, block) })
+        Materials.MATERIALS, Material::oreBlockPath, ::OreBlock, ::OreBlockItem, MaterialInfo.Types.OreLike
+    )
 
 
     private fun <T : Block> registerBlock(id: String, block: Supplier<T>): DeferredBlock<T> {
@@ -58,11 +59,13 @@ object ModBlocks {
         materials: List<Material>,
         nameSupplier: Function<Material, String>,
         blockConstructor: Function<Material, T>,
-        itemConstructor: BiFunction<Block, Material, MaterialBlockItem>
+        itemConstructor: BiFunction<Block, Material, MaterialBlockItem>,
+        type: MaterialInfo.Types,
     ): List<DeferredBlock<T>> {
         val list = ArrayList<DeferredBlock<T>>()
 
         for (material in materials) {
+            if (!material.info.types.has(type)) continue
             val name = nameSupplier.apply(material)
             val regBlock = BLOCKS.register(name, Supplier { blockConstructor.apply(material) })
             list.add(regBlock)

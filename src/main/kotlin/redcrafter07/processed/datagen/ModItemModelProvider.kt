@@ -19,7 +19,10 @@ class ModItemModelProvider(output: PackOutput, existingFileHelper: ExistingFileH
 
         simpleModel("dust_item", "item/dust")
         simpleModel("ingot_item", "item/ingot")
-        simpleModel("nugget_item", "item/nugget")
+        simpleModel("nugget_item0", "item/nugget0")
+        simpleModel("nugget_item1", "item/nugget1")
+        simpleModel("nugget_item2", "item/nugget2")
+        simpleModel("nugget_item3", "item/nugget3")
         simpleModel("raw_item", "item/raw_metal")
     }
 

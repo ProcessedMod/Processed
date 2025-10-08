@@ -6,16 +6,16 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Block
 import redcrafter07.processed.Translations
 
-abstract class MaterialBlockItem(val material: Material, block: Block) : BlockItem(block, PROPS) {
+abstract class MaterialBlockItem(block: Block, val material: Material) : BlockItem(block, PROPS) {
     companion object {
         val PROPS: Properties = Properties().stacksTo(64)
     }
 
-    class MetalBlockItem(material: Material, block: Block) : MaterialBlockItem(material, block) {
+    class MetalBlockItem(block: Block, material: Material) : MaterialBlockItem(block, material) {
         override fun getName(stack: ItemStack): Component = Translations.materialMetalBlock(material)
     }
 
-    class OreBlockItem(material: Material, block: Block) : MaterialBlockItem(material, block) {
+    class OreBlockItem(block: Block, material: Material) : MaterialBlockItem(block, material) {
         override fun getName(stack: ItemStack): Component = Translations.materialOre(material)
     }
 }

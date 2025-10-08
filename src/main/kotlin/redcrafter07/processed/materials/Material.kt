@@ -10,17 +10,16 @@ import net.minecraft.world.level.block.state.BlockBehaviour
 import redcrafter07.processed.Translations
 
 class Material(
-    val identifier: String,
-    val color: Int,
-    val chemicalDescription: String,
+    val info: MaterialInfo,
     val materialTag: TagKey<Block>,
     val metalBlockProperties: BlockBehaviour.Properties,
     val oreBlockProperties: BlockBehaviour.Properties
 ) {
     val component: MutableComponent get() = Translations.materialName(identifier)
 
+    val identifier: String get() = info.identifier
     val dustPath: String get() = "${identifier}_dust"
-    val rawPath: String get() = "raw_$identifier"
+    val rawPath: String get() = "raw_${identifier}"
     val nuggetPath: String get() = "${identifier}_nugget"
     val ingotPath: String get() = "${identifier}_ingot"
     val metalBlockPath: String get() = "${identifier}_block"
@@ -31,5 +30,5 @@ class Material(
     val nuggetTag: TagKey<Item> get() = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "nuggets/$identifier"))
     val ingotTag: TagKey<Item> get() = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "ingots/$identifier"))
 
-    override fun toString(): String = "Material($chemicalDescription, $identifier)"
+    override fun toString(): String = "Material(${info.chemicalDescription}, $identifier)"
 }
