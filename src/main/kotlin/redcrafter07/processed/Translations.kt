@@ -34,6 +34,11 @@ object Translations {
     inline fun ioStateName(stateName: String) = t("processed.io_state.$stateName")
     inline fun blockSide(sideName: String) = t("processed.side.$sideName")
 
+    inline fun cableState(state: C) = t("processed.cable_state", state)
+    inline fun cableStateDisconnected() = t("processed.cable_state.disconnected")
+    inline fun cableStateConnected() = t("processed.cable_state.connected")
+    inline fun cableStateSplit() = t("processed.cable_state.disallowed")
+
     inline fun ioButtonMessage(name: C, state: IoState) = t("processed.io_button.message", name, state)
     inline fun ioButtonTooltip(state: IoState) = t("processed.io_button.tooltip", state)
 

@@ -1,3 +1,5 @@
+@file:Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+
 package redcrafter07.processed.block.cable
 
 import net.minecraft.core.BlockPos
@@ -9,6 +11,8 @@ import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
@@ -17,16 +21,19 @@ import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.client.model.data.ModelData
 import net.neoforged.neoforge.client.model.data.ModelProperty
 import net.neoforged.neoforge.energy.IEnergyStorage
-import redcrafter07.processed.ProcessedMod
+import redcrafter07.processed.Translations
+import redcrafter07.processed.block.WrenchInteractableBlock
 import redcrafter07.processed.block.machine_abstractions.BlockSide
 import redcrafter07.processed.block.machine_abstractions.EnergyCapableBlockEntity
 import redcrafter07.processed.block.tile_entities.ModTileEntities
 import redcrafter07.processed.materials.MaterialContainer
+import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.minus
+import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.toVec3
 import java.util.function.BiFunction
 import java.util.function.Consumer
 
 class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
-    BlockEntity(ModTileEntities.CABLE.get(), pos, blockState), EnergyCapableBlockEntity {
+    BlockEntity(ModTileEntities.CABLE.get(), pos, blockState), EnergyCapableBlockEntity, WrenchInteractableBlock {
 
     val connected = Connected()
     val disallowedConnections = Connected()
@@ -72,8 +79,7 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
                     val cap = level!!.getCapability(Capabilities.EnergyStorage.BLOCK, pos, direction.opposite)
                     if (cap != null && cap.canReceive()) outputs.compute(pos) { _, value ->
                         maxOf(
-                            value ?: 0,
-                            transferSpeed
+                            value ?: 0, transferSpeed
                         )
                     }
                 }
@@ -129,7 +135,6 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
         val level = level ?: return
         if (level.isClientSide || level !is ServerLevel) return
         for (direction in Direction.entries) connected[direction] = isConnected(level, direction)
-        ProcessedMod.LOG.info("Updating shape @ {}", blockPos)
         sync()
         traverse(worldPosition) { it.outputCacheInner = null }
     }
@@ -178,7 +183,6 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
 
         val level = level ?: return
         if (level.isClientSide) {
-            ProcessedMod.LOG.info("Updating client @ {}", blockPos)
             level.sendBlockUpdated(this.worldPosition, blockState, blockState, Block.UPDATE_ALL)
             requestModelDataUpdate()
         }
@@ -188,14 +192,53 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
         if (disallowedConnections[direction]) return false
         val pos = blockPos.relative(direction)
         val be = level.getBlockEntity(pos) ?: return false
-        if (be is CableBlockEntity) return true
+        if (be is CableBlockEntity) return !be.disallowedConnections[direction.opposite]
         val cap1 = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, null)
         return cap1 != null
     }
 
     override fun getModelData(): ModelData = ModelData.builder().with(TRANSMITTER_PROPERTY, connected).build()
 
+    override fun onWrenchUse(ctx: UseOnContext, state: BlockState) {
+        val level = level ?: return
+        if (level.isClientSide) return
+        val clickOffset = ctx.clickLocation - ctx.clickedPos.toVec3()
+        val direction = actualDirection(clickOffset.x, clickOffset.y, clickOffset.z, ctx.clickedFace)
+        disallowedConnections[direction] = !disallowedConnections[direction]
+        updateShape()
+        level.updateNeighborsAt(blockPos, blockState.block)
+
+        val player = ctx.player ?: return
+        if (player !is ServerPlayer) return
+        val state = if (disallowedConnections[direction]) Translations.cableStateSplit() else {
+            if (connected[direction]) Translations.cableStateConnected()
+            else Translations.cableStateDisconnected()
+        }
+        player.sendSystemMessage(Translations.cableState(state))
+    }
+
     companion object {
+        fun actualDirection(originalX: Double, originalY: Double, originalZ: Double, direction: Direction): Direction {
+            var x = originalX
+            var y = originalY
+            var z = originalZ
+            when (direction) {
+                Direction.WEST -> x = 0.5
+                Direction.EAST -> x = 0.5
+                Direction.DOWN -> y = 0.5
+                Direction.UP -> y = 0.5
+                Direction.NORTH -> z = 0.5
+                Direction.SOUTH -> z = 0.5
+            }
+            if (x < CableBlock.START) return Direction.WEST
+            if (x >= CableBlock.END) return Direction.EAST
+            if (y < CableBlock.START) return Direction.DOWN
+            if (y >= CableBlock.END) return Direction.UP
+            if (z < CableBlock.START) return Direction.NORTH
+            if (z >= CableBlock.END) return Direction.SOUTH
+            return direction
+        }
+
         val TRANSMITTER_PROPERTY = ModelProperty<Connected>()
     }
 
