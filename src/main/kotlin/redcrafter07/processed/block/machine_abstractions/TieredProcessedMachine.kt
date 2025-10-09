@@ -12,7 +12,7 @@ abstract class TieredProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, b
     ProcessedMachine(
         type, pos, blockState
     ) {
-    var tier = ProcessedTier.DEFAULT
+    var tier = ProcessedTier.None
         set(value) {
             val old = field
             field = value
@@ -20,14 +20,14 @@ abstract class TieredProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, b
         }
 
 
-    public override fun loadAdditional(nbt: CompoundTag, provider: HolderLookup.Provider) {
-        tier = ProcessedTier.TIERS[min(max(nbt.getInt("machine_tier"), 0), ProcessedTier.TIERS.size - 1)]
-        super.loadAdditional(nbt, provider)
+    public override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
+        tier = ProcessedTier.TIERS[min(max(tag.getInt("machine_tier"), 0), ProcessedTier.TIERS.size - 1)]
+        super.loadAdditional(tag, registries)
     }
 
-    public override fun saveAdditional(nbt: CompoundTag, provider: HolderLookup.Provider) {
-        nbt.putInt("machine_tier", tier.tier)
-        super.saveAdditional(nbt, provider)
+    public override fun saveAdditional(tag: CompoundTag, provider: HolderLookup.Provider) {
+        tag.putInt("machine_tier", tier.tier)
+        super.saveAdditional(tag, provider)
     }
 
     /**

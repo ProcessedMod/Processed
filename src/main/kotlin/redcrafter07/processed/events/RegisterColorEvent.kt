@@ -12,9 +12,7 @@ import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.block.ModBlocks
 import redcrafter07.processed.items.ModItems
-import redcrafter07.processed.materials.MaterialBlock
-import redcrafter07.processed.materials.MaterialBlockItem
-import redcrafter07.processed.materials.MaterialItem
+import redcrafter07.processed.materials.MaterialContainer
 
 @EventBusSubscriber(modid = ProcessedMod.ID, bus = EventBusSubscriber.Bus.MOD)
 object RegisterColorEvent {
@@ -30,9 +28,8 @@ object RegisterColorEvent {
     private object ItemColorProvider : ItemColor {
         override fun getColor(stack: ItemStack, tintIndex: Int): Int {
             return when (val item = stack.item) {
+                is MaterialContainer -> item.getColor(tintIndex) ?: 0xFFFFFF
                 is ItemColor -> item.getColor(stack, tintIndex)
-                is MaterialItem -> item.material.info.color
-                is MaterialBlockItem -> item.material.info.color
                 else -> 0xFFFFFF
             }
         }
@@ -40,20 +37,14 @@ object RegisterColorEvent {
 
     @SubscribeEvent
     fun registerBlockColors(event: RegisterColorHandlersEvent.Block) {
-        event.register(
-            BlockColorProvider, *ModBlocks.METAL_BLOCKS.stream().map { it.get() }.toList().toTypedArray()
-        )
-        event.register(
-            BlockColorProvider, *ModBlocks.STONE_ORE_BLOCKS.stream().map { it.get() }.toList().toTypedArray()
-        )
+        event.register(BlockColorProvider, *ModBlocks.MATERIAL_BLOCKS.stream().map { it.get() }.toList().toTypedArray())
     }
 
     private object BlockColorProvider : BlockColor {
         override fun getColor(state: BlockState, level: BlockAndTintGetter?, pos: BlockPos?, tintIndex: Int): Int {
-            ProcessedMod.LOG.info("BlockColorProvider: {}", state.block)
             return when (val block = state.block) {
+                is MaterialContainer -> block.getColor(tintIndex) ?: 0xFFFFFF
                 is BlockColor -> block.getColor(state, level, pos, tintIndex)
-                is MaterialBlock -> block.material.info.color
                 else -> 0xFFFFFF
             }
         }

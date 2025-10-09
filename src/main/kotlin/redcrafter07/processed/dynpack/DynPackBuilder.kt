@@ -16,6 +16,13 @@ object DynPackBuilder {
         val oreModel = DelegatedModel(oreRL).get()
         val metalBlockRL = rl("block/metal_block")
         val metalBlockModel = DelegatedModel(metalBlockRL).get()
+        val cableRL = rl("block/cable")
+        val cableModel = DelegatedModel(cableRL).get()
+
+        for (block in ModBlocks.CABLES) {
+            DynPackResources.addBlockState(block.id, createSimpleBlock(block.get(), cableRL).get())
+            DynPackResources.addItemModel(block.id, cableModel)
+        }
 
         for (block in ModBlocks.STONE_ORE_BLOCKS) {
             DynPackResources.addBlockState(block.id, createSimpleBlock(block.get(), oreRL).get())

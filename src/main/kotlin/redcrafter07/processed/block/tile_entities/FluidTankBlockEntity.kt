@@ -35,7 +35,6 @@ class FluidTankBlockEntity(pos: BlockPos, state: BlockState) :
         fluidHandler.setOnChange(this::sync)
     }
 
-
     override fun getUpdatePacket(): Packet<ClientGamePacketListener?>? {
         return ClientboundBlockEntityDataPacket.create(this)
     }

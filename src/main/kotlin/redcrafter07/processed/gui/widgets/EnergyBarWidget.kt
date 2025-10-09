@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import redcrafter07.processed.Translations
@@ -36,11 +37,12 @@ class EnergyBarWidget(
 
         fill(graphics, x + 1, y - 1 + height - energyHeight, width - 2, energyHeight, RenderUtils.ENERGY)
 
+        val onesFlag = Screen.hasShiftDown()
         if (isHovered) graphics.renderTooltip(
-            Minecraft.getInstance().font,
-            Translations.energyBarTooltip(getEnergyComponent(energy), getEnergyComponent(maxEnergy)),
-            mouseX,
-            mouseY
+            Minecraft.getInstance().font, Translations.energyBarTooltip(
+                getEnergyComponent(energy, onesFlag),
+                getEnergyComponent(maxEnergy, onesFlag),
+            ), mouseX, mouseY
         )
     }
 
@@ -57,5 +59,8 @@ class EnergyBarWidget(
             if (energy >= 2000) return Translations.energyBarUnitThousand(energy / 1000)
             return Translations.energyBarUnitOnes(energy)
         }
+
+        fun getEnergyComponent(energy: Int, keepAsOnes: Boolean): MutableComponent =
+            if (keepAsOnes) Translations.energyBarUnitOnes(energy) else getEnergyComponent(energy)
     }
 }

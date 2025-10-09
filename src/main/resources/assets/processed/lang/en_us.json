@@ -19,6 +19,7 @@
   "block.processed.powered_furnace.tooltip": "§7Smelts item using Power.",
   "block.processed.big_smelter": "Big Smelter",
   "block.processed.big_smelter.tooltip": "An arc furnace lol",
+  "block.processed.cable.tooltip": "Transfer speed: %s/t",
   "processed.pipe_state.normal": "Normal",
   "processed.pipe_state.push": "Push",
   "processed.pipe_state.pull": "Pull",
@@ -62,6 +63,7 @@
   "processed.material_raw": "Raw %s",
   "processed.material_metal_block": "%s Block",
   "processed.material_ore": "%s Ore",
+  "processed.material_cable": "%s Cable",
 
   "processed.material.steel": "Steel",
   "processed.material.aluminium": "Aluminium",

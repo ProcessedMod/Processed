@@ -17,6 +17,7 @@ object Translations {
     inline fun materialRaw(material: Material) = t("processed.material_raw", material)
     inline fun materialMetalBlock(material: Material) = t("processed.material_metal_block", material)
     inline fun materialOre(material: Material) = t("processed.material_ore", material)
+    inline fun materialCable(material: Material) = t("processed.material_cable", material)
     inline fun materialName(identifier: String) = t("processed.material.$identifier")
     inline fun blockItemTooltip(id: String) = t("block.processed.$id.tooltip")
     inline fun itemTooltip(id: String) = t("item.processed.$id.tooltip")
@@ -42,6 +43,8 @@ object Translations {
     inline fun energyBarUnitThousand(amount: Int) = t("processed.gui.widget.energy_bar.thousand", amount)
     inline fun energyBarUnitOnes(amount: Int) = t("processed.gui.widget.energy_bar.normal", amount)
     inline fun energyBarTooltip(amount: C, max: C) = t("processed.gui.widget.energy_bar", amount, max)
+
+    inline fun cableTransferSpeedTooltip(amount: C) = t("block.processed.cable.tooltip", amount)
 
     inline fun tieredMachineInfo(maxPower: C, nameColored: C) = t("processed.tiered_machine_info", maxPower, nameColored)
     inline fun poweredFurnaceName(tier: ProcessedTier) = t("block.processed.powered_furnace", tier)

@@ -20,17 +20,17 @@ class ProcessedTier(val tier: Int, val speedMultiplier: Int, val energyMultiplie
     fun scaledPower(basePower: Int): Int = basePower * energyMultiplier
 
     companion object {
-        val DEFAULT = ProcessedTier(-1, 0, 0)
+        val None = ProcessedTier(-1, 0, 0)
 
-        val TIERS = listOf(
-            ProcessedTier(0, 1, 1),         // Rudimentary (Steam age-ish?)
-            ProcessedTier(1, 3, 4),         // Basic
-            ProcessedTier(2, 9, 16),        // Advanced (Basic Fuel)
-            ProcessedTier(3, 27, 64),       // iEnergy Pro Max (Advanced Fuel)
-            ProcessedTier(4, 81, 256),      // Nuclear (Fission and bad Fusion)
-            ProcessedTier(5, 243, 1024),    // Quantum (Fusion)
-            ProcessedTier(6, 729, 4096),    // Void    (Void energy or sum idfk lmao)
-            ProcessedTier(7, 2187, 16384),  // Ultimate (Idk void energy but it uses more electricity lol)
-        )
+        val Rudimentary = ProcessedTier(0, 1, 1)     // Rudimentary (Steam age-ish?)
+        val Basic = ProcessedTier(1, 3, 4)           // Basic
+        val Advanced = ProcessedTier(2, 9, 16)       // Advanced (Basic Fuel)
+        val IEnergyProMax = ProcessedTier(3, 27, 64) // iEnergy Pro Max (Advanced Fuel)
+        val Nuclear = ProcessedTier(4, 81, 256)      // Nuclear (Fission and bad Fusion)
+        val Quantum = ProcessedTier(5, 243, 1024)    // Quantum (Fusion)
+        val Void = ProcessedTier(6, 729, 4096)       // Void    (Void energy or sum idfk lmao)
+        val Ultimate = ProcessedTier(7, 2187, 16384) // Ultimate (Idk void energy but it uses more electricity lol)
+
+        val TIERS = listOf(Rudimentary, Basic, Advanced, IEnergyProMax, Nuclear, Quantum, Void, Ultimate)
     }
 }

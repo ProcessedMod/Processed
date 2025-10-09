@@ -9,6 +9,7 @@ import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.block.ModBlocks
+import redcrafter07.processed.block.cable.CableBlockEntity
 import java.util.function.Supplier
 
 object ModTileEntities {
@@ -19,6 +20,7 @@ object ModTileEntities {
         register("powered_furnace", ::PoweredFurnaceBlockEntity, *ModBlocks.BLOCKS_POWERED_FURNACE.toTypedArray())
     val FLUID_TANK = register("fluid_tank", ::FluidTankBlockEntity, ModBlocks.FLUID_TANK)
     val BIG_SMELTER = register("big_smelter", ::BigSmelterBlockEntity, ModBlocks.BIG_SMELTER)
+    val CABLE = register("cable", ::CableBlockEntity, *ModBlocks.CABLES.toTypedArray())
 
     private fun <T : BlockEntity> register(
         name: String, blockEntity: BlockEntitySupplier<T>, vararg blocks: DeferredBlock<*>

@@ -11,9 +11,22 @@ class MaterialInfo(
     var nuggetVariant: NuggetVariant,
     var color: Int,
     val identifier: String,
-    var chemicalDescription: String
+    var chemicalDescription: String,
+    var extraData: MutableList<Any>,
 ) {
-    constructor(identifier: String) : this(Types.None, NuggetVariant.LongHoriz, 0, identifier, "")
+    constructor(identifier: String) : this(Types.None, NuggetVariant.LongHoriz, 0, identifier, "", ArrayList())
+
+    fun withExtraData(data: Any): MaterialInfo {
+        extraData.add(data)
+        return this
+    }
+
+    fun <T> getExtraData(clazz: Class<T>): T? {
+        for (data in extraData) {
+            @Suppress("UNCHECKED_CAST") if (data::class.java == clazz) return data as T
+        }
+        return null
+    }
 
     fun addType(type: Types): MaterialInfo {
         types = types and type
@@ -34,7 +47,7 @@ class MaterialInfo(
 
     /** Gets the chemical description based on the makeup of the material */
     fun ofMaterials(vararg materials: Pair<Material, Int>): MaterialInfo {
-        var builder = StringBuilder()
+        val builder = StringBuilder()
         for (material in materials) {
             builder.append(material.first.info.chemicalDescription)
             if (material.second != 1) builder.append(toSubscript(material.second.toString()))

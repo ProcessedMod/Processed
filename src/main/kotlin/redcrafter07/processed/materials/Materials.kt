@@ -6,6 +6,8 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument
+import redcrafter07.processed.block.machine_abstractions.ProcessedTier
+import redcrafter07.processed.block.cable.CableData
 
 object Materials {
     val MATERIALS = ArrayList<Material>()
@@ -21,7 +23,7 @@ object Materials {
     val STEEL =
         MaterialInfo("steel").color(0x49, 0x4b, 0x4d).chemicalDescription("Fe").addType(MaterialInfo.Types.MetalBlock)
             .addType(MaterialInfo.Types.IngotLike).addType(MaterialInfo.Types.Dust)
-            .nuggetVariant(MaterialInfo.NuggetVariant.LongVert).register(
+            .withExtraData(CableData(ProcessedTier.Basic)).nuggetVariant(MaterialInfo.NuggetVariant.LongVert).register(
                 BlockTags.NEEDS_IRON_TOOL,
                 BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.BASEDRUM).strength(5f, 10f)
                     .requiresCorrectToolForDrops(),
@@ -29,7 +31,8 @@ object Materials {
             )
     val NICKEL =
         MaterialInfo("nickel").color(0x4d, 0xd4, 0xa9).chemicalDescription("Ni").addType(MaterialInfo.Types.All)
-            .nuggetVariant(MaterialInfo.NuggetVariant.ShortHoriz).register(
+            .withExtraData(CableData(ProcessedTier.Advanced)).nuggetVariant(MaterialInfo.NuggetVariant.ShortHoriz)
+            .register(
                 BlockTags.NEEDS_IRON_TOOL,
                 BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.BASEDRUM).strength(5f, 10f)
                     .requiresCorrectToolForDrops(),
@@ -37,7 +40,7 @@ object Materials {
             )
     val TITANIUM =
         MaterialInfo("titanium").color(0xcf, 0x71, 0xaf).chemicalDescription("Ti").addType(MaterialInfo.Types.All)
-            .nuggetVariant(MaterialInfo.NuggetVariant.ShortVert).register(
+            .withExtraData(CableData(ProcessedTier.Void)).nuggetVariant(MaterialInfo.NuggetVariant.ShortVert).register(
                 BlockTags.NEEDS_DIAMOND_TOOL,
                 BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.BASEDRUM).strength(5f, 10f)
                     .requiresCorrectToolForDrops(),
@@ -45,7 +48,7 @@ object Materials {
             )
     val URANIUM =
         MaterialInfo("uranium").color(0x3c, 0xff, 0x49).chemicalDescription("U").addType(MaterialInfo.Types.All)
-            .register(
+            .withExtraData(CableData(ProcessedTier.Nuclear)).register(
                 BlockTags.NEEDS_DIAMOND_TOOL,
                 BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.BASEDRUM).strength(5f, 10f)
                     .requiresCorrectToolForDrops(),

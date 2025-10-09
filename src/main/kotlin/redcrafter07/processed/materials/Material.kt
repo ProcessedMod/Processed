@@ -30,5 +30,7 @@ class Material(
     val nuggetTag: TagKey<Item> get() = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "nuggets/$identifier"))
     val ingotTag: TagKey<Item> get() = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "ingots/$identifier"))
 
+    fun <T> getExtraData(clazz: Class<T>): T? = info.getExtraData(clazz)
+
     override fun toString(): String = "Material(${info.chemicalDescription}, $identifier)"
 }

@@ -9,7 +9,7 @@ import net.minecraft.world.item.TooltipFlag
 import redcrafter07.processed.Translations
 
 
-abstract class MaterialItem(val material: Material) : Item(DEFAULT_PROPERTIES) {
+abstract class MaterialItem(override val material: Material) : Item(DEFAULT_PROPERTIES), MaterialContainer {
     companion object { val DEFAULT_PROPERTIES: Properties = Properties().stacksTo(64); }
 
     override fun appendHoverText(
