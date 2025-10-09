@@ -16,6 +16,7 @@ import net.minecraft.world.phys.shapes.BooleanOp
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
+import redcrafter07.processed.items.ModItems
 import redcrafter07.processed.materials.Material
 import redcrafter07.processed.materials.MaterialContainer
 
@@ -51,24 +52,27 @@ class CableBlock(override val material: Material) : Block(Properties.of().noOccl
 
     override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
         val be = level.getBlockEntity(pos)
-        if (be is CableBlockEntity) return shapeCache.value[be.connected.value and 0b111111]
-        return Shapes.empty()
+        return if (be is CableBlockEntity) shapeCache.value[be.connected.value and 0b111111] else shapeCache.value[0] // Only center block
     }
 
     override fun getVisualShape(
         state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext
+
     ): VoxelShape = Shapes.empty()
 
-    override fun getShadeBrightness(state: BlockState, level: BlockGetter, pos: BlockPos): Float = 1f
     override fun propagatesSkylightDown(state: BlockState, level: BlockGetter, pos: BlockPos): Boolean = true
 
     companion object {
-        val SHAPE_CABLE_NORTH: VoxelShape = Shapes.box(.4, .4, 0.0, .6, .6, .4)
-        val SHAPE_CABLE_SOUTH: VoxelShape = Shapes.box(.4, .4, .6, .6, .6, 1.0)
-        val SHAPE_CABLE_WEST: VoxelShape = Shapes.box(0.0, .4, .4, .4, .6, .6)
-        val SHAPE_CABLE_EAST: VoxelShape = Shapes.box(.6, .4, .4, 1.0, .6, .6)
-        val SHAPE_CABLE_UP: VoxelShape = Shapes.box(.4, .6, .4, .6, 1.0, .6)
-        val SHAPE_CABLE_DOWN: VoxelShape = Shapes.box(.4, 0.0, .4, .6, .4, .6)
+        // Start of the center of the cable, determines the thickness of it.
+        const val START = .35
+        const val END = 1 - START
+
+        val SHAPE_CABLE_NORTH: VoxelShape = Shapes.box(START, START, 0.0, END, END, START)
+        val SHAPE_CABLE_SOUTH: VoxelShape = Shapes.box(START, START, END, END, END, 1.0)
+        val SHAPE_CABLE_WEST: VoxelShape = Shapes.box(0.0, START, START, START, END, END)
+        val SHAPE_CABLE_EAST: VoxelShape = Shapes.box(END, START, START, 1.0, END, END)
+        val SHAPE_CABLE_UP: VoxelShape = Shapes.box(START, END, START, END, 1.0, END)
+        val SHAPE_CABLE_DOWN: VoxelShape = Shapes.box(START, 0.0, START, END, START, END)
 
         val shapeCache = lazy { makeShapes() }
 
@@ -78,7 +82,7 @@ class CableBlock(override val material: Material) : Block(Properties.of().noOccl
             for (value in 0..<64) {
                 val connected = CableBlockEntity.Connected(value)
                 // center
-                var shape = Shapes.box(.4, .4, .4, .6, .6, .6)
+                var shape = Shapes.box(START, START, START, END, END, END)
                 if (connected[Direction.NORTH]) shape = Shapes.join(shape, SHAPE_CABLE_NORTH, BooleanOp.OR)
                 if (connected[Direction.SOUTH]) shape = Shapes.join(shape, SHAPE_CABLE_SOUTH, BooleanOp.OR)
                 if (connected[Direction.WEST]) shape = Shapes.join(shape, SHAPE_CABLE_WEST, BooleanOp.OR)

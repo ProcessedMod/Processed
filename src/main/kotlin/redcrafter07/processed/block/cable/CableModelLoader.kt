@@ -23,7 +23,6 @@ object CableModelLoader : IGeometryLoader<CableModelLoader.CableModel> {
             p2: Function<Material?, TextureAtlasSprite?>,
             p3: ModelState,
             p4: ItemOverrides
-        ): BakedModel = CableBakedModel
-
+        ): BakedModel = CableBakedModel(p0.transforms)
     }
 }
