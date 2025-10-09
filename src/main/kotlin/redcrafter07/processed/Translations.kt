@@ -17,6 +17,7 @@ object Translations {
     inline fun materialRaw(material: Material) = t("processed.material_raw", material)
     inline fun materialMetalBlock(material: Material) = t("processed.material_metal_block", material)
     inline fun materialOre(material: Material) = t("processed.material_ore", material)
+    inline fun materialRawMetalBlock(material: Material) = t("processed.material_raw_metal_block", material)
     inline fun materialCable(material: Material) = t("processed.material_cable", material)
     inline fun materialName(identifier: String) = t("processed.material.$identifier")
     inline fun blockItemTooltip(id: String) = t("block.processed.$id.tooltip")

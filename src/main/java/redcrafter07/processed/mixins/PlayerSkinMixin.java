@@ -9,10 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerSkin.class)
 abstract class PlayerSkinMixin {
-    @Inject(
-            at = @At("HEAD"),
-            method = {"capeTexture", "elytraTexture"}
-    )
+    @Inject(at = @At("HEAD"), method = {"capeTexture", "elytraTexture"}, cancellable = true)
     public void processed$capeTexture(CallbackInfoReturnable<ResourceLocation> cir) {
         // TODO: Milestone Capes :3
     }

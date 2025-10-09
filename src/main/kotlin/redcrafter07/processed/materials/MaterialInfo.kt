@@ -9,12 +9,15 @@ import redcrafter07.processed.toSubscript
 class MaterialInfo(
     var types: Types,
     var nuggetVariant: NuggetVariant,
+    var rawBlockVariant: RawBlockVariant,
     var color: Int,
     val identifier: String,
     var chemicalDescription: String,
     var extraData: MutableList<Any>,
 ) {
-    constructor(identifier: String) : this(Types.None, NuggetVariant.LongHoriz, 0, identifier, "", ArrayList())
+    constructor(identifier: String) : this(
+        Types.None, NuggetVariant.LongHoriz, RawBlockVariant.IronLike, 0, identifier, "", ArrayList()
+    )
 
     fun withExtraData(data: Any): MaterialInfo {
         extraData.add(data)
@@ -35,6 +38,11 @@ class MaterialInfo(
 
     fun nuggetVariant(value: NuggetVariant): MaterialInfo {
         nuggetVariant = value
+        return this
+    }
+
+    fun rawBlockVariant(value: RawBlockVariant): MaterialInfo {
+        rawBlockVariant = value
         return this
     }
 
@@ -71,12 +79,16 @@ class MaterialInfo(
         LongHoriz(0), LongVert(1), ShortHoriz(2), ShortVert(3);
     }
 
+    enum class RawBlockVariant(val index: Int) {
+        GoldLike(0), IronLike(1);
+    }
+
     // bitmap of material types.
     class Types private constructor(private val value: Int) {
         companion object {
             fun of(bit: Int): Types = Types(1.shl(bit))
 
-            /** Adds an Ore and a Raw Metal variant */
+            /** Adds an Ore, a Raw Metal, and a Raw Metal Block variant */
             val OreLike = of(0)
 
             /** Adds a Dust variant */

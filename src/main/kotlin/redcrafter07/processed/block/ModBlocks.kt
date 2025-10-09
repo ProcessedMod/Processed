@@ -16,10 +16,12 @@ import redcrafter07.processed.items.ModItems
 import redcrafter07.processed.materials.Material
 import redcrafter07.processed.materials.MaterialBlock.MetalBlock
 import redcrafter07.processed.materials.MaterialBlock.OreBlock
+import redcrafter07.processed.materials.MaterialBlock.RawMetalBlock
 import redcrafter07.processed.materials.MaterialBlockItem
 import redcrafter07.processed.materials.MaterialBlockItem.CableBlockItem
 import redcrafter07.processed.materials.MaterialBlockItem.MetalBlockItem
 import redcrafter07.processed.materials.MaterialBlockItem.OreBlockItem
+import redcrafter07.processed.materials.MaterialBlockItem.RawMetalBlockItem
 import redcrafter07.processed.materials.MaterialInfo
 import redcrafter07.processed.materials.Materials
 import redcrafter07.processed.multiblock.CasingBlock
@@ -47,15 +49,17 @@ object ModBlocks {
         Materials.MATERIALS, CableData::class.java, { m, _ -> "${m.identifier}_cable" }, ::CableBlock, ::CableBlockItem
     )
 
-    var METAL_BLOCKS = registerMaterialBlock(
+    val METAL_BLOCKS = registerMaterialBlock(
         Materials.MATERIALS, Material::metalBlockPath, ::MetalBlock, ::MetalBlockItem, MaterialInfo.Types.MetalBlock
     )
 
-    var STONE_ORE_BLOCKS = registerMaterialBlock(
-        Materials.MATERIALS, Material::oreBlockPath, ::OreBlock, ::OreBlockItem, MaterialInfo.Types.OreLike
+    val RAW_METAL_BLOCKS = registerMaterialBlock(
+        Materials.MATERIALS, Material::rawMetalBlockPath, ::RawMetalBlock, ::RawMetalBlockItem, MaterialInfo.Types.OreLike
     )
 
-
+    val STONE_ORE_BLOCKS = registerMaterialBlock(
+        Materials.MATERIALS, Material::oreBlockPath, ::OreBlock, ::OreBlockItem, MaterialInfo.Types.OreLike
+    )
 
     private fun <T : Block> registerBlock(id: String, block: Supplier<T>): DeferredBlock<T> {
         val regBlock = BLOCKS.register(id, block)

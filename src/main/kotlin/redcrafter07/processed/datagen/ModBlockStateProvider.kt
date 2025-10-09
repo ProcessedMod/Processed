@@ -24,6 +24,16 @@ class ModBlockStateProvider(output: PackOutput, existingFileHelper: ExistingFile
             .faces { dir, builder ->
                 builder.uvs(0f, 0f, 16f, 16f).cullface(dir).tintindex(0).end()
             }.end()
+        models().withExistingParent("block/raw_metal_block0", ResourceLocation.withDefaultNamespace("block/block"))
+            .texture("all", rl("block/raw_block0")).texture("particle", "#all").element().cube("#all")
+            .faces { dir, builder ->
+                builder.uvs(0f, 0f, 16f, 16f).cullface(dir).tintindex(0).end()
+            }.end()
+        models().withExistingParent("block/raw_metal_block1", ResourceLocation.withDefaultNamespace("block/block"))
+            .texture("all", rl("block/raw_block1")).texture("particle", "#all").element().cube("#all")
+            .faces { dir, builder ->
+                builder.uvs(0f, 0f, 16f, 16f).cullface(dir).tintindex(0).end()
+            }.end()
 
         models().withExistingParent("block/ore_block", ResourceLocation.withDefaultNamespace("block/block"))
             .texture("layer0", rl("block/ore")).texture("layer1", rl("block/ore_overlay"))

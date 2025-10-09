@@ -61,7 +61,8 @@
   "processed.material_ingot": "%s Ingot",
   "processed.material_nugget": "%s Nugget",
   "processed.material_raw": "Raw %s",
-  "processed.material_metal_block": "%s Block",
+  "processed.material_metal_block": "Block of %s",
+  "processed.material_raw_metal_block": "Raw Block of %s",
   "processed.material_ore": "%s Ore",
   "processed.material_cable": "%s Cable",
 

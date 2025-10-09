@@ -16,7 +16,6 @@ import net.minecraft.world.phys.shapes.BooleanOp
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
-import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.materials.Material
 import redcrafter07.processed.materials.MaterialContainer
 
@@ -53,7 +52,6 @@ class CableBlock(override val material: Material) : Block(Properties.of().noOccl
     override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
         val be = level.getBlockEntity(pos)
         if (be is CableBlockEntity) return shapeCache.value[be.connected.value and 0b111111]
-        ProcessedMod.LOG.info("Failed to get be :<")
         return Shapes.empty()
     }
 

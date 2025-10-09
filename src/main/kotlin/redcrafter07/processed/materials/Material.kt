@@ -23,6 +23,7 @@ class Material(
     val nuggetPath: String get() = "${identifier}_nugget"
     val ingotPath: String get() = "${identifier}_ingot"
     val metalBlockPath: String get() = "${identifier}_block"
+    val rawMetalBlockPath: String get() = "raw_${identifier}_block"
     val oreBlockPath: String get() = "${identifier}_ore"
 
     val dustTag: TagKey<Item> get() = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "dusts/$identifier"))

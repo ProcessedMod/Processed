@@ -14,7 +14,8 @@ object Materials {
 
     val ALUMINIUM =
         MaterialInfo("aluminium").color(0xd0, 0xd5, 0xd9).chemicalDescription("Al").addType(MaterialInfo.Types.All)
-            .nuggetVariant(MaterialInfo.NuggetVariant.LongHoriz).register(
+            .nuggetVariant(MaterialInfo.NuggetVariant.LongHoriz).rawBlockVariant(MaterialInfo.RawBlockVariant.GoldLike)
+            .register(
                 BlockTags.NEEDS_STONE_TOOL,
                 BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.BASEDRUM).strength(5f, 10f)
                     .requiresCorrectToolForDrops(),
@@ -40,7 +41,8 @@ object Materials {
             )
     val TITANIUM =
         MaterialInfo("titanium").color(0xcf, 0x71, 0xaf).chemicalDescription("Ti").addType(MaterialInfo.Types.All)
-            .withExtraData(CableData(ProcessedTier.Void)).nuggetVariant(MaterialInfo.NuggetVariant.ShortVert).register(
+            .withExtraData(CableData(ProcessedTier.Void)).nuggetVariant(MaterialInfo.NuggetVariant.ShortVert)
+            .rawBlockVariant(MaterialInfo.RawBlockVariant.GoldLike).register(
                 BlockTags.NEEDS_DIAMOND_TOOL,
                 BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.BASEDRUM).strength(5f, 10f)
                     .requiresCorrectToolForDrops(),

@@ -37,6 +37,10 @@ abstract class MaterialBlockItem(block: Block, override val material: Material) 
         override fun getName(stack: ItemStack): Component = Translations.materialOre(material)
     }
 
+    class RawMetalBlockItem(block: Block, material: Material) : MaterialBlockItem(block, material) {
+        override fun getName(stack: ItemStack): Component = Translations.materialRawMetalBlock(material)
+    }
+
     class CableBlockItem(block: Block, material: Material) : MaterialBlockItem(block, material) {
         override fun getName(stack: ItemStack): Component = Translations.materialCable(material)
 
