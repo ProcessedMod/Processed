@@ -51,6 +51,7 @@ class CableBlock(override val material: Material) : Block(Properties.of().noOccl
     }
 
     override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
+        if (context.isHoldingItem(ModItems.WRENCH.get())) return Shapes.block()
         val be = level.getBlockEntity(pos)
         return if (be is CableBlockEntity) shapeCache.value[be.connected.value and 0b111111] else shapeCache.value[0] // Only center block
     }
