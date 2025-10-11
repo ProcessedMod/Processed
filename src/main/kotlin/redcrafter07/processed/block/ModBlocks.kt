@@ -8,7 +8,7 @@ import net.neoforged.neoforge.registries.DeferredBlock
 import net.neoforged.neoforge.registries.DeferredItem
 import net.neoforged.neoforge.registries.DeferredRegister
 import redcrafter07.processed.ProcessedMod
-import redcrafter07.processed.block.machine_abstractions.ProcessedTier
+import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.block.machine_abstractions.TieredProcessedBlock
 import redcrafter07.processed.block.cable.CableBlock
 import redcrafter07.processed.block.cable.CableData

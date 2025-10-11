@@ -4,7 +4,6 @@ package redcrafter07.processed
 
 import net.neoforged.neoforge.common.TranslatableEnum
 import redcrafter07.processed.block.machine_abstractions.IoState
-import redcrafter07.processed.block.machine_abstractions.ProcessedTier
 import redcrafter07.processed.items.WrenchMode
 import redcrafter07.processed.materials.Material
 import net.minecraft.network.chat.Component as C

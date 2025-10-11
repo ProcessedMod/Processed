@@ -6,7 +6,7 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument
-import redcrafter07.processed.block.machine_abstractions.ProcessedTier
+import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.block.cable.CableData
 
 object Materials {

@@ -5,6 +5,7 @@ import net.minecraft.core.HolderLookup
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
+import redcrafter07.processed.ProcessedTier
 import kotlin.math.max
 import kotlin.math.min
 
@@ -39,14 +40,14 @@ abstract class TieredProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, b
     }
 
     protected fun useScaledEnergyCapability(capacity: Int) {
-        useEnergyCapability(tier.scaledPower(capacity), tier.maxPower)
+        useEnergyCapability(tier.scalePower(capacity), tier.maxPower)
     }
 
     protected fun useScaledOutputEnergyCapability(capacity: Int) {
-        useOutputEnergyCapability(tier.scaledPower(capacity), tier.maxPower)
+        useOutputEnergyCapability(tier.scalePower(capacity), tier.maxPower)
     }
 
-    protected fun useScaledPower(amps: Int): Boolean {
-        return usePower(tier.powerUsageForAmps(amps))
+    protected fun useScaledPower(baseEnergy: Int): Boolean {
+        return usePower(tier.scalePower(baseEnergy))
     }
 }

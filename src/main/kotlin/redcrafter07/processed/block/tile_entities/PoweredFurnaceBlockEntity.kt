@@ -15,9 +15,9 @@ import net.minecraft.world.item.crafting.SingleRecipeInput
 import net.minecraft.world.item.crafting.SmeltingRecipe
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
+import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.Translations
 import redcrafter07.processed.block.machine_abstractions.IoState
-import redcrafter07.processed.block.machine_abstractions.ProcessedTier
 import redcrafter07.processed.block.machine_abstractions.TieredProcessedMachine
 import redcrafter07.processed.gui.PoweredFurnaceMenu
 
@@ -55,7 +55,7 @@ class PoweredFurnaceBlockEntity(pos: BlockPos, blockState: BlockState) :
 
     override fun commonTick(level: Level, pos: BlockPos, state: BlockState) {
         if (hasRecipeAndSync()) {
-            if (!useScaledPower(1)) {
+            if (!useScaledPower(8)) {
                 if (progress <= 0) return
                 progress -= tier.speedMultiplier * 2
                 if (progress < 0) progress = 0
