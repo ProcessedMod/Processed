@@ -9,19 +9,14 @@ import net.neoforged.neoforge.registries.DeferredItem
 import net.neoforged.neoforge.registries.DeferredRegister
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.ProcessedTier
-import redcrafter07.processed.block.machine_abstractions.TieredProcessedBlock
 import redcrafter07.processed.block.cable.CableBlock
 import redcrafter07.processed.block.cable.CableData
+import redcrafter07.processed.block.machine_abstractions.TieredProcessedBlock
 import redcrafter07.processed.items.ModItems
 import redcrafter07.processed.materials.Material
-import redcrafter07.processed.materials.MaterialBlock.MetalBlock
-import redcrafter07.processed.materials.MaterialBlock.OreBlock
-import redcrafter07.processed.materials.MaterialBlock.RawMetalBlock
+import redcrafter07.processed.materials.MaterialBlock.*
 import redcrafter07.processed.materials.MaterialBlockItem
-import redcrafter07.processed.materials.MaterialBlockItem.CableBlockItem
-import redcrafter07.processed.materials.MaterialBlockItem.MetalBlockItem
-import redcrafter07.processed.materials.MaterialBlockItem.OreBlockItem
-import redcrafter07.processed.materials.MaterialBlockItem.RawMetalBlockItem
+import redcrafter07.processed.materials.MaterialBlockItem.*
 import redcrafter07.processed.materials.MaterialInfo
 import redcrafter07.processed.materials.Materials
 import redcrafter07.processed.multiblock.CasingBlock
@@ -41,6 +36,7 @@ object ModBlocks {
     }
     val FLUID_TANK = registerBlock("fluid_tank", ::FluidTankBlock)
     val BLOCKS_POWERED_FURNACE = registerTieredBlock("powered_furnace", ProcessedTier.TIERS, ::PoweredFurnaceBlock)
+    val CREATIVE_POWER_SOURCE = registerTieredBlock("creative_power_source", ProcessedTier.TIERS, ::CreativePowerSourceBlock)
     val BASIC_CASING = registerBlock("basic_casing") { CasingBlock(BlockBehaviour.Properties.of()) }
     val BIG_SMELTER = registerBlock("big_smelter", ::BigSmelterBlock)
 
@@ -54,7 +50,11 @@ object ModBlocks {
     )
 
     val RAW_METAL_BLOCKS = registerMaterialBlock(
-        Materials.MATERIALS, Material::rawMetalBlockPath, ::RawMetalBlock, ::RawMetalBlockItem, MaterialInfo.Types.OreLike
+        Materials.MATERIALS,
+        Material::rawMetalBlockPath,
+        ::RawMetalBlock,
+        ::RawMetalBlockItem,
+        MaterialInfo.Types.OreLike
     )
 
     val STONE_ORE_BLOCKS = registerMaterialBlock(

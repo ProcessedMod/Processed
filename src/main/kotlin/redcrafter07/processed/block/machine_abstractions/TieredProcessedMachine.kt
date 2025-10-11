@@ -13,7 +13,7 @@ abstract class TieredProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, b
     ProcessedMachine(
         type, pos, blockState
     ) {
-    var tier = ProcessedTier.None
+    override var tier = ProcessedTier.None
         set(value) {
             val old = field
             field = value

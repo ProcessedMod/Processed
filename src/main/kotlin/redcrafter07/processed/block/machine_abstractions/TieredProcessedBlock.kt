@@ -12,7 +12,7 @@ import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.Translations
 import redcrafter07.processed.gui.widgets.EnergyBarWidget
 
-abstract class TieredProcessedBlock(
+open class TieredProcessedBlock(
     properties: Properties,
     val baseName: String,
     val tier: ProcessedTier,

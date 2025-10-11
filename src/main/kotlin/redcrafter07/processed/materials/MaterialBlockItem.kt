@@ -8,7 +8,6 @@ import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.level.block.Block
 import redcrafter07.processed.Translations
 import redcrafter07.processed.block.cable.CableData
-import redcrafter07.processed.gui.widgets.EnergyBarWidget
 
 abstract class MaterialBlockItem(block: Block, override val material: Material) : BlockItem(block, PROPS),
     MaterialContainer {
@@ -48,10 +47,7 @@ abstract class MaterialBlockItem(block: Block, override val material: Material) 
             stack: ItemStack, context: TooltipContext, tooltip: MutableList<Component>, tooltipFlag: TooltipFlag
         ) {
             val data = material.getExtraData(CableData::class.java) ?: return
-            val formatted = if (tooltipFlag.hasShiftDown()) Translations.energyBarUnitOnes(data.transferRate)
-            else EnergyBarWidget.getEnergyComponent(data.transferRate)
-
-            tooltip.add(Translations.cableTransferSpeedTooltip(formatted))
+            tooltip.add(Translations.cableTransferSpeedTooltip(data.tier.nameColored))
         }
     }
 }

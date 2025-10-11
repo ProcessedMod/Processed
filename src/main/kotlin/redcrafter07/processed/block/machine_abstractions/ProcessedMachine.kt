@@ -24,6 +24,8 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import net.neoforged.neoforge.items.IItemHandler
 import net.neoforged.neoforge.items.IItemHandlerModifiable
 import net.neoforged.neoforge.items.wrapper.EmptyItemHandler
+import redcrafter07.processed.ProcessedPower
+import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.block.WrenchInteractableBlock
 import redcrafter07.processed.block.tile_entities.capabilities.*
 import redcrafter07.processed.gui.ConfigScreen
@@ -34,6 +36,8 @@ abstract class ProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, blockSt
     companion object {
         val EMPTY_ITEM_HANDLER = EmptyItemHandler()
     }
+
+    abstract val tier: ProcessedTier
 
     val sides: MutableList<IoState> = listOf(
         IoState.None,
@@ -112,8 +116,8 @@ abstract class ProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, blockSt
         }
     }
 
-    override fun energyCapabilityForSide(side: BlockSide?, state: BlockState): IEnergyStorage? =
-        capabilityHandlers.energyStore
+    override fun energyCapabilityForSide(side: BlockSide?, state: BlockState): ProcessedPower? =
+        capabilityHandlers.energyCapability
 
     override fun itemCapabilityForSide(side: BlockSide?, state: BlockState): IItemHandler? =
         if (side == null) null else capabilityHandlers.getItemHandlerForState(getSide(true, side))
@@ -361,18 +365,23 @@ abstract class ProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, blockSt
     val extraFluidHandler: FluidHandlerModifiable get() = getFluidCapability(IoState.Extra)
     val supportedFluidHandlers: Set<IoState> get() = capabilityHandlers.supportedFluidHandlers
 
-
     class CapabilityHandlers(private val attachedMachine: ProcessedMachine) : INBTSerializable<CompoundTag> {
         var supportedItemHandlers = hashSetOf(IoState.None).toMutableSet()
         var supportedFluidHandlers = hashSetOf(IoState.None).toMutableSet()
 
-
-        var energyStore: ProcessedEnergyHandler<CompoundTag>? = null
+        var energyStore: ProcessedEnergyHandler<CompoundTag>?
+            get() = energyCapability?.energyStore
             set(value) {
-                field?.setOnChange(null)
-                value?.setOnChange(attachedMachine::sync)
-                field = value
+                energyCapability?.energyStore?.setOnChange(null)
+                if (value == null) energyCapability = null
+                else {
+                    value.setOnChange(attachedMachine::sync)
+                    energyCapability = ProcessedPowerStore(attachedMachine.tier, value)
+                }
             }
+
+        var energyCapability: ProcessedPowerStore<ProcessedEnergyHandler<CompoundTag>>? = null
+            private set
 
         private var inputItemHandler: ProcessedItemHandler<CompoundTag>? = null
         private var outputItemHandler: ProcessedItemHandler<CompoundTag>? = null
@@ -460,7 +469,7 @@ abstract class ProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, blockSt
             val tag = CompoundTag()
 
             // energy
-            val energyStoreNbt = energyStore?.serializeNBT(provider)
+            val energyStoreNbt = energyCapability?.energyStore?.serializeNBT(provider)
 
             if (energyStoreNbt != null) tag.put("energyStore", energyStoreNbt)
 
@@ -493,7 +502,7 @@ abstract class ProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, blockSt
 
         override fun deserializeNBT(provider: HolderLookup.Provider, tag: CompoundTag) {
             // energy
-            if (tag.contains("energyStore", 10)) energyStore?.deserializeNBT(
+            if (tag.contains("energyStore", 10)) energyCapability?.energyStore?.deserializeNBT(
                 provider, tag.getCompound("energyStore")
             )
 

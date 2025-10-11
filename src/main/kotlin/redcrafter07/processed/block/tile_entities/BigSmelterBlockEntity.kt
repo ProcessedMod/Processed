@@ -7,6 +7,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.level.block.state.BlockState
 import org.joml.Vector2i
+import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.Translations
 import redcrafter07.processed.block.ModBlocks
 import redcrafter07.processed.multiblock.BlockMapMultiblockValidator
@@ -58,4 +59,6 @@ class BigSmelterBlockEntity(pos: BlockPos, blockState: BlockState) :
     )
     override fun createMenu(p0: Int, p1: Inventory, p2: Player): AbstractContainerMenu? = null
     override fun getDisplayName(): Component = Translations.bigSmelterName()
+
+    override val tier: ProcessedTier = ProcessedTier.Advanced
 }

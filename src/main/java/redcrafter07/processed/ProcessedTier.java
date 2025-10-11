@@ -31,6 +31,15 @@ public record ProcessedTier(int tier, int speedMultiplier, int energyMultiplier)
         return basePower * energyMultiplier;
     }
 
+    public @NotNull ProcessedTier min(@NotNull ProcessedTier other) {
+        return other.tier >= tier ? this : other;
+    }
+
+    /// Returns if a cable of this tier can insert into some target tier.
+    public boolean canInsertEnergy(@NotNull ProcessedTier target) {
+        return target.tier <= tier;
+    }
+
     @NotNull
     public static ProcessedTier None = new ProcessedTier(-1, 0, 0);
 

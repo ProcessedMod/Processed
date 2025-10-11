@@ -48,6 +48,12 @@ class ModBlockStateProvider(output: PackOutput, existingFileHelper: ExistingFile
             simpleBlock(block.get(), models().getExistingFile(modelRL))
             itemModels().withExistingParent(block.id.path, modelRL)
         }
+
+        for (block in ModBlocks.CREATIVE_POWER_SOURCE) {
+            val modelRL = ResourceLocation.withDefaultNamespace("block/redstone_block")
+            simpleBlock(block.get(), models().getExistingFile(modelRL))
+            itemModels().withExistingParent(block.id.path, modelRL)
+        }
     }
 
     private fun blockWithItem(blockRegistryObject: DeferredBlock<*>, model: ModelFile) {

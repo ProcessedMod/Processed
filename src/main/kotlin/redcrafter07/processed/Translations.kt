@@ -49,7 +49,7 @@ object Translations {
     inline fun energyBarUnitOnes(amount: Int) = t("processed.gui.widget.energy_bar.normal", amount)
     inline fun energyBarTooltip(amount: C, max: C) = t("processed.gui.widget.energy_bar", amount, max)
 
-    inline fun cableTransferSpeedTooltip(amount: C) = t("block.processed.cable.tooltip", amount)
+    inline fun cableTransferSpeedTooltip(tier: C) = t("block.processed.cable.tooltip", tier)
 
     inline fun tieredMachineInfo(maxPower: C, nameColored: C) = t("processed.tiered_machine_info", maxPower, nameColored)
     inline fun poweredFurnaceName(tier: ProcessedTier) = t("block.processed.powered_furnace", tier)

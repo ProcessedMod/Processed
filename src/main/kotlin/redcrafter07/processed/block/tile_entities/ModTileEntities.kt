@@ -21,6 +21,7 @@ object ModTileEntities {
     val FLUID_TANK = register("fluid_tank", ::FluidTankBlockEntity, ModBlocks.FLUID_TANK)
     val BIG_SMELTER = register("big_smelter", ::BigSmelterBlockEntity, ModBlocks.BIG_SMELTER)
     val CABLE = register("cable", ::CableBlockEntity, *ModBlocks.CABLES.toTypedArray())
+    val CREATIVE_POWER_SOURCE = register("creative_power_source", ::CreativePowerSourceBlockEntity, *ModBlocks.CREATIVE_POWER_SOURCE.toTypedArray())
 
     private fun <T : BlockEntity> register(
         name: String, blockEntity: BlockEntitySupplier<T>, vararg blocks: DeferredBlock<*>

@@ -19,7 +19,8 @@
   "block.processed.powered_furnace.tooltip": "§7Smelts item using Power.",
   "block.processed.big_smelter": "Big Smelter",
   "block.processed.big_smelter.tooltip": "An arc furnace lol",
-  "block.processed.cable.tooltip": "Transfer speed: %s/t",
+  "block.processed.cable.tooltip": "Cable Tier: %s",
+  "block.creative_power_source": "%d Creative Power Source",
 
   "processed.cable_state.disconnected": "Disconnected",
   "processed.cable_state.connected": "Connected",
@@ -88,5 +89,5 @@
   "processed.tier_6.colored": "§6Void§r",
   "processed.tier_7.colored": "§4Ultimate§r",
 
-  "processed.tiered_machine_info": "§7Max Power: %s§a/t (%s§a)§f"
+  "processed.tiered_machine_info": "§7Max Power: %s§a/t of %s  §aPower"
 }

@@ -13,6 +13,7 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent
 import net.neoforged.neoforge.event.AddPackFindersEvent
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
 import redcrafter07.processed.ProcessedMod
+import redcrafter07.processed.ProcessedPower
 import redcrafter07.processed.block.machine_abstractions.BlockSide
 import redcrafter07.processed.block.machine_abstractions.EnergyCapableBlockEntity
 import redcrafter07.processed.block.machine_abstractions.FluidCapableBlockEntity
@@ -81,7 +82,7 @@ object Registering {
             *itemCapable(blocks),
         )
         event.registerBlock(
-            Capabilities.EnergyStorage.BLOCK,
+            ProcessedPower.BLOCK,
             { _, _, state, blockEntity, side ->
                 if (blockEntity is EnergyCapableBlockEntity) {
                     return@registerBlock if (side == null) blockEntity.energyCapabilityForSide(null, state)
