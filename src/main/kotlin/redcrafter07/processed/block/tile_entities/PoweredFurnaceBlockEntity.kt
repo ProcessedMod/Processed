@@ -23,6 +23,7 @@ import redcrafter07.processed.gui.PoweredFurnaceMenu
 
 class PoweredFurnaceBlockEntity(pos: BlockPos, blockState: BlockState) :
     TieredProcessedMachine(ModTileEntities.POWERED_FURNACE.get(), pos, blockState) {
+
     var progress = 0
     var maxProgress = 78
 
@@ -51,7 +52,6 @@ class PoweredFurnaceBlockEntity(pos: BlockPos, blockState: BlockState) :
     }
 
     public override fun onTierChanged(oldTier: ProcessedTier, newTier: ProcessedTier) = useScaledEnergyCapability(1000)
-
 
     override fun commonTick(level: Level, pos: BlockPos, state: BlockState) {
         if (hasRecipeAndSync()) {

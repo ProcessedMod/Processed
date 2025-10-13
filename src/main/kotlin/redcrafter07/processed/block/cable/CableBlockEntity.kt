@@ -48,11 +48,11 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
 
     val energyHandler = object : IEnergyStorage {
         override fun receiveEnergy(amount: Int, sim: Boolean): Int {
-            val lvl = level ?: return amount
+            val lvl = level ?: return 0
             var energyLeft = amount
 
             for (entry in outputs.entries) {
-                if (energyLeft <= 0) return 0
+                if (energyLeft <= 0) return amount
                 val cap: IEnergyStorage
                 val cap1 = lvl.getCapability(Capabilities.EnergyStorage.BLOCK, entry.key, entry.value.second)
                 if (cap1 != null) cap = cap1
@@ -63,12 +63,12 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
                 }
 
                 try {
-                    energyLeft = cap.receiveEnergy(energyLeft, sim)
+                    energyLeft -= cap.receiveEnergy(energyLeft, sim)
                 } catch (_: Exception) {
                 }
             }
 
-            return energyLeft
+            return amount - energyLeft
         }
 
         override fun extractEnergy(p0: Int, p1: Boolean): Int = 0
