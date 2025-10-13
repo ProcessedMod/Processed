@@ -4,7 +4,9 @@ import net.minecraft.core.BlockPos
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.EntityBlock
 import net.neoforged.bus.api.SubscribeEvent
+import net.neoforged.fml.ModList
 import net.neoforged.fml.common.EventBusSubscriber
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent
 import net.neoforged.neoforge.client.event.EntityRenderersEvent
@@ -24,6 +26,7 @@ import redcrafter07.processed.block.tile_entities.ModTileEntities
 import redcrafter07.processed.dynpack.DynPackSource
 import redcrafter07.processed.gui.GenericMachineMenuScreen
 import redcrafter07.processed.gui.ModMenuTypes
+import redcrafter07.processed.integration.theoneprobe.TheOneProbeIntegration
 import redcrafter07.processed.network.IOChangePacket
 import redcrafter07.processed.network.MultiblockDestroyPacket
 import redcrafter07.processed.network.WrenchModeChangePacket
@@ -140,4 +143,9 @@ object Registering {
 
     @SubscribeEvent
     fun registerModelLoaders(e: ModelEvent.RegisterGeometryLoaders) = e.register(rl("cable"), CableModelLoader)
+
+    @SubscribeEvent
+    fun loadComplete(e: FMLLoadCompleteEvent) {
+        e.enqueueWork { if (ModList.get().isLoaded("theoneprobe")) TheOneProbeIntegration.init() }
+    }
 }

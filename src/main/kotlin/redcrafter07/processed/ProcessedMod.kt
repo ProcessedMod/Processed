@@ -16,13 +16,13 @@ import redcrafter07.processed.items.ModItems
 fun rl(path: String): ResourceLocation = ResourceLocation.fromNamespaceAndPath(ProcessedMod.ID, path)
 
 @Mod(ProcessedMod.ID)
-class ProcessedMod {
+class ProcessedMod(bus: IEventBus, modContainer: ModContainer) {
     companion object {
         const val ID = "processed"
         val LOG: Logger = LoggerFactory.getLogger(ID)
     }
 
-    constructor(bus: IEventBus, modContainer: ModContainer) {
+    init {
         ModBlocks.BLOCKS.register(bus)
         ModItems.ITEMS.register(bus)
         ModItemGroup.CREATIVE_MODE_TABS.register(bus)

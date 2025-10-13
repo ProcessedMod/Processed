@@ -112,6 +112,9 @@ dependencies {
     implementation "thedarkcolour:kotlinforforge-neoforge:$kff_version"
 
     runtimeOnly "mekanism:Mekanism:1.21-10.6.7.54" // Mekanism
+    compileOnly "mcjty.theoneprobe:theoneprobe:1.21_neo-12.0.4-6"
+
+    localRuntime "mcjty.theoneprobe:theoneprobe:1.21_neo-12.0.4-6"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

@@ -120,10 +120,12 @@ abstract class ProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, blockSt
         capabilityHandlers.energyCapability
 
     override fun itemCapabilityForSide(side: BlockSide?, state: BlockState): IItemHandler? =
-        if (side == null) null else capabilityHandlers.getItemHandlerForState(getSide(true, side))
+        if (side == null) capabilityHandlers.mergedItemHandlers
+        else capabilityHandlers.getItemHandlerForState(getSide(true, side))
 
     override fun fluidCapabilityForSide(side: BlockSide?, state: BlockState): IFluidHandler? =
-        if (side == null) null else capabilityHandlers.getFluidHandlerForState(getSide(false, side))
+        if (side == null) capabilityHandlers.mergedFluidHandlers
+        else capabilityHandlers.getFluidHandlerForState(getSide(false, side))
 
     fun handleTick(level: Level, pos: BlockPos, state: BlockState) {
         tickNoProcessing(level, pos, state)
@@ -395,6 +397,10 @@ abstract class ProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, blockSt
         private var extraFluidHandler: ProcessedFluidHandler<CompoundTag>? = null
         private val mergedIoFluidCapabilityHandler: FluidHandlerModifiable = MergedIoFluidCapability(this)
 
+        var mergedItemHandlers: MergedItemCapability = MergedItemCapability(listOf())
+            private set
+        var mergedFluidHandlers: MergedFluidCapability = MergedFluidCapability(listOf())
+            private set
 
         fun getItemHandlerForState(state: IoState): IItemHandlerModifiable? {
             return when (state) {
@@ -427,6 +433,11 @@ abstract class ProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, blockSt
                 IoState.Output -> outputItemHandler = handler
                 IoState.Additional -> additionalItemHandler = handler
                 IoState.Extra -> extraItemHandler = handler
+            }
+            if (state != IoState.InputOutput && state != IoState.None) {
+                val handlers =
+                    listOfNotNull(inputItemHandler, outputItemHandler, additionalItemHandler, extraItemHandler)
+                mergedItemHandlers = MergedItemCapability(handlers)
             }
         }
 
@@ -462,6 +473,11 @@ abstract class ProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, blockSt
                 IoState.Output -> outputFluidHandler = handler
                 IoState.Additional -> additionalFluidHandler = handler
                 IoState.Extra -> extraFluidHandler = handler
+            }
+            if (state != IoState.InputOutput && state != IoState.None) {
+                val handlers =
+                    listOfNotNull(inputFluidHandler, outputFluidHandler, additionalFluidHandler, extraFluidHandler)
+                mergedFluidHandlers = MergedFluidCapability(handlers)
             }
         }
 
