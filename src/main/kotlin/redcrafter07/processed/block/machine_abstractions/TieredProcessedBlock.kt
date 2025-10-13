@@ -20,7 +20,6 @@ open class TieredProcessedBlock(
     val tier: ProcessedTier,
     val blockEntity: BlockEntityType.BlockEntitySupplier<TieredProcessedMachine>,
 ) : ProcessedBlock(properties), MaterialContainer {
-
     override fun getName(): MutableComponent = Component.translatable(baseName, tier.name)
 
     fun getDescription(
@@ -30,11 +29,11 @@ open class TieredProcessedBlock(
         tooltips.add(getMachineInfo(tier, flag.hasShiftDown()))
     }
 
-    override val material: Material
-        get() = tier.material
+    override val material: Material get() = tier.material
 
     private fun getMachineInfo(tier: ProcessedTier, shift: Boolean): MutableComponent {
-        val maxPower = if (shift) Translations.energyBarUnitOnes(tier.maxPower) else EnergyBarWidget.getEnergyComponent(tier.maxPower)
+        val maxPower =
+            if (shift) Translations.energyBarUnitOnes(tier.maxPower) else EnergyBarWidget.getEnergyComponent(tier.maxPower)
         return Translations.tieredMachineInfo(maxPower.withStyle(ChatFormatting.GREEN), tier.nameColored)
     }
 

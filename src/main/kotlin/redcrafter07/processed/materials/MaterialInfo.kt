@@ -13,20 +13,20 @@ class MaterialInfo(
     var color: Int,
     val identifier: String,
     var chemicalDescription: String,
-    var extraData: MutableList<Any>,
+    var extraData: MutableList<Lazy<Any>>,
 ) {
     constructor(identifier: String) : this(
         Types.None, NuggetVariant.LongHoriz, RawBlockVariant.IronLike, 0, identifier, "", ArrayList()
     )
 
-    fun withExtraData(data: Any): MaterialInfo {
-        extraData.add(data)
+    fun withExtraData(data: () -> Any): MaterialInfo {
+        extraData.add(lazy(data))
         return this
     }
 
     fun <T> getExtraData(clazz: Class<T>): T? {
         for (data in extraData) {
-            @Suppress("UNCHECKED_CAST") if (data::class.java == clazz) return data as T
+            @Suppress("UNCHECKED_CAST") if (data.value::class.java == clazz) return data.value as T
         }
         return null
     }

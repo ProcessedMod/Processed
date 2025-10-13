@@ -17,8 +17,8 @@ class DynPackContents {
         // Data should only ever be a Map<String, Node> or IoSupplier<InputStream>.
         // This is enforced by making the constructor private and giving 2 functions which take only these arguments to construct Node.
         companion object {
-            fun file(contents: IoSupplier<InputStream>): Node = Node(contents);
-            fun dir(): Node = Node(HashMap<String, Node>());
+            fun file(contents: IoSupplier<InputStream>): Node = Node(contents)
+            fun dir(): Node = Node(HashMap<String, Node>())
         }
 
         val isLeaf: Boolean get() = data is IoSupplier<*>
@@ -32,10 +32,10 @@ class DynPackContents {
                 if (data !is IoSupplier<*>) throw IllegalStateException("Tried to get children of a file")
                 @Suppress("UNCHECKED_CAST") return data as IoSupplier<InputStream>
             }
-        val maybeContents: IoSupplier<InputStream>? get() = if (isLeaf) contents else null;
+        val maybeContents: IoSupplier<InputStream>? get() = if (isLeaf) contents else null
 
         fun listContents(namespace: String, path: String, output: PackResources.ResourceOutput) {
-            if (isLeaf) output.accept(ResourceLocation.fromNamespaceAndPath(namespace, path), contents);
+            if (isLeaf) output.accept(ResourceLocation.fromNamespaceAndPath(namespace, path), contents)
             else for (entry in children.entries) entry.value.listContents(namespace, "$path/${entry.key}", output)
         }
 
@@ -53,9 +53,9 @@ class DynPackContents {
     val root = Node.dir()
 
     private fun getPath(namespace: String, path: String): Node? {
-        var node = root.getFile(namespace) ?: return null;
-        for (arg in path.split('/')) node = node.getFile(arg) ?: return null;
-        return node;
+        var node = root.getFile(namespace) ?: return null
+        for (arg in path.split('/')) node = node.getFile(arg) ?: return null
+        return node
     }
 
     fun getResource(namespace: String, path: String): IoSupplier<InputStream>? =
@@ -74,7 +74,7 @@ class DynPackContents {
     }
 
     fun write(path: ResourceLocation, contents: ByteArray) {
-        ProcessedMod.LOG.info("Writing {}/{}: {}", path.namespace, path.path, contents.toString(StandardCharsets.UTF_8))
+        ProcessedMod.LOG.debug("Writing {}/{}: {}", path.namespace, path.path, contents.toString(StandardCharsets.UTF_8))
 
         write(path) { ByteArrayInputStream(contents) }
     }

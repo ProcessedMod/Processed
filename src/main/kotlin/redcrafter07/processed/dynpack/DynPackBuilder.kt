@@ -1,12 +1,16 @@
 package redcrafter07.processed.dynpack
 
+import net.minecraft.core.Direction
 import net.minecraft.data.models.blockstates.MultiVariantGenerator
+import net.minecraft.data.models.blockstates.PropertyDispatch
 import net.minecraft.data.models.blockstates.Variant
 import net.minecraft.data.models.blockstates.VariantProperties
+import net.minecraft.data.models.blockstates.VariantProperties.Rotation
 import net.minecraft.data.models.model.DelegatedModel
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.Block
 import redcrafter07.processed.block.ModBlocks
+import redcrafter07.processed.block.machine_abstractions.ProcessedBlock
 import redcrafter07.processed.items.ModItems
 import redcrafter07.processed.rl
 
@@ -22,6 +26,8 @@ object DynPackBuilder {
         val itemPipeModel = DelegatedModel(itemPipeRL).get()
         val rawMetalBlockRLS = listOf(rl("block/raw_metal_block0"), rl("block/raw_metal_block1"))
         val rawMetalBlocks = rawMetalBlockRLS.map { DelegatedModel(it).get() }.toList()
+        val poweredFurnaceRL = rl("block/powered_furnace")
+        val poweredFurnaceModel = DelegatedModel(poweredFurnaceRL).get()
 
         for (block in ModBlocks.CABLES) {
             DynPackResources.addBlockState(block.id, createSimpleBlock(block.get(), cableRL).get())
@@ -47,6 +53,11 @@ object DynPackBuilder {
             DynPackResources.addBlockState(block.id, createSimpleBlock(block.get(), rawMetalBlockRLS[idx]).get())
             DynPackResources.addItemModel(block.id, rawMetalBlocks[idx])
         }
+
+        for (block in ModBlocks.BLOCKS_POWERED_FURNACE) {
+            DynPackResources.addBlockState(block.id, createSidedHorizontal(block.get(), poweredFurnaceRL).get())
+            DynPackResources.addItemModel(block.id, poweredFurnaceModel)
+        }
     }
 
     fun addMaterialItems() {
@@ -66,6 +77,19 @@ object DynPackBuilder {
             item.id, nuggetModels[item.get().material.info.nuggetVariant.index]
         )
         for (item in ModItems.RAW_ITEMS) DynPackResources.addItemModel(item.id, rawModel)
+    }
+
+    fun createSidedHorizontal(block: Block, modelLocation: ResourceLocation): MultiVariantGenerator {
+        // create a PropertyDispatch for the facing=... property, with different y rotations according to the direction.
+        val prop =
+            PropertyDispatch.property(ProcessedBlock.STATE_HORIZONTAL_FACING).select(Direction.NORTH, Variant.variant())
+                .select(Direction.SOUTH, Variant.variant().with(VariantProperties.Y_ROT, Rotation.R180))
+                .select(Direction.WEST, Variant.variant().with(VariantProperties.Y_ROT, Rotation.R270))
+                .select(Direction.EAST, Variant.variant().with(VariantProperties.Y_ROT, Rotation.R90))
+
+        // add the propertydispatch to the blockstate
+        return MultiVariantGenerator.multiVariant(block, Variant.variant().with(VariantProperties.MODEL, modelLocation))
+            .with(prop)
     }
 
     fun createSimpleBlock(block: Block, modelLocation: ResourceLocation): MultiVariantGenerator {

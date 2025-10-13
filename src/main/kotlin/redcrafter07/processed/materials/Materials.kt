@@ -25,7 +25,7 @@ object Materials {
     val STEEL =
         MaterialInfo("steel").color(0x49, 0x4b, 0x4d).chemicalDescription("Fe").addType(MaterialInfo.Types.MetalBlock)
             .addType(MaterialInfo.Types.IngotLike).addType(MaterialInfo.Types.Dust)
-            .withExtraData(CableData(ProcessedTier.Basic)).withExtraData(ItemPipeData(ProcessedTier.Basic))
+            .withExtraData { CableData(ProcessedTier.Basic) }.withExtraData { ItemPipeData(ProcessedTier.Basic) }
             .nuggetVariant(MaterialInfo.NuggetVariant.LongVert).register(
                 BlockTags.NEEDS_IRON_TOOL,
                 BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.BASEDRUM).strength(5f, 10f)
@@ -34,7 +34,7 @@ object Materials {
             )
     val NICKEL =
         MaterialInfo("nickel").color(0x4d, 0xd4, 0xa9).chemicalDescription("Ni").addType(MaterialInfo.Types.All)
-            .withExtraData(CableData(ProcessedTier.Advanced)).withExtraData(ItemPipeData(ProcessedTier.Advanced))
+            .withExtraData { CableData(ProcessedTier.Advanced) }.withExtraData { ItemPipeData(ProcessedTier.Advanced) }
             .nuggetVariant(MaterialInfo.NuggetVariant.ShortHoriz).register(
                 BlockTags.NEEDS_IRON_TOOL,
                 BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.BASEDRUM).strength(5f, 10f)
@@ -43,7 +43,7 @@ object Materials {
             )
     val TITANIUM =
         MaterialInfo("titanium").color(0xcf, 0x71, 0xaf).chemicalDescription("Ti").addType(MaterialInfo.Types.All)
-            .withExtraData(CableData(ProcessedTier.Void)).withExtraData(ItemPipeData(ProcessedTier.Void))
+            .withExtraData { CableData(ProcessedTier.Void) }.withExtraData { ItemPipeData(ProcessedTier.Void) }
             .nuggetVariant(MaterialInfo.NuggetVariant.ShortVert).rawBlockVariant(MaterialInfo.RawBlockVariant.GoldLike)
             .register(
                 BlockTags.NEEDS_DIAMOND_TOOL,
@@ -53,7 +53,7 @@ object Materials {
             )
     val URANIUM =
         MaterialInfo("uranium").color(0x3c, 0xff, 0x49).chemicalDescription("U").addType(MaterialInfo.Types.All)
-            .withExtraData(CableData(ProcessedTier.Nuclear)).withExtraData(ItemPipeData(ProcessedTier.Nuclear))
+            .withExtraData { CableData(ProcessedTier.Nuclear) }.withExtraData { ItemPipeData(ProcessedTier.Nuclear) }
             .register(
                 BlockTags.NEEDS_DIAMOND_TOOL,
                 BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.BASEDRUM).strength(5f, 10f)

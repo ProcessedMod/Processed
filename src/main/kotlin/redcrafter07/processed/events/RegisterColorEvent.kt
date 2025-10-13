@@ -3,6 +3,7 @@ package redcrafter07.processed.events
 import net.minecraft.client.color.block.BlockColor
 import net.minecraft.client.color.item.ItemColor
 import net.minecraft.core.BlockPos
+import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.BlockAndTintGetter
 import net.minecraft.world.level.block.state.BlockState
@@ -24,9 +25,9 @@ object RegisterColorEvent {
         // all the items with ItemColorProvider.
         event.register(
             ItemColorProvider,
-            *ModItems.ITEMS.entries.map { it.get() }.filter { it is MaterialContainer || it is ItemColor }.toList()
-                .toTypedArray()
-        )
+            *ModItems.ITEMS.entries.map { it.get() }
+                .filter { it is MaterialContainer || it is ItemColor || (it is BlockItem && it.block is MaterialContainer) }
+                .toList().toTypedArray())
     }
 
     private object ItemColorProvider : ItemColor {
@@ -34,6 +35,11 @@ object RegisterColorEvent {
             return when (val item = stack.item) {
                 is MaterialContainer -> item.getColor(tintIndex) ?: 0xFFFFFF
                 is ItemColor -> item.getColor(stack, tintIndex)
+                is BlockItem -> {
+                    val block = item.block
+                    if(block is MaterialContainer) block.getColor(tintIndex) ?: 0xFFFFFF
+                    else 0xFFFFFF
+                }
                 else -> 0xFFFFFF
             }
         }
