@@ -1,13 +1,16 @@
 package redcrafter07.processed.block.cable
 
+import com.google.common.collect.ImmutableMap
 import com.mojang.blaze3d.vertex.VertexConsumer
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.block.model.BakedQuad
 import net.minecraft.client.renderer.block.model.ItemOverrides
+import net.minecraft.client.renderer.block.model.ItemTransform
 import net.minecraft.client.renderer.block.model.ItemTransforms
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.core.Direction
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.RandomSource
 import net.minecraft.world.inventory.InventoryMenu
 import net.minecraft.world.item.ItemStack
@@ -17,63 +20,64 @@ import net.neoforged.neoforge.client.model.IDynamicBakedModel
 import net.neoforged.neoforge.client.model.data.ModelData
 import net.neoforged.neoforge.client.model.pipeline.QuadBakingVertexConsumer
 import org.joml.Vector3f
-import redcrafter07.processed.rl
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.minus
 
-class CableBakedModel(val itemTransforms: ItemTransforms) : IDynamicBakedModel {
-    val itemConnected = CableBlockEntity.Connected()
+class CableBakedModel(center: ResourceLocation, side: ResourceLocation, val s: Double) : IDynamicBakedModel {
+    val e = 1 - s
+
+    val center = lazy { Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(center) }
+    val side = lazy { Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(side) }
 
     override fun getQuads(
         p0: BlockState?, p1: Direction?, p2: RandomSource, modelData: ModelData, p4: RenderType?
     ): List<BakedQuad> {
         val quads = ArrayList<BakedQuad>()
         val connected = modelData.get(CableBlockEntity.TRANSMITTER_PROPERTY) ?: itemConnected
-        val sprite = cableTexture.value
 
-        val s = CableBlock.START
-        val e = CableBlock.END
+        val center = center.value
+        val side = side.value
 
         if (connected[Direction.UP]) {
-            quads.add(quad(v(e, 1, s), v(e, 1, e), v(e, e, e), v(e, e, s), sprite))
-            quads.add(quad(v(s, 1, e), v(s, 1, s), v(s, e, s), v(s, e, e), sprite))
-            quads.add(quad(v(s, 1, s), v(e, 1, s), v(e, e, s), v(s, e, s), sprite))
-            quads.add(quad(v(s, e, e), v(e, e, e), v(e, 1, e), v(s, 1, e), sprite))
-        } else quads.add(quad(v(s, e, e), v(e, e, e), v(e, e, s), v(s, e, s), sprite))
+            quads.add(quad(v(e, 1, s), v(e, 1, e), v(e, e, e), v(e, e, s), side))
+            quads.add(quad(v(s, 1, e), v(s, 1, s), v(s, e, s), v(s, e, e), side))
+            quads.add(quad(v(s, 1, s), v(e, 1, s), v(e, e, s), v(s, e, s), side))
+            quads.add(quad(v(s, e, e), v(e, e, e), v(e, 1, e), v(s, 1, e), side))
+        } else quads.add(quad(v(s, e, e), v(e, e, e), v(e, e, s), v(s, e, s), center))
 
         if (connected[Direction.DOWN]) {
-            quads.add(quad(v(e, s, s), v(e, s, e), v(e, 0, e), v(e, 0, s), sprite))
-            quads.add(quad(v(s, s, e), v(s, s, s), v(s, 0, s), v(s, 0, e), sprite))
-            quads.add(quad(v(s, s, s), v(e, s, s), v(e, 0, s), v(s, 0, s), sprite))
-            quads.add(quad(v(s, 0, e), v(e, 0, e), v(e, s, e), v(s, s, e), sprite))
-        } else quads.add(quad(v(s, s, s), v(e, s, s), v(e, s, e), v(s, s, e), sprite))
+            quads.add(quad(v(e, s, s), v(e, s, e), v(e, 0, e), v(e, 0, s), side))
+            quads.add(quad(v(s, s, e), v(s, s, s), v(s, 0, s), v(s, 0, e), side))
+            quads.add(quad(v(s, s, s), v(e, s, s), v(e, 0, s), v(s, 0, s), side))
+            quads.add(quad(v(s, 0, e), v(e, 0, e), v(e, s, e), v(s, s, e), side))
+        } else quads.add(quad(v(s, s, s), v(e, s, s), v(e, s, e), v(s, s, e), center))
 
         if (connected[Direction.EAST]) {
-            quads.add(quad(v(1, e, e), v(1, e, s), v(e, e, s), v(e, e, e), sprite))
-            quads.add(quad(v(1, s, s), v(1, s, e), v(e, s, e), v(e, s, s), sprite))
-            quads.add(quad(v(1, e, s), v(1, s, s), v(e, s, s), v(e, e, s), sprite))
-            quads.add(quad(v(1, s, e), v(1, e, e), v(e, e, e), v(e, s, e), sprite))
-        } else quads.add(quad(v(e, s, s), v(e, e, s), v(e, e, e), v(e, s, e), sprite))
+            quads.add(quad(v(1, e, e), v(1, e, s), v(e, e, s), v(e, e, e), side))
+            quads.add(quad(v(1, s, s), v(1, s, e), v(e, s, e), v(e, s, s), side))
+            quads.add(quad(v(1, e, s), v(1, s, s), v(e, s, s), v(e, e, s), side))
+            quads.add(quad(v(1, s, e), v(1, e, e), v(e, e, e), v(e, s, e), side))
+        } else quads.add(quad(v(e, s, s), v(e, e, s), v(e, e, e), v(e, s, e), center))
 
         if (connected[Direction.WEST]) {
-            quads.add(quad(v(s, e, e), v(s, e, s), v(0, e, s), v(0, e, e), sprite))
-            quads.add(quad(v(s, s, s), v(s, s, e), v(0, s, e), v(0, s, s), sprite))
-            quads.add(quad(v(s, e, s), v(s, s, s), v(0, s, s), v(0, e, s), sprite))
-            quads.add(quad(v(s, s, e), v(s, e, e), v(0, e, e), v(0, s, e), sprite))
-        } else quads.add(quad(v(s, s, e), v(s, e, e), v(s, e, s), v(s, s, s), sprite))
+            quads.add(quad(v(s, e, e), v(s, e, s), v(0, e, s), v(0, e, e), side))
+            quads.add(quad(v(s, s, s), v(s, s, e), v(0, s, e), v(0, s, s), side))
+            quads.add(quad(v(s, e, s), v(s, s, s), v(0, s, s), v(0, e, s), side))
+            quads.add(quad(v(s, s, e), v(s, e, e), v(0, e, e), v(0, s, e), side))
+        } else quads.add(quad(v(s, s, e), v(s, e, e), v(s, e, s), v(s, s, s), center))
 
         if (connected[Direction.NORTH]) {
-            quads.add(quad(v(s, e, s), v(e, e, s), v(e, e, 0), v(s, e, 0), sprite))
-            quads.add(quad(v(s, s, 0), v(e, s, 0), v(e, s, s), v(s, s, s), sprite))
-            quads.add(quad(v(e, s, 0), v(e, e, 0), v(e, e, s), v(e, s, s), sprite))
-            quads.add(quad(v(s, s, s), v(s, e, s), v(s, e, 0), v(s, s, 0), sprite))
-        } else quads.add(quad(v(s, e, s), v(e, e, s), v(e, s, s), v(s, s, s), sprite))
+            quads.add(quad(v(s, e, s), v(e, e, s), v(e, e, 0), v(s, e, 0), side))
+            quads.add(quad(v(s, s, 0), v(e, s, 0), v(e, s, s), v(s, s, s), side))
+            quads.add(quad(v(e, s, 0), v(e, e, 0), v(e, e, s), v(e, s, s), side))
+            quads.add(quad(v(s, s, s), v(s, e, s), v(s, e, 0), v(s, s, 0), side))
+        } else quads.add(quad(v(s, e, s), v(e, e, s), v(e, s, s), v(s, s, s), center))
 
         if (connected[Direction.SOUTH]) {
-            quads.add(quad(v(s, e, 1), v(e, e, 1), v(e, e, e), v(s, e, e), sprite))
-            quads.add(quad(v(s, s, e), v(e, s, e), v(e, s, 1), v(s, s, 1), sprite))
-            quads.add(quad(v(e, s, e), v(e, e, e), v(e, e, 1), v(e, s, 1), sprite))
-            quads.add(quad(v(s, s, 1), v(s, e, 1), v(s, e, e), v(s, s, e), sprite))
-        } else quads.add(quad(v(s, s, e), v(e, s, e), v(e, e, e), v(s, e, e), sprite))
+            quads.add(quad(v(s, e, 1), v(e, e, 1), v(e, e, e), v(s, e, e), side))
+            quads.add(quad(v(s, s, e), v(e, s, e), v(e, s, 1), v(s, s, 1), side))
+            quads.add(quad(v(e, s, e), v(e, e, e), v(e, e, 1), v(e, s, 1), side))
+            quads.add(quad(v(s, s, 1), v(s, e, 1), v(s, e, e), v(s, s, e), side))
+        } else quads.add(quad(v(s, s, e), v(e, s, e), v(e, e, e), v(s, e, e), center))
 
         return quads
     }
@@ -87,7 +91,7 @@ class CableBakedModel(val itemTransforms: ItemTransforms) : IDynamicBakedModel {
     override fun isCustomRenderer() = false
 
     @Suppress("OVERRIDE_DEPRECATION")
-    override fun getParticleIcon(): TextureAtlasSprite = cableTexture.value
+    override fun getParticleIcon(): TextureAtlasSprite = center.value
     override fun getRenderTypes(itemStack: ItemStack, fabulous: Boolean): List<RenderType> = listOf(RenderType.CUTOUT)
     override fun getRenderTypes(state: BlockState, rand: RandomSource, data: ModelData): ChunkRenderTypeSet =
         ChunkRenderTypeSet.of(RenderType.CUTOUT)
@@ -95,8 +99,30 @@ class CableBakedModel(val itemTransforms: ItemTransforms) : IDynamicBakedModel {
     override fun getOverrides(): ItemOverrides = ItemOverrides.EMPTY
 
     companion object {
-        val cableTexture =
-            lazy { Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(rl("block/cable")) }
+        val itemConnected = CableBlockEntity.Connected()
+
+        val itemTransforms: ItemTransforms
+
+        init {
+            val gui = ItemTransform(v(30, 225, 0), v(0, 0, 0), v(.625, .625, .625))
+            val ground = ItemTransform(v(0, 0, 0), v(0, .1875, 0), v(.25, .25, .25))
+            val fixed = ItemTransform(v(0, 0, 0), v(0, 0, 0), v(.5, .5, .5))
+            val thirdPersonRighthand = ItemTransform(v(75, 45, 0), v(0, .015625, 0), v(.375, .375, .375))
+            val firstPersonRighthand = ItemTransform(v(0, 45, 0), v(0, 0, 0), v(.4, .4, .4))
+            val firstPersonLefthand = ItemTransform(v(0, 225, 0), v(0, 0, 0), v(.4, .4, .4))
+
+            itemTransforms = ItemTransforms(
+                thirdPersonRighthand,
+                thirdPersonRighthand,
+                firstPersonLefthand,
+                firstPersonRighthand,
+                ItemTransform.NO_TRANSFORM,
+                gui,
+                ground,
+                fixed,
+                ImmutableMap.of()
+            )
+        }
 
         fun quad(v1: Vector3f, v2: Vector3f, v3: Vector3f, v4: Vector3f, sprite: TextureAtlasSprite): BakedQuad {
             val normal = (v3 - v2).cross(v1 - v2).normalize()

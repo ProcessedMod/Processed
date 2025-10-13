@@ -14,12 +14,11 @@ import net.neoforged.neoforge.event.AddPackFindersEvent
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.ProcessedPower
+import redcrafter07.processed.block.cable.CableModelLoader
 import redcrafter07.processed.block.machine_abstractions.BlockSide
 import redcrafter07.processed.block.machine_abstractions.EnergyCapableBlockEntity
 import redcrafter07.processed.block.machine_abstractions.FluidCapableBlockEntity
 import redcrafter07.processed.block.machine_abstractions.ItemCapableBlockEntity
-import redcrafter07.processed.block.cable.CableModelLoader
-import redcrafter07.processed.block.itempipe.ItemPipeModelLoader
 import redcrafter07.processed.block.tile_entities.FluidTankBlockEntity
 import redcrafter07.processed.block.tile_entities.ModTileEntities
 import redcrafter07.processed.dynpack.DynPackSource
@@ -33,6 +32,7 @@ import java.util.*
 
 @EventBusSubscriber(modid = ProcessedMod.ID, bus = EventBusSubscriber.Bus.MOD)
 object Registering {
+    /** Checks if the block entity associated with this block implements the clazz. */
     private fun blockEntityIs(block: Block?, clazz: Class<*>): Boolean {
         if (block is EntityBlock) {
             try {
@@ -45,68 +45,76 @@ object Registering {
         return false
     }
 
+    /** Checks if the block entity associated with this block implements ItemCapableBlockEntity */
     private fun isItemCapable(block: Block): Boolean {
         return blockEntityIs(block, ItemCapableBlockEntity::class.java)
     }
 
+    /** Checks if the block entity associated with this block implements FluidCapableBlockEntity */
     private fun isFluidCapable(block: Block): Boolean {
         return blockEntityIs(block, FluidCapableBlockEntity::class.java)
     }
 
+    /** Checks if the block entity associated with this block implements EnergyCapableBlockEntity */
     private fun isEnergyCapable(block: Block): Boolean {
         return blockEntityIs(block, EnergyCapableBlockEntity::class.java)
     }
 
+    /** Filters out any blocks that don't implement ItemCapableBlockEntity */
     private fun itemCapable(block: Array<Block>): Array<Block> =
         Arrays.stream(block).filter(Registering::isItemCapable).toArray { arrayOfNulls(it) }
 
+    /** Filters out any blocks that don't implement FluidCapableBlockEntity */
     private fun fluidCapable(block: Array<Block>): Array<Block> =
         Arrays.stream(block).filter(Registering::isFluidCapable).toArray { arrayOfNulls(it) }
 
+    /** Filters out any blocks that don't implement EnergyCapableBlockEntity */
     private fun energyCapable(block: Array<Block>): Array<Block> =
         Arrays.stream(block).filter(Registering::isEnergyCapable).toArray { arrayOfNulls(it) }
 
     @SubscribeEvent
     fun onRegisterCapabilities(event: RegisterCapabilitiesEvent) {
+        // Gets all processed blocks
         val blocks = ModTileEntities.BLOCK_TYPES.entries.stream().flatMap { it.get().validBlocks.stream() }.toList()
             .toTypedArray()
 
+        // registers all blocks that have an item capability as having an item capability
         event.registerBlock(
             Capabilities.ItemHandler.BLOCK,
             { _, _, state, blockEntity, side ->
                 if (blockEntity is ItemCapableBlockEntity) {
-                    return@registerBlock if (side == null) blockEntity.itemCapabilityForSide(null, state)
+                    if (side == null) blockEntity.itemCapabilityForSide(null, state)
                     else blockEntity.itemCapabilityForSide(BlockSide.translateDirection(side, state), state)
-                }
-                return@registerBlock null
+                } else null
             },
             *itemCapable(blocks),
         )
+        // registers all blocks that have a processed energy capability as having an item capability
         event.registerBlock(
             ProcessedPower.BLOCK,
             { _, _, state, blockEntity, side ->
                 if (blockEntity is EnergyCapableBlockEntity) {
-                    return@registerBlock if (side == null) blockEntity.energyCapabilityForSide(null, state)
+                    if (side == null) blockEntity.energyCapabilityForSide(null, state)
                     else blockEntity.energyCapabilityForSide(BlockSide.translateDirection(side, state), state)
-                }
-                return@registerBlock null
+                } else null
             },
             *energyCapable(blocks),
         )
+        // registers all blocks that have a fluid as having an item capability
         event.registerBlock(
             Capabilities.FluidHandler.BLOCK,
             { _, _, state, blockEntity, side ->
                 if (blockEntity is FluidCapableBlockEntity) {
-                    return@registerBlock if (side == null) blockEntity.fluidCapabilityForSide(null, state)
+                    if (side == null) blockEntity.fluidCapabilityForSide(null, state)
                     else blockEntity.fluidCapabilityForSide(BlockSide.translateDirection(side, state), state)
-                }
-                return@registerBlock null
+                } else null
             },
             *fluidCapable(blocks),
         )
     }
 
     @SubscribeEvent
+    // registers all packets
     fun registerNetworkHandlers(event: RegisterPayloadHandlersEvent) {
         val registrar = event.registrar(ProcessedMod.ID)
 
@@ -118,7 +126,6 @@ object Registering {
             MultiblockDestroyPacket.TYPE, MultiblockDestroyPacket.CODEC, MultiblockDestroyPacket::handleClient
         )
     }
-
 
     @SubscribeEvent
     fun registerMenuScreens(event: RegisterMenuScreensEvent) =
@@ -132,8 +139,5 @@ object Registering {
     fun registerPackSources(event: AddPackFindersEvent) = event.addRepositorySource(DynPackSource)
 
     @SubscribeEvent
-    fun registerModelLoaders(e: ModelEvent.RegisterGeometryLoaders) {
-        e.register(rl("cable"), CableModelLoader)
-        e.register(rl("item_pipe"), ItemPipeModelLoader)
-    }
+    fun registerModelLoaders(e: ModelEvent.RegisterGeometryLoaders) = e.register(rl("cable"), CableModelLoader)
 }

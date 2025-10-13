@@ -49,7 +49,7 @@ abstract class ProcessedBlock(properties: Properties) : Block(properties.pushRea
         addBlockStateDefinition(builder)
     }
 
-    fun getBlockState(context: BlockPlaceContext): BlockState? = null
+    protected open fun getBlockState(context: BlockPlaceContext): BlockState? = null
 
     override fun getStateForPlacement(context: BlockPlaceContext): BlockState? {
         var state = getBlockState(context)

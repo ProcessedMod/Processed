@@ -17,12 +17,16 @@ import redcrafter07.processed.materials.MaterialContainer
 @EventBusSubscriber(modid = ProcessedMod.ID, bus = EventBusSubscriber.Bus.MOD)
 object RegisterColorEvent {
     @SubscribeEvent
+    /// Register all tinted items of this mods
     fun registerItemColors(event: RegisterColorHandlersEvent.Item) {
-        event.register(ItemColorProvider, *ModItems.DUST_ITEMS.toTypedArray())
-        event.register(ItemColorProvider, *ModItems.INGOT_ITEMS.toTypedArray())
-        event.register(ItemColorProvider, *ModItems.NUGGET_ITEMS.toTypedArray())
-        event.register(ItemColorProvider, *ModItems.RAW_ITEMS.toTypedArray())
-        event.register(ItemColorProvider, *ModBlocks.MATERIAL_BLOCK_ITEMS.toTypedArray())
+        // Go through all items and filter out any that don't have custom colors. This filter should have all the interfaces/classes in ItemColorProvider.
+        // Then turn that stream of items into a list and then into a typed array, to spread that array over the varargs of event.register, and as such register
+        // all the items with ItemColorProvider.
+        event.register(
+            ItemColorProvider,
+            *ModItems.ITEMS.entries.map { it.get() }.filter { it is MaterialContainer || it is ItemColor }.toList()
+                .toTypedArray()
+        )
     }
 
     private object ItemColorProvider : ItemColor {
@@ -36,8 +40,14 @@ object RegisterColorEvent {
     }
 
     @SubscribeEvent
+    /// Register all tinted blocks of this mods
     fun registerBlockColors(event: RegisterColorHandlersEvent.Block) {
-        event.register(BlockColorProvider, *ModBlocks.MATERIAL_BLOCKS.stream().map { it.get() }.toList().toTypedArray())
+        // Go through all blocks and filter out any that don't have custom colors. This filter should have all the interfaces/classes in BlockColorProvider.
+        // Then turn that stream of blocks into a list and then into a typed array, to spread that array over the varargs of event.register, and as such register
+        // all the blocks with BlockColorProvider.
+        event.register(BlockColorProvider, *ModBlocks.BLOCKS.entries.stream().map { it.get() }.filter {
+            it is MaterialContainer || it is BlockColor
+        }.toList().toTypedArray())
     }
 
     private object BlockColorProvider : BlockColor {

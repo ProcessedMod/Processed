@@ -22,7 +22,5 @@ data class WrenchModeChangePacket(val state: WrenchMode) : CustomPacketPayload {
         if (item.item is WrenchItem) WrenchItem.setMode(item, state)
     }
 
-    override fun type(): CustomPacketPayload.Type<WrenchModeChangePacket> {
-        return TYPE
-    }
+    override fun type(): CustomPacketPayload.Type<WrenchModeChangePacket> = TYPE
 }
