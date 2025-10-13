@@ -43,11 +43,11 @@ class ModBlockStateProvider(output: PackOutput, existingFileHelper: ExistingFile
                 builder.uvs(0f, 0f, 16f, 16f).cullface(dir).tintindex(1).end()
             }.end()
 
-        for (block in ModBlocks.BLOCKS_POWERED_FURNACE) {
-            val modelRL = ResourceLocation.withDefaultNamespace("block/blast_furnace")
-            simpleBlock(block.get(), models().getExistingFile(modelRL))
-            itemModels().withExistingParent(block.id.path, modelRL)
-        }
+//        for (block in ModBlocks.BLOCKS_POWERED_FURNACE) {
+//            val modelRL = ResourceLocation.withDefaultNamespace("block/blast_furnace")
+//            simpleBlock(block.get(), models().getExistingFile(modelRL))
+//            itemModels().withExistingParent(block.id.path, modelRL)
+//        }
 
         for (block in ModBlocks.CREATIVE_POWER_SOURCE) {
             val modelRL = ResourceLocation.withDefaultNamespace("block/redstone_block")
