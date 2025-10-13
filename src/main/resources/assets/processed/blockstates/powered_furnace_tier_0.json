@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "processed:block/powered_furnace",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "processed:block/powered_furnace"
+    },
+    "facing=south": {
+      "model": "processed:block/powered_furnace",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "processed:block/powered_furnace",
+      "y": 270
+    }
+  }
+}
