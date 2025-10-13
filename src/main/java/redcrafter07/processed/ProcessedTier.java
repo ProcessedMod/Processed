@@ -2,10 +2,12 @@ package redcrafter07.processed;
 
 import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.NotNull;
+import redcrafter07.processed.materials.Material;
+import redcrafter07.processed.materials.Materials;
 
 import java.util.List;
 
-public record ProcessedTier(int tier, int speedMultiplier, int energyMultiplier) {
+public record ProcessedTier(int tier, int speedMultiplier, int energyMultiplier, Material material) {
     @NotNull
     public String getNamed() {
         return "tier_" + tier;
@@ -41,31 +43,31 @@ public record ProcessedTier(int tier, int speedMultiplier, int energyMultiplier)
     }
 
     @NotNull
-    public static ProcessedTier None = new ProcessedTier(-1, 0, 0);
+    public static ProcessedTier None = new ProcessedTier(-1, 0, 0, Materials.INSTANCE.getSTEEL());
 
     // Steam age-ish?
     @NotNull
-    public static ProcessedTier Rudimentary = new ProcessedTier(0, 1, 1);
+    public static ProcessedTier Rudimentary = new ProcessedTier(0, 1, 1, Materials.INSTANCE.getALUMINIUM());
     @NotNull
-    public static ProcessedTier Basic = new ProcessedTier(1, 3, 4);
+    public static ProcessedTier Basic = new ProcessedTier(1, 3, 4, Materials.INSTANCE.getSTEEL());
     // Basic Fuel
     @NotNull
-    public static ProcessedTier Advanced = new ProcessedTier(2, 9, 16);
+    public static ProcessedTier Advanced = new ProcessedTier(2, 9, 16, Materials.INSTANCE.getNICKEL());
     // Advanced Fuel
     @NotNull
-    public static ProcessedTier IEnergyProMax = new ProcessedTier(3, 27, 64);
+    public static ProcessedTier IEnergyProMax = new ProcessedTier(3, 27, 64, Materials.INSTANCE.getALUMINIUM());
     // Fission and bad Fusion
     @NotNull
-    public static ProcessedTier Nuclear = new ProcessedTier(4, 81, 256);
+    public static ProcessedTier Nuclear = new ProcessedTier(4, 81, 256, Materials.INSTANCE.getURANIUM());
     // Fusion
     @NotNull
-    public static ProcessedTier Quantum = new ProcessedTier(5, 243, 1024);
+    public static ProcessedTier Quantum = new ProcessedTier(5, 243, 1024, Materials.INSTANCE.getNICKEL_TITANIUM());
     // Void energy or sum idfk lmao
     @NotNull
-    public static ProcessedTier Void = new ProcessedTier(6, 729, 4096);
+    public static ProcessedTier Void = new ProcessedTier(6, 729, 4096, Materials.INSTANCE.getTITANIUM());
     // Idk void energy but it uses more electricity lol
     @NotNull
-    public static ProcessedTier Ultimate = new ProcessedTier(7, 2187, 16384);
+    public static ProcessedTier Ultimate = new ProcessedTier(7, 2187, 16384, Materials.INSTANCE.getTITANIUM());
 
     @NotNull
     public static List<ProcessedTier> TIERS = List.of(Rudimentary, Basic, Advanced, IEnergyProMax, Nuclear, Quantum,

@@ -11,13 +11,15 @@ import net.minecraft.world.level.block.state.BlockState
 import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.Translations
 import redcrafter07.processed.gui.widgets.EnergyBarWidget
+import redcrafter07.processed.materials.Material
+import redcrafter07.processed.materials.MaterialContainer
 
 open class TieredProcessedBlock(
     properties: Properties,
     val baseName: String,
     val tier: ProcessedTier,
     val blockEntity: BlockEntityType.BlockEntitySupplier<TieredProcessedMachine>,
-) : ProcessedBlock(properties) {
+) : ProcessedBlock(properties), MaterialContainer {
 
     override fun getName(): MutableComponent = Component.translatable(baseName, tier.name)
 
@@ -27,6 +29,9 @@ open class TieredProcessedBlock(
         tooltips.add(Component.translatable("$baseName.tooltip"))
         tooltips.add(getMachineInfo(tier, flag.hasShiftDown()))
     }
+
+    override val material: Material
+        get() = tier.material
 
     private fun getMachineInfo(tier: ProcessedTier, shift: Boolean): MutableComponent {
         val maxPower = if (shift) Translations.energyBarUnitOnes(tier.maxPower) else EnergyBarWidget.getEnergyComponent(tier.maxPower)
