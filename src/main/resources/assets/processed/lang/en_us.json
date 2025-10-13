@@ -89,5 +89,5 @@
   "processed.tier_6.colored": "§6Void§r",
   "processed.tier_7.colored": "§4Ultimate§r",
 
-  "processed.tiered_machine_info": "§7Max Power: %s§a/t of %s  §aPower"
+  "processed.tiered_machine_info": "§7Max Power: %s§a/t of %s §aPower"
 }
