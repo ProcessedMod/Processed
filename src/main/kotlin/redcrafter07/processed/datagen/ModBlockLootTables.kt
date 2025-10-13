@@ -36,6 +36,7 @@ class ModBlockLootTables(provider: HolderLookup.Provider) :
         dropSelf(ModBlocks.BASIC_CASING)
         dropSelf(ModBlocks.BIG_SMELTER)
 
+        dropSelf(ModBlocks.ITEM_PIPES)
         dropSelf(ModBlocks.CABLES)
         dropSelf(ModBlocks.RAW_METAL_BLOCKS)
         dropSelf(ModBlocks.METAL_BLOCKS)
