@@ -19,6 +19,7 @@ import redcrafter07.processed.block.machine_abstractions.EnergyCapableBlockEntit
 import redcrafter07.processed.block.machine_abstractions.FluidCapableBlockEntity
 import redcrafter07.processed.block.machine_abstractions.ItemCapableBlockEntity
 import redcrafter07.processed.block.cable.CableModelLoader
+import redcrafter07.processed.block.itempipe.ItemPipeModelLoader
 import redcrafter07.processed.block.tile_entities.FluidTankBlockEntity
 import redcrafter07.processed.block.tile_entities.ModTileEntities
 import redcrafter07.processed.dynpack.DynPackSource
@@ -131,5 +132,8 @@ object Registering {
     fun registerPackSources(event: AddPackFindersEvent) = event.addRepositorySource(DynPackSource)
 
     @SubscribeEvent
-    fun registerModelLoaders(e: ModelEvent.RegisterGeometryLoaders) = e.register(rl("cable"), CableModelLoader)
+    fun registerModelLoaders(e: ModelEvent.RegisterGeometryLoaders) {
+        e.register(rl("cable"), CableModelLoader)
+        e.register(rl("item_pipe"), ItemPipeModelLoader)
+    }
 }

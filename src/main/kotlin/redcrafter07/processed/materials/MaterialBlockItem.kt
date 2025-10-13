@@ -8,6 +8,7 @@ import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.level.block.Block
 import redcrafter07.processed.Translations
 import redcrafter07.processed.block.cable.CableData
+import redcrafter07.processed.block.itempipe.ItemPipeData
 
 abstract class MaterialBlockItem(block: Block, override val material: Material) : BlockItem(block, PROPS),
     MaterialContainer {
@@ -47,7 +48,18 @@ abstract class MaterialBlockItem(block: Block, override val material: Material) 
             stack: ItemStack, context: TooltipContext, tooltip: MutableList<Component>, tooltipFlag: TooltipFlag
         ) {
             val data = material.getExtraData(CableData::class.java) ?: return
-            tooltip.add(Translations.cableTransferSpeedTooltip(data.tier.nameColored))
+            tooltip.add(Translations.cableTierTooltip(data.tier.nameColored))
+        }
+    }
+
+    class ItemPipeBlockItem(block: Block, material: Material) : MaterialBlockItem(block, material) {
+        override fun getName(stack: ItemStack): Component = Translations.materialItemPipe(material)
+
+        override fun customHoverText(
+            stack: ItemStack, context: TooltipContext, tooltip: MutableList<Component>, tooltipFlag: TooltipFlag
+        ) {
+            val data = material.getExtraData(ItemPipeData::class.java) ?: return
+            tooltip.add(Translations.itemPipeTooltip(data.speed))
         }
     }
 }

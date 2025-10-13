@@ -18,12 +18,19 @@ object DynPackBuilder {
         val metalBlockModel = DelegatedModel(metalBlockRL).get()
         val cableRL = rl("block/cable")
         val cableModel = DelegatedModel(cableRL).get()
+        val itemPipeRL = rl("block/item_pipe")
+        val itemPipeModel = DelegatedModel(itemPipeRL).get()
         val rawMetalBlockRLS = listOf(rl("block/raw_metal_block0"), rl("block/raw_metal_block1"))
         val rawMetalBlocks = rawMetalBlockRLS.map { DelegatedModel(it).get() }.toList()
 
         for (block in ModBlocks.CABLES) {
             DynPackResources.addBlockState(block.id, createSimpleBlock(block.get(), cableRL).get())
             DynPackResources.addItemModel(block.id, cableModel)
+        }
+
+        for (block in ModBlocks.ITEM_PIPES) {
+            DynPackResources.addBlockState(block.id, createSimpleBlock(block.get(), itemPipeRL).get())
+            DynPackResources.addItemModel(block.id, itemPipeModel)
         }
 
         for (block in ModBlocks.STONE_ORE_BLOCKS) {

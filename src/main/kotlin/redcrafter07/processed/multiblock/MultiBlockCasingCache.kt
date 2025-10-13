@@ -10,7 +10,6 @@ class MultiBlockCasingCache {
     companion object {
         fun remove(access: ChunkAccess) = access.removeData(Attachments.MULTIBLOCK_CHUNK_ATTACHMENT)
 
-
         fun getOrDefault(access: ChunkAccess): MultiBlockCasingCache = access.getData(Attachments.MULTIBLOCK_CHUNK_ATTACHMENT)
 
         fun get(access: ChunkAccess): MultiBlockCasingCache? {

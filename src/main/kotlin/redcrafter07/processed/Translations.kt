@@ -18,6 +18,7 @@ object Translations {
     inline fun materialOre(material: Material) = t("processed.material_ore", material)
     inline fun materialRawMetalBlock(material: Material) = t("processed.material_raw_metal_block", material)
     inline fun materialCable(material: Material) = t("processed.material_cable", material)
+    inline fun materialItemPipe(material: Material) = t("processed.material_item_pipe", material)
     inline fun materialName(identifier: String) = t("processed.material.$identifier")
     inline fun blockItemTooltip(id: String) = t("block.processed.$id.tooltip")
     inline fun itemTooltip(id: String) = t("item.processed.$id.tooltip")
@@ -33,10 +34,10 @@ object Translations {
     inline fun ioStateName(stateName: String) = t("processed.io_state.$stateName")
     inline fun blockSide(sideName: String) = t("processed.side.$sideName")
 
-    inline fun cableState(state: C) = t("processed.cable_state", state)
-    inline fun cableStateDisconnected() = t("processed.cable_state.disconnected")
-    inline fun cableStateConnected() = t("processed.cable_state.connected")
-    inline fun cableStateSplit() = t("processed.cable_state.disallowed")
+    inline fun pipeLikeState(state: C) = t("processed.pipe_like_state", state)
+    inline fun pipeLikeStateDisconnected() = t("processed.pipe_like_state.disconnected")
+    inline fun pipeLikeStateConnected() = t("processed.pipe_like_state.connected")
+    inline fun pipeLikeStateSplit() = t("processed.pipe_like_state.disallowed")
 
     inline fun ioButtonMessage(name: C, state: IoState) = t("processed.io_button.message", name, state)
     inline fun ioButtonTooltip(state: IoState) = t("processed.io_button.tooltip", state)
@@ -49,7 +50,8 @@ object Translations {
     inline fun energyBarUnitOnes(amount: Int) = t("processed.gui.widget.energy_bar.normal", amount)
     inline fun energyBarTooltip(amount: C, max: C) = t("processed.gui.widget.energy_bar", amount, max)
 
-    inline fun cableTransferSpeedTooltip(tier: C) = t("block.processed.cable.tooltip", tier)
+    inline fun cableTierTooltip(tier: C) = t("block.processed.cable.tooltip", tier)
+    inline fun itemPipeTooltip(transferSpeed: Int) = t("block.processed.item_pipe.tooltip", transferSpeed)
 
     inline fun tieredMachineInfo(maxPower: C, nameColored: C) = t("processed.tiered_machine_info", maxPower, nameColored)
     inline fun poweredFurnaceName(tier: ProcessedTier) = t("block.processed.powered_furnace", tier)

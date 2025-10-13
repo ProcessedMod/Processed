@@ -8,26 +8,17 @@ import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.EntityBlock
-import net.minecraft.world.level.block.entity.BlockEntity
-import net.minecraft.world.level.block.entity.BlockEntityTicker
-import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.shapes.BooleanOp
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
-import redcrafter07.processed.items.ModItems
 import redcrafter07.processed.materials.Material
 import redcrafter07.processed.materials.MaterialContainer
 
 class CableBlock(override val material: Material) : Block(Properties.of().noOcclusion()), EntityBlock,
     MaterialContainer {
     override fun newBlockEntity(pos: BlockPos, state: BlockState) = CableBlockEntity(pos, state)
-
-    override fun <T : BlockEntity?> getTicker(
-        level: Level, state: BlockState, blockEntityType: BlockEntityType<T?>
-    ): BlockEntityTicker<T>? = if (level.isClientSide) null
-    else BlockEntityTicker { _, _, _, be -> if (be is CableBlockEntity) be.serverTick() }
 
     override fun neighborChanged(
         state: BlockState,

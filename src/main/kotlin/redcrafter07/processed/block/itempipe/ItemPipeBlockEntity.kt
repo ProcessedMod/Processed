@@ -1,4 +1,4 @@
-package redcrafter07.processed.block.cable
+package redcrafter07.processed.block.itempipe
 
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -10,6 +10,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
@@ -18,96 +19,103 @@ import net.minecraft.world.level.block.state.BlockState
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.client.model.data.ModelData
 import net.neoforged.neoforge.client.model.data.ModelProperty
-import net.neoforged.neoforge.energy.IEnergyStorage
-import redcrafter07.processed.ProcessedPower
-import redcrafter07.processed.ProcessedTier
+import net.neoforged.neoforge.items.IItemHandler
 import redcrafter07.processed.Translations
 import redcrafter07.processed.block.WrenchInteractableBlock
 import redcrafter07.processed.block.machine_abstractions.BlockSide
-import redcrafter07.processed.block.machine_abstractions.EnergyCapableBlockEntity
+import redcrafter07.processed.block.machine_abstractions.ItemCapableBlockEntity
 import redcrafter07.processed.block.tile_entities.ModTileEntities
-import redcrafter07.processed.block.tile_entities.capabilities.ProcessedPowerStore
 import redcrafter07.processed.materials.MaterialContainer
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.minus
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.toVec3
 import java.util.function.BiFunction
 import java.util.function.Consumer
+import kotlin.math.max
+import kotlin.math.min
 
-class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
-    BlockEntity(ModTileEntities.CABLE.get(), pos, blockState), EnergyCapableBlockEntity, WrenchInteractableBlock {
+class ItemPipeBlockEntity(pos: BlockPos, blockState: BlockState) :
+    BlockEntity(ModTileEntities.ITEM_PIPE.get(), pos, blockState), ItemCapableBlockEntity, WrenchInteractableBlock {
 
-    val cableTier = lazy {
+    val transferSpeed = lazy {
         val blk = blockState.block
-        if (blk !is MaterialContainer) throw IllegalStateException("CableBlock is not a material container")
-        blk.material.getExtraData(CableData::class.java)?.tier
-            ?: throw IllegalStateException("material data for material ${blk.material.identifier} does not have CableeData.")
+        if (blk !is MaterialContainer) throw IllegalStateException("ItemPipe is not a material container")
+        blk.material.getExtraData(ItemPipeData::class.java)?.speed
+            ?: throw IllegalStateException("material data for material ${blk.material.identifier} does not have ItemPipeData.")
     }
 
     val connected = Connected()
     val disallowedConnections = Connected()
+    var itemsTransferred = 0
 
-    val energyHandler = object : IEnergyStorage {
-        override fun receiveEnergy(amount: Int, sim: Boolean): Int {
-            val lvl = level ?: return amount
-            var energyLeft = amount
+    val itemHandler = object : IItemHandler {
+        override fun getSlots(): Int = 1
+        override fun getStackInSlot(p0: Int): ItemStack = ItemStack.EMPTY
+        override fun insertItem(
+            slot: Int, item: ItemStack, simulate: Boolean
+        ): ItemStack {
+            val lvl = level ?: return item
+            var item = item
+            var simItemsTransferred = itemsTransferred
 
             for (entry in outputs.entries) {
-                if (energyLeft <= 0) return 0
-                val cap: IEnergyStorage
-                val cap1 = lvl.getCapability(Capabilities.EnergyStorage.BLOCK, entry.key, entry.value.second)
-                if (cap1 != null) cap = cap1
-                else {
-                    val cap2 = lvl.getCapability(ProcessedPower.BLOCK, entry.key, entry.value.second) ?: continue
-                    if (!cableTier.value.canInsertEnergy(cap2.minTier())) continue
-                    cap = cap2.energy()
-                }
-
+                if (item.isEmpty) break
+                val cap = lvl.getCapability(Capabilities.ItemHandler.BLOCK, entry.key, entry.value.second) ?: continue
                 try {
-                    energyLeft = cap.receiveEnergy(energyLeft, sim)
+                    for (slot in 0..<cap.slots) {
+                        if (simItemsTransferred >= entry.value.first || item.isEmpty) break
+                        val left = entry.value.first - simItemsTransferred
+                        val removed = max(0, item.count - left)
+                        if (item.count - removed <= 0) break
+
+                        val newItem = item.copyWithCount(item.count - removed)
+                        val rejected = cap.insertItem(slot, newItem, simulate)
+                        simItemsTransferred += newItem.count - rejected.count
+
+                        if (rejected.isEmpty) item.count = removed
+                        else {
+                            item = rejected
+                            item.count += removed
+                        }
+                    }
                 } catch (_: Exception) {
                 }
             }
 
-            return energyLeft
+            if (!simulate) itemsTransferred = simItemsTransferred
+            return item
         }
 
-        override fun extractEnergy(p0: Int, p1: Boolean): Int = 0
-        override fun getEnergyStored(): Int = 0
-        override fun getMaxEnergyStored(): Int = 0
-        override fun canExtract(): Boolean = false
-        override fun canReceive(): Boolean = true
+        override fun extractItem(
+            p0: Int, p1: Int, p2: Boolean
+        ): ItemStack = ItemStack.EMPTY
+
+        override fun getSlotLimit(p0: Int): Int = 0
+        override fun isItemValid(p0: Int, p1: ItemStack): Boolean = true
     }
-    val energyCapability = ProcessedPowerStore(cableTier.value, energyHandler)
 
-    override fun energyCapabilityForSide(side: BlockSide?, state: BlockState) = energyCapability
+    override fun itemCapabilityForSide(side: BlockSide?, state: BlockState) = itemHandler
 
-    private var outputCacheInner: Map<BlockPos, Pair<ProcessedTier, Direction>>? = null
-    val outputs: Map<BlockPos, Pair<ProcessedTier, Direction>>
+    private var outputCacheInner: Map<BlockPos, Pair<Int, Direction>>? = null
+    val outputs: Map<BlockPos, Pair<Int, Direction>>
         get() {
             val outputCache = outputCacheInner
             if (outputCache != null) return outputCache
-            val outputs = HashMap<BlockPos, Pair<ProcessedTier, Direction>>()
+            val outputs = HashMap<BlockPos, Pair<Int, Direction>>()
+            val level = level
+                ?: throw IllegalStateException("ItemPipeBlockEntity is missing a level while trying to get the outputs")
 
-            traverse(worldPosition, cableTier.value) { pipe, transferTier ->
-                val tier = transferTier.min(pipe.cableTier.value)
+            traverse(worldPosition, transferSpeed.value) { pipe, transferSpeed ->
+                val speed = min(transferSpeed, pipe.transferSpeed.value)
 
                 for (direction in Direction.entries) {
                     val pos = pipe.blockPos.relative(direction)
-                    val be = level!!.getBlockEntity(pos)
-                    if (be != null && be is CableBlockEntity) continue
-                    var cap = level!!.getCapability(Capabilities.EnergyStorage.BLOCK, pos, direction.opposite)
-                    if (cap == null) {
-                        val cap1 = level!!.getCapability(ProcessedPower.BLOCK, pos, direction.opposite) ?: continue
-                        if (!tier.canInsertEnergy(cap1.minTier())) continue
-                        cap = cap1.energy()
-                    }
-                    if (!cap.canReceive()) continue
-                    outputs.compute(pos) { _, value ->
-                        Pair(value?.first ?: tier, direction.opposite)
-                    }
+                    val be = level.getBlockEntity(pos)
+                    if (be != null && be is ItemPipeBlockEntity) continue
+                    level.getCapability(Capabilities.ItemHandler.BLOCK, pos, direction.opposite) ?: continue
+                    outputs.compute(pos) { _, value -> Pair(value?.first ?: speed, direction.opposite) }
                 }
 
-                tier
+                speed
             }
             outputCacheInner = outputs
             return outputs
@@ -142,9 +150,9 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
         }
     }
 
-    fun traverse(pos: BlockPos, f: Consumer<CableBlockEntity>) = traverse(pos, Unit) { model, _ -> f.accept(model) }
+    fun traverse(pos: BlockPos, f: Consumer<ItemPipeBlockEntity>) = traverse(pos, Unit) { model, _ -> f.accept(model) }
 
-    fun <T> traverse(pos: BlockPos, data: T, f: BiFunction<CableBlockEntity, T, T>) {
+    fun <T> traverse(pos: BlockPos, data: T, f: BiFunction<ItemPipeBlockEntity, T, T>) {
         val set = hashSetOf(pos)
         val data = f.apply(this, data)
         val level = level ?: return
@@ -153,18 +161,18 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
 
     fun <T> traverse(
         pos: BlockPos,
-        f: BiFunction<CableBlockEntity, T, T>,
+        f: BiFunction<ItemPipeBlockEntity, T, T>,
         set: MutableSet<BlockPos>,
         level: Level,
         data: T,
-        be: CableBlockEntity
+        be: ItemPipeBlockEntity
     ) {
         for (direction in Direction.entries) {
             val newPos = pos.relative(direction)
             if (set.contains(newPos) || !be.connected[direction]) continue
             set.add(newPos)
             val blockEntity = level.getBlockEntity(newPos)
-            if (blockEntity is CableBlockEntity) {
+            if (blockEntity is ItemPipeBlockEntity) {
                 val data = f.apply(blockEntity, data)
                 traverse(newPos, f, set, level, data, blockEntity)
             }
@@ -190,11 +198,8 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
         if (disallowedConnections[direction]) return false
         val pos = blockPos.relative(direction)
         val be = level.getBlockEntity(pos) ?: return false
-        if (be is CableBlockEntity) return !be.disallowedConnections[direction.opposite]
-        val cap1 = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, direction.opposite)
-        if (cap1 != null) return true
-        val cap2 = level.getCapability(ProcessedPower.BLOCK, pos, direction.opposite)
-        return cap2 != null && cableTier.value.canInsertEnergy(cap2.minTier())
+        if (be is ItemPipeBlockEntity) return !be.disallowedConnections[direction.opposite]
+        return level.getCapability(Capabilities.ItemHandler.BLOCK, pos, direction.opposite) != null
     }
 
     override fun getModelData(): ModelData = ModelData.builder().with(TRANSMITTER_PROPERTY, connected).build()
@@ -230,12 +235,12 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
                 Direction.NORTH -> z = 0.5
                 Direction.SOUTH -> z = 0.5
             }
-            if (x < CableBlock.START) return Direction.WEST
-            if (x >= CableBlock.END) return Direction.EAST
-            if (y < CableBlock.START) return Direction.DOWN
-            if (y >= CableBlock.END) return Direction.UP
-            if (z < CableBlock.START) return Direction.NORTH
-            if (z >= CableBlock.END) return Direction.SOUTH
+            if (x < ItemPipeBlock.START) return Direction.WEST
+            if (x >= ItemPipeBlock.END) return Direction.EAST
+            if (y < ItemPipeBlock.START) return Direction.DOWN
+            if (y >= ItemPipeBlock.END) return Direction.UP
+            if (z < ItemPipeBlock.START) return Direction.NORTH
+            if (z >= ItemPipeBlock.END) return Direction.SOUTH
             return direction
         }
 

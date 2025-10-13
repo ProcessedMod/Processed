@@ -11,6 +11,8 @@ import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.block.cable.CableBlock
 import redcrafter07.processed.block.cable.CableData
+import redcrafter07.processed.block.itempipe.ItemPipeBlock
+import redcrafter07.processed.block.itempipe.ItemPipeData
 import redcrafter07.processed.block.machine_abstractions.TieredProcessedBlock
 import redcrafter07.processed.items.ModItems
 import redcrafter07.processed.materials.Material
@@ -36,13 +38,22 @@ object ModBlocks {
     }
     val FLUID_TANK = registerBlock("fluid_tank", ::FluidTankBlock)
     val BLOCKS_POWERED_FURNACE = registerTieredBlock("powered_furnace", ProcessedTier.TIERS, ::PoweredFurnaceBlock)
-    val CREATIVE_POWER_SOURCE = registerTieredBlock("creative_power_source", ProcessedTier.TIERS, ::CreativePowerSourceBlock)
+    val CREATIVE_POWER_SOURCE =
+        registerTieredBlock("creative_power_source", ProcessedTier.TIERS, ::CreativePowerSourceBlock)
     val BASIC_CASING = registerBlock("basic_casing") { CasingBlock(BlockBehaviour.Properties.of()) }
     val BIG_SMELTER = registerBlock("big_smelter", ::BigSmelterBlock)
 
 
     val CABLES = registerMaterialBlockExtra(
         Materials.MATERIALS, CableData::class.java, { m, _ -> "${m.identifier}_cable" }, ::CableBlock, ::CableBlockItem
+    )
+
+    val ITEM_PIPES = registerMaterialBlockExtra(
+        Materials.MATERIALS,
+        ItemPipeData::class.java,
+        { m, _ -> "${m.identifier}_item_pipe" },
+        ::ItemPipeBlock,
+        ::ItemPipeBlockItem
     )
 
     val METAL_BLOCKS = registerMaterialBlock(
