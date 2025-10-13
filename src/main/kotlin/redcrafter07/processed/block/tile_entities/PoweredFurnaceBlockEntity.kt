@@ -17,6 +17,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.Translations
+import redcrafter07.processed.block.PoweredFurnaceBlock
 import redcrafter07.processed.block.machine_abstractions.IoState
 import redcrafter07.processed.block.machine_abstractions.TieredProcessedMachine
 import redcrafter07.processed.gui.PoweredFurnaceMenu
@@ -59,9 +60,13 @@ class PoweredFurnaceBlockEntity(pos: BlockPos, blockState: BlockState) :
                 if (progress <= 0) return
                 progress -= tier.speedMultiplier * 2
                 if (progress < 0) progress = 0
+                if (state.getValue(PoweredFurnaceBlock.WORKING))
+                    level.setBlockAndUpdate(pos, state.setValue(PoweredFurnaceBlock.WORKING, false));
                 setChanged(level, pos, state)
                 return
             }
+            if (!state.getValue(PoweredFurnaceBlock.WORKING))
+                level.setBlockAndUpdate(pos, state.setValue(PoweredFurnaceBlock.WORKING, true));
             progress += tier.speedMultiplier // we could also just do `maxProgress = recipe.cookingTime` in `hasRecipeAndSync`, but this takes less computation power!
 
             if (progress > maxProgress) {
@@ -71,7 +76,11 @@ class PoweredFurnaceBlockEntity(pos: BlockPos, blockState: BlockState) :
             setChanged(level, pos, state)
         } else if (progress != 0) {
             progress = 0
+
             setChanged(level, pos, state)
+        }   else {
+            if (state.getValue(PoweredFurnaceBlock.WORKING))
+                level.setBlockAndUpdate(pos,state.setValue(PoweredFurnaceBlock.WORKING, false));
         }
     }
 
