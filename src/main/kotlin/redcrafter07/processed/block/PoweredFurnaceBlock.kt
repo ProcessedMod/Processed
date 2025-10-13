@@ -1,19 +1,37 @@
 package redcrafter07.processed.block
 
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.state.StateDefinition
+import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.phys.BlockHitResult
 import redcrafter07.processed.ProcessedTier
+import redcrafter07.processed.block.machine_abstractions.ProcessedBlock
 import redcrafter07.processed.block.machine_abstractions.TieredProcessedBlock
 import redcrafter07.processed.block.tile_entities.PoweredFurnaceBlockEntity
 
 class PoweredFurnaceBlock(tier: ProcessedTier) : TieredProcessedBlock(
     Properties.of().sound(SoundType.STONE), "block.processed.powered_furnace", tier, ::PoweredFurnaceBlockEntity
 ) {
+    companion object {
+        val WORKING: BooleanProperty = BooleanProperty.create("working")
+    }
+
+    override fun addBlockStateDefinition(stateDefinition: StateDefinition.Builder<Block, BlockState>) {
+        stateDefinition.add(WORKING);
+    }
+
+    override fun getStateForPlacement(context: BlockPlaceContext): BlockState? {
+        return defaultBlockState().setValue(STATE_HORIZONTAL_FACING, context.horizontalDirection.opposite)
+    }
+
     override fun useWithoutItem(
         state: BlockState,
         level: Level,
