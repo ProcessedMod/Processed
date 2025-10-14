@@ -28,6 +28,16 @@ enum class BlockSide(val id: Int, val sideName: String) : StringRepresentable, T
             Back -> Vector2i(73, 51)
         }
 
+    val asDirectionNotRotated: Direction
+        get() = when (this) {
+            Top -> Direction.UP
+            Bottom -> Direction.DOWN
+            Left -> Direction.WEST
+            Right -> Direction.EAST
+            Front -> Direction.NORTH
+            Back -> Direction.SOUTH
+        }
+
     override fun getTranslatedName(): Component = Translations.blockSide(sideName)
 
     companion object {
@@ -110,7 +120,10 @@ enum class BlockSide(val id: Int, val sideName: String) : StringRepresentable, T
             Direction.EAST -> Right
         }
 
-        fun getFacing(machineFacing: Direction, direction: Direction): BlockSide = fromDirection(DIRECTION_LOOKUP[machineFacing.get3DDataValue()][direction.get3DDataValue()])
-        fun translateDirection(direction: Direction, state: BlockState) = getFacing(getFacingDirection(state), direction)
+        fun getFacing(machineFacing: Direction, direction: Direction): BlockSide =
+            fromDirection(DIRECTION_LOOKUP[machineFacing.get3DDataValue()][direction.get3DDataValue()])
+
+        fun translateDirection(direction: Direction, state: BlockState) =
+            getFacing(getFacingDirection(state), direction)
     }
 }

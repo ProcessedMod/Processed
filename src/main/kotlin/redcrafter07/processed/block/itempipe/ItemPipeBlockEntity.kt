@@ -101,13 +101,14 @@ class ItemPipeBlockEntity(pos: BlockPos, blockState: BlockState) :
             val outputCache = outputCacheInner
             if (outputCache != null) return outputCache
             val outputs = HashMap<BlockPos, Pair<Int, Direction>>()
-            val level = level
-                ?: throw IllegalStateException("ItemPipeBlockEntity is missing a level while trying to get the outputs")
 
+            val level =
+                level ?: throw IllegalStateException("tried to update the output cache while not having a level")
             traverse(worldPosition, transferSpeed.value) { pipe, transferSpeed ->
                 val speed = min(transferSpeed, pipe.transferSpeed.value)
 
                 for (direction in Direction.entries) {
+                    if (!pipe.connected[direction]) continue
                     val pos = pipe.blockPos.relative(direction)
                     val be = level.getBlockEntity(pos)
                     if (be != null && be is ItemPipeBlockEntity) continue

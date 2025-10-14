@@ -3,11 +3,8 @@ package redcrafter07.processed.dynpack
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.PackResources
 import net.minecraft.server.packs.resources.IoSupplier
-import redcrafter07.processed.ProcessedMod
 import java.io.ByteArrayInputStream
 import java.io.InputStream
-import java.nio.charset.StandardCharsets
-import java.util.HashMap
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write
@@ -15,11 +12,10 @@ import kotlin.concurrent.write
 class DynPackContents {
     class Node private constructor(var data: Any) {
         // Data should only ever be a Map<String, Node> or IoSupplier<InputStream>.
-        // This is enforced by making the constructor private and giving 2 functions which take only these arguments to construct Node.
-        companion object {
-            fun file(contents: IoSupplier<InputStream>): Node = Node(contents)
-            fun dir(): Node = Node(HashMap<String, Node>())
-        }
+        // This is enforced by making the constructor only ever do Map<String, Node>
+        // and adding a function that turns a directory into a file.
+
+        constructor() : this(HashMap<String, Node>())
 
         val isLeaf: Boolean get() = data is IoSupplier<*>
         val children: MutableMap<String, Node>
@@ -50,7 +46,7 @@ class DynPackContents {
     }
 
     val lock = ReentrantReadWriteLock()
-    val root = Node.dir()
+    val root = Node()
 
     private fun getPath(namespace: String, path: String): Node? {
         var node = root.getFile(namespace) ?: return null
@@ -67,15 +63,11 @@ class DynPackContents {
 
     fun write(path: ResourceLocation, contents: IoSupplier<InputStream>) {
         lock.write {
-            var node = root.children.computeIfAbsent(path.namespace) { Node.dir() }
-            for (arg in path.path.split('/')) node = node.children.computeIfAbsent(arg) { Node.dir() }
+            var node = root.children.computeIfAbsent(path.namespace) { Node() }
+            for (arg in path.path.split('/')) node = node.children.computeIfAbsent(arg) { Node() }
             node.makeIntoFile(contents)
         }
     }
 
-    fun write(path: ResourceLocation, contents: ByteArray) {
-        ProcessedMod.LOG.debug("Writing {}/{}: {}", path.namespace, path.path, contents.toString(StandardCharsets.UTF_8))
-
-        write(path) { ByteArrayInputStream(contents) }
-    }
+    fun write(path: ResourceLocation, contents: ByteArray) = write(path) { ByteArrayInputStream(contents) }
 }

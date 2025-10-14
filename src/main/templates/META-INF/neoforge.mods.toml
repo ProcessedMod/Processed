@@ -11,14 +11,14 @@ displayName = "${mod_name}"
 #credits="The ExampleMod dev team"
 authors = "${mod_authors}"
 description = '''${mod_description}'''
-displayURL="https://modrinth.com/project/processed"
-logoFile="logo.png"
+displayURL = "https://modrinth.com/project/processed"
+logoFile = "logo.png"
 # TODO: Updates
 # See: https://docs.modrinth.com/#tag/misc/operation/forgeUpdates
 # updateJSONURL=""
 
 [[mixins]]
-config="${mod_id}.mixins.json"
+config = "${mod_id}.mixins.json"
 
 [[dependencies.${mod_id}]]
 modId = "neoforge"
@@ -32,3 +32,7 @@ type = "required"
 versionRange = "${minecraft_version_range}"
 ordering = "AFTER"
 side = "BOTH"
+[[dependencies.${mod_id}]]
+modId = "theoneprobe"
+type = "optional"
+ordering = "AFTER"

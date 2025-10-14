@@ -79,7 +79,8 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
     }
     val energyCapability = ProcessedPowerStore(cableTier.value, energyHandler)
 
-    override fun energyCapabilityForSide(side: BlockSide?, state: BlockState) = energyCapability
+    override fun energyCapabilityForSide(side: BlockSide?, state: BlockState) =
+        if (side == null) energyCapability else if (connected[side.asDirectionNotRotated]) energyCapability else null
 
     private var outputCacheInner: Map<BlockPos, Pair<ProcessedTier, Direction>>? = null
     val outputs: Map<BlockPos, Pair<ProcessedTier, Direction>>
@@ -88,16 +89,21 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
             if (outputCache != null) return outputCache
             val outputs = HashMap<BlockPos, Pair<ProcessedTier, Direction>>()
 
-            traverse(worldPosition, cableTier.value) { pipe, transferTier ->
-                val tier = transferTier.min(pipe.cableTier.value)
+            val level =
+                level ?: throw IllegalStateException("tried to update the output cache while not having a level")
+
+            traverse(worldPosition, cableTier.value) { cable, transferTier ->
+                val tier = transferTier.min(cable.cableTier.value)
 
                 for (direction in Direction.entries) {
-                    val pos = pipe.blockPos.relative(direction)
-                    val be = level!!.getBlockEntity(pos)
+                    val pos = cable.blockPos.relative(direction)
+                    if (!cable.connected[direction]) continue
+
+                    val be = level.getBlockEntity(pos)
                     if (be != null && be is CableBlockEntity) continue
-                    var cap = level!!.getCapability(Capabilities.EnergyStorage.BLOCK, pos, direction.opposite)
+                    var cap = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, direction.opposite)
                     if (cap == null) {
-                        val cap1 = level!!.getCapability(ProcessedPower.BLOCK, pos, direction.opposite) ?: continue
+                        val cap1 = level.getCapability(ProcessedPower.BLOCK, pos, direction.opposite) ?: continue
                         if (!tier.canInsertEnergy(cap1.minTier())) continue
                         cap = cap1.energy()
                     }

@@ -26,7 +26,7 @@ abstract class ProcessedBlock(properties: Properties) : Block(properties.pushRea
     EntityBlock {
     companion object {
         val STATE_FACING: DirectionProperty = BlockStateProperties.FACING
-        val STATE_HORIZONTAL_FACING: DirectionProperty = BlockStateProperties.HORIZONTAL_FACING
+        val STATE_HORIZ_FACING: DirectionProperty = BlockStateProperties.HORIZONTAL_FACING
     }
 
     override fun useItemOn(
@@ -42,10 +42,16 @@ abstract class ProcessedBlock(properties: Properties) : Block(properties.pushRea
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult)
     }
 
+    open fun rotationType() = RotationType.RotatableHorizontal
+
     protected open fun addBlockStateDefinition(stateDefinition: StateDefinition.Builder<Block, BlockState>) {}
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
-        builder.add(STATE_HORIZONTAL_FACING)
+        when (rotationType()) {
+            RotationType.RotatableHorizontal -> builder.add(STATE_HORIZ_FACING)
+            RotationType.Rotatable -> builder.add(STATE_FACING)
+            RotationType.NonRotatable -> Unit
+        }
         addBlockStateDefinition(builder)
     }
 
@@ -54,13 +60,17 @@ abstract class ProcessedBlock(properties: Properties) : Block(properties.pushRea
     override fun getStateForPlacement(context: BlockPlaceContext): BlockState? {
         var state = getBlockState(context)
         if (state == null) state = defaultBlockState()
-        return state.setValue(STATE_HORIZONTAL_FACING, context.horizontalDirection.opposite)
+        return when (rotationType()) {
+            RotationType.RotatableHorizontal -> state.setValue(STATE_HORIZ_FACING, context.horizontalDirection.opposite)
+            RotationType.Rotatable -> state.setValue(STATE_FACING, context.clickedFace)
+            RotationType.NonRotatable -> state
+        }
     }
 
     override fun <T : BlockEntity> getTicker(
         level: Level, state: BlockState, blockEntityType: BlockEntityType<T>
     ): BlockEntityTicker<T>? = BlockEntityTicker { lv, pos, tickState, ticker ->
-            if (ticker is ProcessedMachine) ticker.handleTick(lv, pos, tickState)
+        if (ticker is ProcessedMachine) ticker.handleTick(lv, pos, tickState)
     }
 
 

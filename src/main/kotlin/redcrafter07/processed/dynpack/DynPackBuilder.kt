@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.Block
 import redcrafter07.processed.block.ModBlocks
 import redcrafter07.processed.block.machine_abstractions.ProcessedBlock
+import redcrafter07.processed.block.machine_abstractions.RotationType
 import redcrafter07.processed.items.ModItems
 import redcrafter07.processed.rl
 
@@ -28,6 +29,8 @@ object DynPackBuilder {
         val rawMetalBlocks = rawMetalBlockRLS.map { DelegatedModel(it).get() }.toList()
         val poweredFurnaceRL = rl("block/powered_furnace")
         val poweredFurnaceModel = DelegatedModel(poweredFurnaceRL).get()
+        val creativePowerSourceRL = ResourceLocation.withDefaultNamespace("block/redstone_block")
+        val createPowerSourceModel = DelegatedModel(creativePowerSourceRL).get()
 
         for (block in ModBlocks.CABLES) {
             DynPackResources.addBlockState(block.id, createSimpleBlock(block.get(), cableRL).get())
@@ -55,8 +58,13 @@ object DynPackBuilder {
         }
 
         for (block in ModBlocks.BLOCKS_POWERED_FURNACE) {
-            DynPackResources.addBlockState(block.id, createSidedHorizontal(block.get(), poweredFurnaceRL).get())
+            DynPackResources.addBlockState(block.id, createProcessedBlock(block.get(), poweredFurnaceRL).get())
             DynPackResources.addItemModel(block.id, poweredFurnaceModel)
+        }
+
+        for (block in ModBlocks.CREATIVE_POWER_SOURCE) {
+            DynPackResources.addBlockState(block.id, createProcessedBlock(block.get(), creativePowerSourceRL).get())
+            DynPackResources.addItemModel(block.id, createPowerSourceModel)
         }
     }
 
@@ -79,10 +87,34 @@ object DynPackBuilder {
         for (item in ModItems.RAW_ITEMS) DynPackResources.addItemModel(item.id, rawModel)
     }
 
+    fun createProcessedBlock(block: ProcessedBlock, modelLocation: ResourceLocation): MultiVariantGenerator =
+        when (block.rotationType()) {
+            RotationType.RotatableHorizontal -> createSidedHorizontal(block, modelLocation)
+            RotationType.Rotatable -> createSided(block, modelLocation)
+            RotationType.NonRotatable -> createSimpleBlock(block, modelLocation)
+        }
+
+    fun createSided(block: Block, modelLocation: ResourceLocation): MultiVariantGenerator {
+        fun xy(x: Rotation, y: Rotation): Variant =
+            Variant.variant().with(VariantProperties.X_ROT, x).with(VariantProperties.Y_ROT, y)
+
+        // create a PropertyDispatch for the facing=... property, with different x and y rotations according to the direction.
+        val prop = PropertyDispatch.property(ProcessedBlock.STATE_FACING).select(Direction.UP, Variant.variant())
+            .select(Direction.DOWN, Variant.variant().with(VariantProperties.X_ROT, Rotation.R180))
+            .select(Direction.NORTH, Variant.variant().with(VariantProperties.X_ROT, Rotation.R90))
+            .select(Direction.SOUTH, xy(Rotation.R90, Rotation.R180))
+            .select(Direction.WEST, xy(Rotation.R90, Rotation.R270))
+            .select(Direction.EAST, xy(Rotation.R90, Rotation.R90))
+
+        // add the propertydispatch to the blockstate
+        return MultiVariantGenerator.multiVariant(block, Variant.variant().with(VariantProperties.MODEL, modelLocation))
+            .with(prop)
+    }
+
     fun createSidedHorizontal(block: Block, modelLocation: ResourceLocation): MultiVariantGenerator {
         // create a PropertyDispatch for the facing=... property, with different y rotations according to the direction.
         val prop =
-            PropertyDispatch.property(ProcessedBlock.STATE_HORIZONTAL_FACING).select(Direction.NORTH, Variant.variant())
+            PropertyDispatch.property(ProcessedBlock.STATE_HORIZ_FACING).select(Direction.NORTH, Variant.variant())
                 .select(Direction.SOUTH, Variant.variant().with(VariantProperties.Y_ROT, Rotation.R180))
                 .select(Direction.WEST, Variant.variant().with(VariantProperties.Y_ROT, Rotation.R270))
                 .select(Direction.EAST, Variant.variant().with(VariantProperties.Y_ROT, Rotation.R90))
