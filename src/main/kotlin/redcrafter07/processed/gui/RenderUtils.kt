@@ -43,7 +43,7 @@ object RenderUtils {
         guiGraphics.fill(x, y, x + width, y + height, color)
     }
 
-    fun getFluidTexture(fluidStack: FluidStack, flowing: Boolean): TextureAtlasSprite? {
+    fun getFluidTexture(fluidStack: FluidStack, flowing: Boolean): TextureAtlasSprite {
         val properties = IClientFluidTypeExtensions.of(fluidStack.fluid)
         val spriteLocation = if (flowing) properties.flowingTexture else properties.stillTexture
         return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(spriteLocation)
@@ -63,7 +63,10 @@ object RenderUtils {
         height: Float,
         zMin: Float,
         zMax: Float,
-        textureAtlasSprite: TextureAtlasSprite,
+        uMin: Float,
+        uMax: Float,
+        vMin: Float,
+        vMax: Float,
         red: Float,
         green: Float,
         blue: Float,
@@ -71,10 +74,6 @@ object RenderUtils {
         packedLight: Int,
         packedOverlay: Int
     ) {
-        val uMin = textureAtlasSprite.u0
-        val uMax = textureAtlasSprite.u1
-        val vMin = textureAtlasSprite.v0
-        val vMax = textureAtlasSprite.v1
 
         val vHeight = vMax - vMin
 
