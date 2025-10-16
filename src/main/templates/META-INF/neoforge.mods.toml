@@ -36,3 +36,7 @@ side = "BOTH"
 modId = "theoneprobe"
 type = "optional"
 ordering = "AFTER"
+[[dependencies.${mod_id}]]
+modId = "jade"
+type = "optional"
+ordering = "AFTER"

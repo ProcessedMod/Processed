@@ -278,6 +278,7 @@ object RenderUtils {
     }
 
     val WHITE: Int = color(0xff, 0xff, 0xff)
+    val BLACK: Int = color(0, 0, 0)
     val GRAY: Int = color(0x8b, 0x8b, 0x8b)
     val DARK_GRAY: Int = color(0x37, 0x37, 0x37)
     val ENERGY: Int = color(0x0e, 0xa5, 0xe9)

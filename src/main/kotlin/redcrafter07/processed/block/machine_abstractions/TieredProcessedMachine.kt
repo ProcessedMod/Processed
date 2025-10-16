@@ -22,7 +22,7 @@ abstract class TieredProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, b
 
 
     public override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
-        tier = ProcessedTier.TIERS[min(max(tag.getInt("machine_tier"), 0), ProcessedTier.TIERS.size - 1)]
+        tier = ProcessedTier.fromTierNumber(min(max(tag.getInt("machine_tier"), 0), ProcessedTier.TIERS.size - 1))
         super.loadAdditional(tag, registries)
     }
 

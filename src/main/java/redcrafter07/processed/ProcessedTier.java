@@ -1,6 +1,10 @@
 package redcrafter07.processed;
 
+import com.mojang.serialization.Codec;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 import redcrafter07.processed.materials.Material;
 import redcrafter07.processed.materials.Materials;
@@ -8,6 +12,11 @@ import redcrafter07.processed.materials.Materials;
 import java.util.List;
 
 public record ProcessedTier(int tier, int speedMultiplier, int energyMultiplier, Material material) {
+    @NotNull
+    public static ProcessedTier fromTierNumber(int tier) {
+        return TIERS.get(tier);
+    }
+
     @NotNull
     public String getNamed() {
         return "tier_" + tier;
@@ -72,4 +81,11 @@ public record ProcessedTier(int tier, int speedMultiplier, int energyMultiplier,
     @NotNull
     public static List<ProcessedTier> TIERS = List.of(Rudimentary, Basic, Advanced, IEnergyProMax, Nuclear, Quantum,
         Void, Ultimate);
+
+    @NotNull
+    public static Codec<@NotNull ProcessedTier> CODEC = Codec.INT.xmap(ProcessedTier::fromTierNumber,
+        ProcessedTier::tier);
+    @NotNull
+    public static StreamCodec<@NotNull ByteBuf, @NotNull ProcessedTier> STREAM_CODEC = ByteBufCodecs.INT.map(
+        ProcessedTier::fromTierNumber, ProcessedTier::tier);
 }

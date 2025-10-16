@@ -22,6 +22,7 @@ repositories {
     mavenLocal()
     maven { url "https://thedarkcolour.github.io/KotlinForForge/" }
     maven { url 'https://modmaven.dev/' }
+    maven { url "https://api.modrinth.com/maven" }
 }
 
 base {
@@ -111,10 +112,12 @@ dependencies {
     // Use the latest version of NeoForge
     implementation "thedarkcolour:kotlinforforge-neoforge:$kff_version"
 
-    runtimeOnly "mekanism:Mekanism:1.21-10.6.7.54" // Mekanism
     compileOnly "mcjty.theoneprobe:theoneprobe:1.21_neo-12.0.4-6"
+    compileOnly "maven.modrinth:jade:15.10.3+neoforge"
 
-    localRuntime "mcjty.theoneprobe:theoneprobe:1.21_neo-12.0.4-6"
+    runtimeOnly "mekanism:Mekanism:1.21-10.6.7.54" // Mekanism
+//    localRuntime "mcjty.theoneprobe:theoneprobe:1.21_neo-12.0.4-6" // The One Probe
+    localRuntime "maven.modrinth:jade:15.10.3+neoforge"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
