@@ -14,6 +14,7 @@ import net.neoforged.neoforge.client.event.ModelEvent
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent
 import net.neoforged.neoforge.event.AddPackFindersEvent
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
+import net.neoforged.neoforge.registries.DataPackRegistryEvent
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.ProcessedPower
 import redcrafter07.processed.block.cable.CableModelLoader
@@ -27,8 +28,10 @@ import redcrafter07.processed.dynpack.DynPackSource
 import redcrafter07.processed.gui.GenericMachineMenuScreen
 import redcrafter07.processed.gui.ModMenuTypes
 import redcrafter07.processed.integration.theoneprobe.TheOneProbeIntegration
+import redcrafter07.processed.miner.Planetoid
 import redcrafter07.processed.network.IOChangePacket
 import redcrafter07.processed.network.MultiblockDestroyPacket
+import redcrafter07.processed.network.PlanetoidSelectPacket
 import redcrafter07.processed.network.WrenchModeChangePacket
 import redcrafter07.processed.rl
 import java.util.*
@@ -128,6 +131,9 @@ object Registering {
         registrar.playToClient(
             MultiblockDestroyPacket.TYPE, MultiblockDestroyPacket.CODEC, MultiblockDestroyPacket::handleClient
         )
+        registrar.playToServer(
+            PlanetoidSelectPacket.TYPE, PlanetoidSelectPacket.CODEC, PlanetoidSelectPacket::handleServer
+        )
     }
 
     @SubscribeEvent
@@ -147,5 +153,14 @@ object Registering {
     @SubscribeEvent
     fun loadComplete(e: FMLLoadCompleteEvent) {
         e.enqueueWork { if (ModList.get().isLoaded("theoneprobe")) TheOneProbeIntegration.init() }
+    }
+
+    @SubscribeEvent
+    fun registerDatapackRegistries(e: DataPackRegistryEvent.NewRegistry) {
+        e.dataPackRegistry(
+            Planetoid.REGISTRY_KEY,
+            Planetoid.CODEC,
+            Planetoid.CODEC,
+        )
     }
 }

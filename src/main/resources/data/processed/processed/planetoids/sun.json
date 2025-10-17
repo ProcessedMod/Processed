@@ -1,0 +1,10 @@
+{
+  "name": "Sun",
+  "x": 0,
+  "y": 0,
+  "size": 100,
+  "texture": "processed:textures/planetoid/sun.png",
+  "color": "#f9d71c",
+  "distance": 149600000,
+  "gravity": 274.13
+}

@@ -27,6 +27,7 @@ object ModItems {
 
     val BASIC_MINER = registerItem("miner_tier_0") { MinerItem(ProcessedTier.Basic) }
     val ADVANCED_MINER = registerItem("miner_tier_1") { MinerItem(ProcessedTier.Advanced) }
+    val LOCATION_SELECTOR = registerItem("location_selector", ::LocationSelectorItem)
 
     val DUST_ITEMS = registerMaterialItem(Materials.MATERIALS, Material::dustPath, ::Dust, MaterialInfo.Types.Dust)
     val INGOT_ITEMS =

@@ -56,6 +56,17 @@ object Translations {
     inline fun tieredMachineInfo(maxPower: C, nameColored: C) = t("processed.tiered_machine_info", maxPower, nameColored)
     inline fun poweredFurnaceName(tier: ProcessedTier) = t("block.processed.powered_furnace", tier)
     inline fun bigSmelterName() = t("block.processed.big_smelter")
+
+    inline fun planetoidWidgetTooltip(planetoidName: String) = t("processed.gui.planetoid_widget.tooltip", t(planetoidName))
+    inline fun planetoidDistance(distance: C) = t("processed.gui.planetoid.distance", distance)
+    inline fun planetoidGravity(gravity: Float) = t("processed.gui.planetoid.gravity", gravity)
+    inline fun unitKilometers(amount: Long) = t("processed.unit.kilometers", amount)
+    inline fun unitKilometersLong(amount: Long) = t("processed.unit.kilometers.long", amount)
+    inline fun planetoidSelectionScreenGoUp() = t("processed.gui.planetoid_selection_screen.go_up")
+
+    inline fun locationSelectorChangeTooltip() = t("item.processed.location_selector.change_tooltip")
+    inline fun locationSelectorUnbound() = t("item.processed.location_selector.unbound")
+    inline fun locationSelectorBound(name: String) = t("item.processed.location_selector.bound", t(name))
 }
 
 inline fun t(key: String): MC = C.translatable(key)

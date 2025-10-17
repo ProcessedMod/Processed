@@ -1,0 +1,11 @@
+{
+  "name": "Moon",
+  "x": 120,
+  "y": 0,
+  "size": 30,
+  "texture": "processed:textures/planetoid/sun.png",
+  "parent": "processed:earth",
+  "color": "#8c9197",
+  "distance": 384400,
+  "gravity": 1.62
+}

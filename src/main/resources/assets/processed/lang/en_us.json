@@ -31,6 +31,10 @@
   "item.processed.wrench.mode.upgrade": "§2Upgrade",
   "item.processed.wrench.mode.rotate": "§3Rotate",
   "item.processed.wrench.name": "Wrench §7[%d§7]",
+  "item.processed.location_selector": "Location Selector",
+  "item.processed.location_selector.change_tooltip": "Right-click to select a planetoid",
+  "item.processed.location_selector.unbound": "Unbound",
+  "item.processed.location_selector.bound": "Bound to: %s",
   "processed.screen.block_config.items": "Configuring Items",
   "processed.screen.block_config.fluids": "Configuring Fluids",
   "processed.screen.block_config.upgrades": "Upgrades",
@@ -91,5 +95,12 @@
 
   "processed.tiered_machine_info": "§7Max Power: %s§a/t of %s §aPower",
 
-  "config.jade.plugin_processed.energy": "Processed Energy"
+  "config.jade.plugin_processed.energy": "Processed Energy",
+
+  "processed.gui.planetoid_selection_screen.go_up": "Go Up",
+  "processed.gui.planetoid_widget.tooltip": "Planetoid: %s",
+  "processed.gui.planetoid.distance": "Distance: %s",
+  "processed.gui.planetoid.gravity": "Gravity (gₒ): %s m/s²",
+  "processed.unit.kilometers": "%d km",
+  "processed.unit.kilometers.long": "%d Kilometers"
 }
