@@ -50,9 +50,9 @@
   "processed.side.front": "Front",
   "processed.side.back": "Back",
   "processed.gui.widget.energy_bar": "Energy: %s / %s",
-  "processed.gui.widget.energy_bar.normal": "%s Fe",
-  "processed.gui.widget.energy_bar.thousand": "%s kFe",
-  "processed.gui.widget.energy_bar.million": "%s MFe",
+  "processed.gui.widget.energy_bar.normal": "%s FE",
+  "processed.gui.widget.energy_bar.thousand": "%s kFE",
+  "processed.gui.widget.energy_bar.million": "%s MFE",
 
   "processed.material_dust": "%s Dust",
   "processed.material_ingot": "%s Ingot",
