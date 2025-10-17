@@ -4,6 +4,7 @@ import net.minecraft.world.item.Item
 import net.neoforged.neoforge.registries.DeferredItem
 import net.neoforged.neoforge.registries.DeferredRegister
 import redcrafter07.processed.ProcessedMod
+import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.materials.Material
 import redcrafter07.processed.materials.MaterialInfo
 import redcrafter07.processed.materials.MaterialItem
@@ -20,6 +21,12 @@ object ModItems {
 
     val BLITZ_ORB = registerItem("blitz_orb") { ModItem(Item.Properties().stacksTo(64), "blitz_orb") }
     val WRENCH = registerItem("wrench") { WrenchItem() }
+
+    val BASIC_ENGINE = registerItem("engine_tier_0") { EngineItem(ProcessedTier.Basic) }
+    val ADVANCED_ENGINE = registerItem("engine_tier_1") { EngineItem(ProcessedTier.Advanced) }
+
+    val BASIC_MINER = registerItem("miner_tier_0") { MinerItem(ProcessedTier.Basic) }
+    val ADVANCED_MINER = registerItem("miner_tier_1") { MinerItem(ProcessedTier.Advanced) }
 
     val DUST_ITEMS = registerMaterialItem(Materials.MATERIALS, Material::dustPath, ::Dust, MaterialInfo.Types.Dust)
     val INGOT_ITEMS =
