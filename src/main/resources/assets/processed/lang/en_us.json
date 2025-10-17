@@ -53,6 +53,10 @@
   "processed.gui.widget.energy_bar.normal": "%s FE",
   "processed.gui.widget.energy_bar.thousand": "%s kFE",
   "processed.gui.widget.energy_bar.million": "%s MFE",
+  "processed.gui.widget.energy_bar.billion": "%s GFE",
+  "processed.gui.widget.energy_bar.trillion": "%s TFE",
+  "processed.gui.widget.energy_bar.quadrillion": "%s PFE",
+  "processed.gui.widget.energy_bar.quintillion": "%s EFE",
 
   "processed.material_dust": "%s Dust",
   "processed.material_ingot": "%s Ingot",
