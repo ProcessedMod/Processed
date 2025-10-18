@@ -3,9 +3,11 @@
 package redcrafter07.processed
 
 import net.neoforged.neoforge.common.TranslatableEnum
+import org.apache.commons.lang3.time.DurationFormatUtils
 import redcrafter07.processed.block.machine_abstractions.IoState
 import redcrafter07.processed.items.WrenchMode
 import redcrafter07.processed.materials.Material
+import java.util.concurrent.TimeUnit
 import net.minecraft.network.chat.Component as C
 import net.minecraft.network.chat.MutableComponent as MC
 
@@ -64,28 +66,77 @@ object Translations {
 
     inline fun planetoidDistance(distance: C) = t("processed.gui.planetoid.distance", distance)
     inline fun planetoidGravity(gravity: Float) = t("processed.gui.planetoid.gravity", gravity)
-    inline fun unitKilometers(amount: Long) = t("processed.unit.kilometers", amount)
-    inline fun unitKilometersLong(amount: Long) = t("processed.unit.kilometers.long", amount)
     inline fun planetoidSelectionScreenGoUp() = t("processed.gui.planetoid_selection_screen.go_up")
 
     inline fun locationSelectorChangeTooltip() = t("item.processed.location_selector.change_tooltip")
     inline fun locationSelectorUnbound() = t("item.processed.location_selector.unbound")
     inline fun locationSelectorBound(name: String) = t("item.processed.location_selector.bound", t(name))
 
+    inline fun unitKilometers(amount: Long) = t("processed.unit.kilometers", amount)
+    inline fun unitKilometersLong(amount: Long) = t("processed.unit.kilometers.long", amount)
+    inline fun unitMillibucket(amount: Int) = t("processed.unit.millibuckets", amount)
+    inline fun unitBucket(amount: Int) = t("processed.unit.buckets", amount)
+    val mb = IntUnit(Pair(1, ::unitMillibucket), Pair(1000, ::unitBucket))
+    inline fun unitItems(items: Int) = t("processed.unit.items", items)
+    inline fun unitStacks(stacks: Int) = t("processed.unit.stacks", stacks)
+    inline fun unitStacksItems(stacks: Int, items: Int) = t("processed.unit.stacks_items", stacks, items)
+    val items = ItemUnit()
+
     inline fun mass(mass: Int) = t("processed.miner_attribute.mass", mass)
     inline fun maxDistance(distance: Int) = t("processed.miner_attribute.max_distance", distance)
     inline fun tankCapacity(capacity: Int) = t("processed.miner_attribute.tankCapacity", capacity)
     inline fun density(density: Float) = t("processed.miner_attribute.density", density)
     inline fun specificImpulse(specificImpulse: Int) = t("processed.miner_attribute.specific_impulse", specificImpulse)
-    inline fun thrust(thrustInNewton: Int) = t("processed.miner_attribute.thrust", thrustInNewton / 1000)
+    inline fun thrust(thrustInNewton: Int) = t("processed.miner_attribute.thrust", thrustInNewton / 1000.toDouble())
     inline fun efficiency(efficiency: Int) = t("processed.miner_attribute.efficiency", efficiency)
     inline fun miningSpeed(blocksPerMin: Int) = t("processed.miner_attribute.mining_speed", blocksPerMin)
     inline fun miningFuel(litersPerBlock: Float) = t("processed.miner_attribute.mining_fuel", litersPerBlock)
-    inline fun cargoCapacity(capacity: Int) =
-        if (capacity % 64 == 0) t("processed.miner_attribute.cargo_capacity", capacity, capacity / 64)
-        else t("processed.miner_attribute.cargo_capacity.items", capacity, capacity / 64, capacity % 64)
+    inline fun cargoCapacity(capacity: Int) = t("processed.miner_attribute.cargo_capacity", capacity, items(capacity))
+    inline fun itemYield(amount: Int) = t("processed.miner_attribute.item_yield", items(amount))
+    inline fun requiredFuel(amount: Int) = t("processed.miner_attribute.required_miner_fuel", mb(amount))
+    inline fun miningTime(secs: Long) = t("processed.miner_attribute.mining_time", duration(secs))
 
-    inline fun assembledMinerItemComponents() = t("item.processed.assembled_miner.components")
+    inline fun assembledMinerItemComponents() = t("item.processed.assembled_mining_rocket.components")
+    inline fun assembledMinerItemStats() = t("item.processed.assembled_mining_rocket.stats")
+
+    inline fun duration(secs: Long): MC {
+        // TODO: Make this configurable
+        return C.literal(DurationFormatUtils.formatDuration(TimeUnit.SECONDS.toMillis(secs), "HH:mm:ss", true))
+    }
+}
+
+class IntUnit(variants: List<Pair<Int, (Int) -> MC>>) : (Int) -> MC {
+    val variants = variants.sortedWith { (i0, _), (i1, _) -> i0.compareTo(i1) }
+
+    constructor(vararg variants: Pair<Int, (Int) -> MC>) : this(variants.toList())
+
+    fun translate(amount: Int): MC {
+        var last = variants.first()
+        for (elem in variants) if (elem.first > last.first && elem.first < amount) last = elem
+        return last.second(amount / last.first)
+    }
+
+    override fun invoke(amount: Int) = translate(amount)
+}
+
+class LongUnit(variants: List<Pair<Long, (Long) -> MC>>) : (Long) -> MC {
+    val variants = variants.sortedWith { (i0, _), (i1, _) -> i0.compareTo(i1) }
+
+    constructor(vararg variants: Pair<Long, (Long) -> MC>) : this(variants.toList())
+
+    fun translate(amount: Long): MC {
+        var last = variants.first()
+        for (elem in variants) if (elem.first > last.first && elem.first < amount) last = elem
+        return last.second(amount / last.first)
+    }
+
+    override fun invoke(amount: Long) = translate(amount)
+}
+
+class ItemUnit : (Int) -> MC {
+    override fun invoke(amount: Int): MC = if (amount <= 64) Translations.unitItems(amount)
+    else if (amount % 64 == 0) Translations.unitStacks(amount / 64)
+    else Translations.unitStacksItems(amount / 64, amount % 64)
 }
 
 inline fun t(key: String): MC = C.translatable(key)

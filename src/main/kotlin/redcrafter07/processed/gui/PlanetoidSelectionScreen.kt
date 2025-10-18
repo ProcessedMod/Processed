@@ -13,6 +13,7 @@ import redcrafter07.processed.Translations
 import redcrafter07.processed.gui.widgets.PlanetoidWidget
 import redcrafter07.processed.miner.Planetoid
 import redcrafter07.processed.network.PlanetoidSelectPacket
+import redcrafter07.processed.rl
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.min
 
@@ -45,6 +46,18 @@ class PlanetoidSelectionScreen(
 
             return PlanetoidSelectionScreen(childMap, rootElements, registry, hand, parent)
         }
+
+        fun fromRegistrySun(registry: Registry<Planetoid>, hand: InteractionHand): PlanetoidSelectionScreen {
+            val sunKey = ResourceKey.create(registry.key(), rl("sun"))
+            return if (registry.containsKey(sunKey)) fromRegistry(registry, sunKey, hand)
+            else fromRegistry(registry, null, hand)
+        }
+    }
+
+    fun shouldSelect(key: ResourceKey<Planetoid>): Boolean {
+        if (parent == key) return true
+        val children = childMap[key]
+        return children == null || children.size < 2
     }
 
     fun goUp() {
@@ -54,6 +67,7 @@ class PlanetoidSelectionScreen(
 
     fun selectPlanetoid(key: ResourceKey<Planetoid>) {
         val planetoid = registry.get(key) ?: return
+        if (planetoid.gravity.isEmpty || planetoid.distance.isEmpty) return
         val conn = Minecraft.getInstance().connection ?: return
         conn.send(PlanetoidSelectPacket(key.location(), planetoid.name, hand))
         Minecraft.getInstance().setScreen(null)
@@ -76,7 +90,7 @@ class PlanetoidSelectionScreen(
         val scale = min(scaleHoriz, scaleVert)
         for (key in elements) {
             val elem = registry.get(key) ?: continue
-            val onPress = if (key == parent) this::selectPlanetoid else this::parent::set
+            val onPress = if (shouldSelect(key)) this::selectPlanetoid else this::parent::set
             addRenderableWidget(PlanetoidWidget(elem, key, onPress, scale, offset, key == parent))
         }
 

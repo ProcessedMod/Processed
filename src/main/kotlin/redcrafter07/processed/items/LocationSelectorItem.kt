@@ -27,7 +27,7 @@ class LocationSelectorItem : Item(Properties()) {
         if (level.isClientSide) {
             val registry = level.registryAccess().registry(Planetoid.REGISTRY_KEY).getOrNull()
             if (registry == null) ProcessedMod.LOG.warn("Failed to get the planetoid registry")
-            else Minecraft.getInstance().setScreen(PlanetoidSelectionScreen.fromRegistry(registry, null, usedHand))
+            else Minecraft.getInstance().setScreen(PlanetoidSelectionScreen.fromRegistrySun(registry, usedHand))
         }
 
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(usedHand), level.isClientSide)

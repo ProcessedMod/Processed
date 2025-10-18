@@ -35,8 +35,9 @@
   "item.processed.location_selector.change_tooltip": "Right-click to select a planetoid",
   "item.processed.location_selector.unbound": "Unbound",
   "item.processed.location_selector.bound": "Bound to: %s",
-  "item.processed.assembled_miner": "Assembled Miner",
-  "item.processed.assembled_miner.components": "Components:",
+  "item.processed.assembled_mining_rocket": "Assembled Mining Rocket",
+  "item.processed.assembled_mining_rocket.components": "Components:",
+  "item.processed.assembled_mining_rocket.stats": "Rocket stats:",
   "processed.screen.block_config.items": "Configuring Items",
   "processed.screen.block_config.fluids": "Configuring Fluids",
   "processed.screen.block_config.upgrades": "Upgrades",
@@ -105,6 +106,11 @@
   "processed.gui.planetoid.gravity": "Gravity (gₒ): %s m/s²",
   "processed.unit.kilometers": "%d km",
   "processed.unit.kilometers.long": "%d Kilometers",
+  "processed.unit.millibuckets": "%d mB",
+  "processed.unit.buckets": "%d B",
+  "processed.unit.items": "%d Items",
+  "processed.unit.stacks": "%d Stacks",
+  "processed.unit.stacks_items": "%d Stacks and %d Items",
 
   "processed.miner_attribute.mass": "Mass: %d kg",
   "processed.miner_attribute.max_distance": "Maximum Distance: %d km",
@@ -115,6 +121,8 @@
   "processed.miner_attribute.efficiency": "Efficiency: %d%%",
   "processed.miner_attribute.mining_speed": "Mining Speed: %d blocks/minute",
   "processed.miner_attribute.mining_fuel": "Required Fuel: %d L/block",
-  "processed.miner_attribute.cargo_capacity": "Space: %d L (%d Stacks)",
-  "processed.miner_attribute.cargo_capacity.items": "Space: %d L (%d Stacks and %d Items)"
+  "processed.miner_attribute.cargo_capacity": "Space: %d L (%s)",
+  "processed.miner_attribute.item_yield": "Item yield: %s",
+  "processed.miner_attribute.required_miner_fuel": "Required miner fuel: %s",
+  "processed.miner_attribute.mining_time": "Time spent mining: %s"
 }

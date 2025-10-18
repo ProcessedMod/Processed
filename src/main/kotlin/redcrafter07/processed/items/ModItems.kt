@@ -29,7 +29,7 @@ object ModItems {
         registerMaterialItem(Materials.MATERIALS, Material::nuggetPath, ::Nugget, MaterialInfo.Types.IngotLike)
     val RAW_ITEMS = registerMaterialItem(Materials.MATERIALS, Material::rawPath, ::Raw, MaterialInfo.Types.OreLike)
 
-    val ASSEMBLED_MINER = registerItem("assembled_miner", ::AssembledMinerItem)
+    val ASSEMBLED_MINER = registerItem("assembled_mining_rocket", ::AssembledMinerItem)
 
     init {
         registerWithComponent("hull", ModDataComponents.HULL_DATA, MinerData.Hull(1900, 50000))

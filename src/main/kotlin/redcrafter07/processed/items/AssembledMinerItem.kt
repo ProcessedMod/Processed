@@ -7,6 +7,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 import redcrafter07.processed.Translations
+import java.lang.Integer.min
 
 class AssembledMinerItem : Item(Properties().stacksTo(1)) {
     override fun appendHoverText(
@@ -48,6 +49,15 @@ class AssembledMinerItem : Item(Properties().stacksTo(1)) {
         if (cargoBay != null) {
             add(Translations.mass(cargoBay.mass))
             add(Translations.cargoCapacity(cargoBay.capacity))
+        }
+        tooltip.add(Component.empty())
+        tooltip.add(Translations.assembledMinerItemStats())
+        if (cargoBay != null && miners != null) {
+            val orePerMission = min(cargoBay.capacity, (cargoBay.capacity.toFloat() / miners.miningFuel).toInt())
+            add(Translations.itemYield(orePerMission))
+            add(Translations.requiredFuel((miners.miningFuel * orePerMission.toFloat()).toInt()))
+            val miningTime = (orePerMission / miners.miningSpeed + 10).toLong() * 60
+            add(Translations.miningTime(miningTime))
         }
     }
 }
