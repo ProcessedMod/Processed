@@ -43,23 +43,3 @@ fun loadBlockPositions(blocks: IntArray): MutableList<BlockPos> {
 
     return list
 }
-
-fun toSubscript(c: Char): Char = when(c) {
-    '0' -> '₀'
-    '1' -> '₁'
-    '2' -> '₂'
-    '3' -> '₃'
-    '4' -> '₄'
-    '5' -> '₅'
-    '6' -> '₆'
-    '7' -> '₇'
-    '8' -> '₈'
-    '9' -> '₉'
-    else -> c
-}
-
-fun toSubscript(s: String): String {
-    val builder = StringBuilder()
-    for (c in s.toCharArray()) builder.append(toSubscript(c))
-    return builder.toString()
-}
