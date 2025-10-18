@@ -1,0 +1,11 @@
+{
+  "name": "Venus",
+  "x": 200,
+  "y": -100,
+  "size": 45,
+  "texture": "processed:textures/planetoids/sun.png",
+  "parent": "processed:sun",
+  "color": "#e0c16d",
+  "distance": 6082,
+  "gravity": 8.87
+}

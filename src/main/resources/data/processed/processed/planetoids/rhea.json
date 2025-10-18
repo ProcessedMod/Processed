@@ -1,0 +1,11 @@
+{
+  "name": "Rhea",
+  "x": -140,
+  "y": -20,
+  "size": 22,
+  "texture": "processed:textures/planetoids/rhea.png",
+  "parent": "processed:saturn",
+  "color": "#c4c2bb",
+  "distance": 153000,
+  "gravity": 0.26
+}

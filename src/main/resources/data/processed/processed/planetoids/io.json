@@ -1,0 +1,11 @@
+{
+  "name": "Io",
+  "x": 80,
+  "y": 30,
+  "size": 28,
+  "texture": "processed:textures/planetoids/io.png",
+  "parent": "processed:jupiter",
+  "color": "#e6d15c",
+  "distance": 62810,
+  "gravity": 1.79
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Iapetus",
+  "x": 260,
+  "y": -80,
+  "size": 20,
+  "texture": "processed:textures/planetoids/iapetus.png",
+  "parent": "processed:saturn",
+  "color": "#bfb9b0",
+  "distance": 156000,
+  "gravity": 0.22
+}

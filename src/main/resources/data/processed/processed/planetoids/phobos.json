@@ -1,0 +1,11 @@
+{
+  "name": "Phobos",
+  "x": 30,
+  "y": 0,
+  "size": 15,
+  "texture": "processed:textures/planetoids/phobos.png",
+  "parent": "processed:mars",
+  "color": "#726e6d",
+  "distance": 9400,
+  "gravity": 0.0057
+}

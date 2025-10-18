@@ -1,0 +1,11 @@
+{
+  "name": "Jupiter",
+  "x": 800,
+  "y": -200,
+  "size": 100,
+  "texture": "processed:textures/planetoids/sun.png",
+  "parent": "processed:sun",
+  "color": "#d9b380",
+  "distance": 62800,
+  "gravity": 24.79
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Umbriel",
+  "x": -140,
+  "y": -40,
+  "size": 20,
+  "texture": "processed:textures/planetoids/umbriel.png",
+  "parent": "processed:uranus",
+  "color": "#7f7a76",
+  "distance": 287000,
+  "gravity": 0.23
+}

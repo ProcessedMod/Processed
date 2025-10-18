@@ -1,0 +1,11 @@
+{
+  "name": "Neptune",
+  "x": 1400,
+  "y": 100,
+  "size": 44,
+  "texture": "processed:textures/planetoids/neptune.png",
+  "parent": "processed:sun",
+  "color": "#3c5cff",
+  "distance": 435000,
+  "gravity": 11.15
+}

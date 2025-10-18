@@ -1,0 +1,11 @@
+{
+  "name": "Hippocamp",
+  "x": 90,
+  "y": -30,
+  "size": 8,
+  "texture": "processed:textures/planetoids/hippocamp.png",
+  "parent": "processed:neptune",
+  "color": "#91a7d1",
+  "distance": 435010,
+  "gravity": 0.02
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Charon",
+  "x": 110,
+  "y": -40,
+  "size": 18,
+  "texture": "processed:textures/planetoids/charon.png",
+  "parent": "processed:pluto",
+  "color": "#b1a698",
+  "distance": 590000,
+  "gravity": 0.29
+}

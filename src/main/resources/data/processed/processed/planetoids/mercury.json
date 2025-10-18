@@ -1,0 +1,11 @@
+{
+  "name": "Mercury",
+  "x": 100,
+  "y": -200,
+  "size": 25,
+  "texture": "processed:textures/planetoids/sun.png",
+  "parent": "processed:sun",
+  "color": "#b5b5b5",
+  "distance": 5790,
+  "gravity": 3.7
+}

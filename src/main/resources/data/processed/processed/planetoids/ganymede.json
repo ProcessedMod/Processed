@@ -1,0 +1,11 @@
+{
+  "name": "Ganymede",
+  "x": 220,
+  "y": -40,
+  "size": 35,
+  "texture": "processed:textures/planetoids/ganymede.png",
+  "parent": "processed:jupiter",
+  "color": "#c9c1a6",
+  "distance": 62800,
+  "gravity": 1.43
+}

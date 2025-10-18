@@ -6,6 +6,6 @@
   "texture": "processed:textures/planetoids/sun.png",
   "parent": "processed:sun",
   "color": "#185e3f",
-  "distance": 384400,
+  "distance": 0,
   "gravity": 1.62
 }
