@@ -7,8 +7,8 @@ import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument
 import redcrafter07.processed.ProcessedTier
-import redcrafter07.processed.block.cable.CableData
-import redcrafter07.processed.block.itempipe.ItemPipeData
+import redcrafter07.processed.materials.data.CableData
+import redcrafter07.processed.materials.data.ItemPipeData
 
 object Materials {
     val MATERIALS = ArrayList<Material>()

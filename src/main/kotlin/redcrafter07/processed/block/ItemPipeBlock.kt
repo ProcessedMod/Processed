@@ -1,4 +1,4 @@
-package redcrafter07.processed.block.itempipe
+package redcrafter07.processed.block
 
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -16,6 +16,7 @@ import net.minecraft.world.phys.shapes.BooleanOp
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
+import redcrafter07.processed.block.tile_entities.ItemPipeBlockEntity
 import redcrafter07.processed.block.tile_entities.ModTileEntities
 import redcrafter07.processed.materials.Material
 import redcrafter07.processed.materials.MaterialContainer

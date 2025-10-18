@@ -28,6 +28,7 @@ import redcrafter07.processed.block.machine_abstractions.EnergyCapableBlockEntit
 import redcrafter07.processed.block.tile_entities.ModTileEntities
 import redcrafter07.processed.block.tile_entities.capabilities.ProcessedPowerStore
 import redcrafter07.processed.materials.MaterialContainer
+import redcrafter07.processed.materials.data.CableData
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.minus
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.toVec3
 import java.util.function.BiFunction

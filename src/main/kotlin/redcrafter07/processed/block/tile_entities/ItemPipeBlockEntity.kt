@@ -1,4 +1,4 @@
-package redcrafter07.processed.block.itempipe
+package redcrafter07.processed.block.tile_entities
 
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -21,11 +21,12 @@ import net.neoforged.neoforge.client.model.data.ModelData
 import net.neoforged.neoforge.client.model.data.ModelProperty
 import net.neoforged.neoforge.items.IItemHandler
 import redcrafter07.processed.Translations
+import redcrafter07.processed.block.ItemPipeBlock
 import redcrafter07.processed.block.WrenchInteractableBlock
 import redcrafter07.processed.block.machine_abstractions.BlockSide
 import redcrafter07.processed.block.machine_abstractions.ItemCapableBlockEntity
-import redcrafter07.processed.block.tile_entities.ModTileEntities
 import redcrafter07.processed.materials.MaterialContainer
+import redcrafter07.processed.materials.data.ItemPipeData
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.minus
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.toVec3
 import java.util.function.BiFunction
