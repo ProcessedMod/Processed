@@ -25,9 +25,17 @@ import kotlin.jvm.optionals.getOrNull
 class LocationSelectorItem : Item(Properties()) {
     override fun use(level: Level, player: Player, usedHand: InteractionHand): InteractionResultHolder<ItemStack?> {
         if (level.isClientSide) {
-            val registry = level.registryAccess().registry(Planetoid.REGISTRY_KEY).getOrNull()
-            if (registry == null) ProcessedMod.LOG.warn("Failed to get the planetoid registry")
-            else Minecraft.getInstance().setScreen(PlanetoidSelectionScreen.fromRegistrySun(registry, usedHand))
+            if(player.isShiftKeyDown) {
+                val stack = player.getItemInHand(usedHand)
+                if(stack.isEmpty) return InteractionResultHolder.fail(stack)
+                stack.remove(ModDataComponents.BOUND_PLANETOID)
+
+                player.displayClientMessage(Translations.locationSelectorUnboundMessage(), true)
+            }   else {
+                val registry = level.registryAccess().registry(Planetoid.REGISTRY_KEY).getOrNull()
+                if (registry == null) ProcessedMod.LOG.warn("Failed to get the planetoid registry")
+                else Minecraft.getInstance().setScreen(PlanetoidSelectionScreen.fromRegistrySun(registry, usedHand))
+            }
         }
 
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(usedHand), level.isClientSide)
@@ -36,11 +44,16 @@ class LocationSelectorItem : Item(Properties()) {
     override fun appendHoverText(
         stack: ItemStack, context: TooltipContext, tooltip: MutableList<Component>, tooltipFlag: TooltipFlag
     ) {
-        tooltip.add(Translations.locationSelectorChangeTooltip())
-        tooltip.add(Component.empty())
         val boundPlanetoid = stack.get(ModDataComponents.BOUND_PLANETOID)
-        if (boundPlanetoid == null) tooltip.add(Translations.locationSelectorUnbound().withStyle(ChatFormatting.RED))
-        else {
+        if (boundPlanetoid == null) {
+            tooltip.add(Component.empty())
+            tooltip.add(Translations.locationSelectorChangeTooltip())
+            tooltip.add(Component.empty())
+            tooltip.add(Translations.locationSelectorUnbound().withStyle(ChatFormatting.RED))
+        } else {
+            tooltip.add(Component.empty())
+            tooltip.add(Translations.locationSelectorUnbindHint())
+            tooltip.add(Component.empty())
             val planetoid = context.level()?.registryAccess()?.registry(Planetoid.REGISTRY_KEY)?.getOrNull()
                 ?.get(boundPlanetoid.location)
             tooltip.add(
@@ -58,6 +71,7 @@ class LocationSelectorItem : Item(Properties()) {
                         Translations.planetoidGravity(planetoid.gravity.get()).withStyle(ChatFormatting.DARK_GRAY)
                     tooltip.add(Component.literal("  ").append(gravity))
                 }
+
             }
         }
         tooltip.add(Component.empty())

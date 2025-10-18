@@ -41,6 +41,8 @@
   "item.processed.location_selector": "Location Selector",
   "item.processed.location_selector.change_tooltip": "§7Right-click to select a planetoid",
   "item.processed.location_selector.unbound": "Unbound",
+  "item.processed.location_selector.unbind_hint": "§7Shift + Right-click to clear binding",
+  "item.processed.location_selector.unbound_message": "§aSuccessfully unbound!",
   "item.processed.location_selector.bound": "§7Bound to: %s",
   "item.processed.assembled_mining_rocket": "Assembled Mining Rocket",
   "item.processed.assembled_mining_rocket.components": "§7Components:",
