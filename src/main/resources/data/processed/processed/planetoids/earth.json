@@ -3,7 +3,7 @@
   "x": 300,
   "y": 0,
   "size": 50,
-  "texture": "processed:textures/planetoid/sun.png",
+  "texture": "processed:textures/planetoids/sun.png",
   "parent": "processed:sun",
   "color": "#185e3f",
   "distance": 384400,
