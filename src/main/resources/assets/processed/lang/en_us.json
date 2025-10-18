@@ -60,9 +60,9 @@
   "processed.miner_attribute.required_miner_fuel": "§7Required miner fuel: %s",
   "processed.miner_attribute.mining_time": "§7Time spent mining: %s",
 
-  "processed.pipe_like_state.disconnected": "Disconnected",
-  "processed.pipe_like_state.connected": "Connected",
-  "processed.pipe_like_state.disallowed": "Split",
+  "processed.pipe_like_state.connected": "§aConnected",
+  "processed.pipe_like_state.disallowed": "§bSplit",
+  "processed.pipe_like_state.disconnected": "§cDisconnected",
   "processed.pipe_like_state": "§7State: %d",
 
   "processed.tiered_machine_info": "§7Max Power: %s§a/t of %s §aPower",

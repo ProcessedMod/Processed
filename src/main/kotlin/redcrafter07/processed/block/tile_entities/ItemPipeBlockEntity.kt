@@ -222,6 +222,6 @@ class ItemPipeBlockEntity(pos: BlockPos, blockState: BlockState) :
             if (connected[direction]) Translations.pipeLikeStateConnected()
             else Translations.pipeLikeStateDisconnected()
         }
-        player.sendSystemMessage(Translations.pipeLikeState(state))
+        player.displayClientMessage(Translations.pipeLikeState(state), true)
     }
 }
