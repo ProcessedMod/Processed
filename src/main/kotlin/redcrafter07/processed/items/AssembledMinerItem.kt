@@ -33,35 +33,32 @@ class AssembledMinerItem : Item(Properties().stacksTo(1)) {
         tooltip.add(Translations.assembledMinerItemComponents())
         tooltip.add(BuiltInRegistries.ITEM.get(assembled.hull).defaultInstance.hoverName)
         if (hull != null) {
-            add(Translations.mass(hull.mass))
             add(Translations.maxDistance(hull.maxDistance))
         }
         tooltip.add(BuiltInRegistries.ITEM.get(assembled.tank).defaultInstance.hoverName)
         if (tank != null) {
-            add(Translations.mass(tank.mass))
             add(Translations.tankCapacity(tank.capacity))
         }
         tooltip.add(BuiltInRegistries.ITEM.get(assembled.engine).defaultInstance.hoverName)
         if (engine != null) {
-            add(Translations.mass(engine.mass))
             add(Translations.thrust(engine.thrust))
             add(Translations.efficiency(engine.efficiency))
         }
         tooltip.add(BuiltInRegistries.ITEM.get(assembled.miners).defaultInstance.hoverName)
         if (miners != null) {
-            add(Translations.mass(miners.mass))
             add(Translations.miningSpeed(miners.miningSpeed))
             add(Translations.miningFuel(miners.miningFuel))
         }
         tooltip.add(BuiltInRegistries.ITEM.get(assembled.cargoBay).defaultInstance.hoverName)
         if (cargoBay != null) {
-            add(Translations.mass(cargoBay.mass))
             add(Translations.cargoCapacity(cargoBay.capacity))
         }
         tooltip.add(Component.empty())
         tooltip.add(Translations.assembledMinerItemStats())
         if (cargoBay != null && miners != null) {
             val orePerMission = min(cargoBay.capacity, (cargoBay.capacity.toFloat() / miners.miningFuel).toInt())
+            val totalMass = listOfNotNull(hull?.mass, tank?.mass, engine?.mass, miners?.mass, cargoBay?.mass).sum();
+            add(Translations.mass(totalMass))
             add(Translations.itemYield(orePerMission))
             add(Translations.requiredFuel((miners.miningFuel * orePerMission.toFloat()).toInt()))
             val miningTime = (orePerMission / miners.miningSpeed + 10).toLong() * 60
