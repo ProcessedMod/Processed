@@ -18,7 +18,7 @@ object ModItemGroup {
 
     val MAIN_TAB: DeferredHolder<*, *> = CREATIVE_MODE_TABS.register("processed.main", Supplier {
         CreativeModeTab.builder().title(Translations.mainItemGroup())
-            .icon { ItemStack(ModItems.BLITZ_ORB.get()) }.displayItems { _, output ->
+            .icon { ItemStack(ModItems.LOCATION_SELECTOR.get()) }.displayItems { _, output ->
                 for (item in ModItems.ITEMS.entries) {
                     val itemInstance = item.get()
                     if (itemInstance is MaterialItem || itemInstance is MaterialBlockItem) continue
