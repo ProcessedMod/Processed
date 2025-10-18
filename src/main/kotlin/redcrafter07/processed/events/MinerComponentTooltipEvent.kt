@@ -1,6 +1,8 @@
 package redcrafter07.processed.events
 
+import net.minecraft.ChatFormatting
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.world.item.BucketItem
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
@@ -20,50 +22,52 @@ object MinerComponentTooltipEvent {
         val level = e.context.level() ?: return
         val registry = level.registryAccess().registry(MinerData.Fuel.REGISTRY_KEY).getOrNull() ?: return
 
+        fun add(translation: MutableComponent) = e.toolTip.add(1, translation.withStyle(ChatFormatting.GOLD))
+
         val item = e.itemStack.item
         if (item is BucketItem) {
             val key = BuiltInRegistries.FLUID.getKey(item.content)
             val fuel = registry.get(key) ?: return
 
-            e.toolTip.add(1, Translations.specificImpulse(fuel.specificImpulse))
-            e.toolTip.add(1, Translations.density(MinerCalc.kgPerLiterToKgPerMb(fuel.density)))
+            add(Translations.specificImpulse(fuel.specificImpulse))
+            add(Translations.density(MinerCalc.kgPerLiterToKgPerMb(fuel.density)))
             return
         }
 
         val hull = e.itemStack.get(ModDataComponents.HULL_DATA)
         if (hull != null) {
-            e.toolTip.add(1, Translations.maxDistance(hull.maxDistance))
-            e.toolTip.add(1, Translations.mass(hull.mass))
+            add(Translations.maxDistance(hull.maxDistance))
+            add(Translations.mass(hull.mass))
             return
         }
 
         val tank = e.itemStack.get(ModDataComponents.TANK_DATA)
         if (tank != null) {
-            e.toolTip.add(1, Translations.tankCapacity(MinerCalc.literToMb(tank.capacity)))
-            e.toolTip.add(1, Translations.mass(tank.mass))
+            add(Translations.tankCapacity(MinerCalc.literToMb(tank.capacity)))
+            add(Translations.mass(tank.mass))
             return
         }
 
         val engine = e.itemStack.get(ModDataComponents.ENGINE_DATA)
         if (engine != null) {
-            e.toolTip.add(1, Translations.efficiency(engine.efficiency))
-            e.toolTip.add(1, Translations.thrust(engine.thrust))
-            e.toolTip.add(1, Translations.mass(engine.mass))
+            add(Translations.efficiency(engine.efficiency))
+            add(Translations.thrust(engine.thrust))
+            add(Translations.mass(engine.mass))
             return
         }
 
         val miners = e.itemStack.get(ModDataComponents.MINER_DATA)
         if (miners != null) {
-            e.toolTip.add(1, Translations.miningFuel(MinerCalc.literToMb(miners.miningFuel)))
-            e.toolTip.add(1, Translations.miningSpeed(miners.miningSpeed))
-            e.toolTip.add(1, Translations.mass(miners.mass))
+            add(Translations.miningFuel(MinerCalc.literToMb(miners.miningFuel)))
+            add(Translations.miningSpeed(miners.miningSpeed))
+            add(Translations.mass(miners.mass))
             return
         }
 
         val cargoBay = e.itemStack.get(ModDataComponents.CARGO_BAY_DATA)
         if (cargoBay != null) {
-            e.toolTip.add(1, Translations.cargoCapacity(MinerCalc.literToMb(cargoBay.capacity), cargoBay.capacity))
-            e.toolTip.add(1, Translations.mass(cargoBay.mass))
+            add(Translations.cargoCapacity(MinerCalc.literToMb(cargoBay.capacity), cargoBay.capacity))
+            add(Translations.mass(cargoBay.mass))
         }
     }
 }

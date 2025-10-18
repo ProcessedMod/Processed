@@ -22,7 +22,7 @@ class AssembledMinerItem : Item(Properties().stacksTo(1)) {
         stack: ItemStack, context: TooltipContext, tooltip: MutableList<Component>, tooltipFlag: TooltipFlag
     ) {
         val assembled = stack.get(ModDataComponents.ASSEMBLED_MINER) ?: return
-        fun add(c: Component) = tooltip.add(Component.literal("  ").append(c).withStyle(ChatFormatting.DARK_GRAY))
+        fun add(c: Component, style: ChatFormatting = ChatFormatting.GOLD) = tooltip.add(Component.literal("  ").append(c).withStyle(style))
 
         val hull = stack.get(ModDataComponents.HULL_DATA)
         val tank = stack.get(ModDataComponents.TANK_DATA)

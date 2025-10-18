@@ -43,7 +43,10 @@ class LocationSelectorItem : Item(Properties()) {
         else {
             val planetoid = context.level()?.registryAccess()?.registry(Planetoid.REGISTRY_KEY)?.getOrNull()
                 ?.get(boundPlanetoid.location)
-            tooltip.add(Translations.locationSelectorBound(planetoid?.name ?: boundPlanetoid.translatedName))
+            tooltip.add(
+                Translations.locationSelectorBound(planetoid?.name ?: boundPlanetoid.translatedName)
+                    .withStyle(ChatFormatting.BLUE)
+            )
             if (planetoid != null) {
                 if (planetoid.distance.isPresent) {
                     val distance = Translations.unitKilometers(planetoid.distance.get())
