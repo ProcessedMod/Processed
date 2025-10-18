@@ -1,22 +1,14 @@
 package redcrafter07.processed.materials
 
-import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.tags.TagKey
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.TooltipFlag
 import redcrafter07.processed.Translations
 
 
 abstract class MaterialItem(override val material: Material) : Item(DEFAULT_PROPERTIES), MaterialContainer {
     companion object { val DEFAULT_PROPERTIES: Properties = Properties().stacksTo(64); }
-
-    override fun appendHoverText(
-        stack: ItemStack, context: TooltipContext, tooltip: MutableList<Component?>, tooltipFlag: TooltipFlag
-    ) {
-        super.appendHoverText(stack, context, tooltip, tooltipFlag)
-    }
 
     abstract val tag: TagKey<Item>
 
