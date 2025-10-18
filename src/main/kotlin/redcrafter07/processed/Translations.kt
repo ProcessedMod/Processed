@@ -96,7 +96,7 @@ object Translations {
     inline fun efficiency(efficiency: Int) = t("processed.miner_attribute.efficiency", efficiency)
     inline fun miningSpeed(blocksPerMin: Int) = t("processed.miner_attribute.mining_speed", blocksPerMin)
     inline fun miningFuel(litersPerBlock: Float) = t("processed.miner_attribute.mining_fuel", litersPerBlock)
-    inline fun cargoCapacity(capacity: Int) = t("processed.miner_attribute.cargo_capacity", capacity, items(capacity))
+    inline fun cargoCapacity(capacityMb: Int, capacity: Int) = t("processed.miner_attribute.cargo_capacity", capacityMb, items(capacity))
     inline fun itemYield(amount: Int) = t("processed.miner_attribute.item_yield", items(amount))
     inline fun requiredFuel(amount: Int) = t("processed.miner_attribute.required_miner_fuel", mb(amount))
     inline fun miningTime(secs: Long) = t("processed.miner_attribute.mining_time", duration(secs))

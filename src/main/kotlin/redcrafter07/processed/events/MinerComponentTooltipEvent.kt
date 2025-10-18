@@ -8,6 +8,7 @@ import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.Translations
 import redcrafter07.processed.items.ModDataComponents
+import redcrafter07.processed.miner.MinerCalc
 import redcrafter07.processed.miner.MinerData
 import kotlin.jvm.optionals.getOrNull
 
@@ -25,7 +26,7 @@ object MinerComponentTooltipEvent {
             val fuel = registry.get(key) ?: return
 
             e.toolTip.add(1, Translations.specificImpulse(fuel.specificImpulse))
-            e.toolTip.add(1, Translations.density(fuel.density))
+            e.toolTip.add(1, Translations.density(MinerCalc.kgPerLiterToKgPerMb(fuel.density)))
             return
         }
 
@@ -38,7 +39,7 @@ object MinerComponentTooltipEvent {
 
         val tank = e.itemStack.get(ModDataComponents.TANK_DATA)
         if (tank != null) {
-            e.toolTip.add(1, Translations.tankCapacity(tank.capacity))
+            e.toolTip.add(1, Translations.tankCapacity(MinerCalc.literToMb(tank.capacity)))
             e.toolTip.add(1, Translations.mass(tank.mass))
             return
         }
@@ -53,7 +54,7 @@ object MinerComponentTooltipEvent {
 
         val miners = e.itemStack.get(ModDataComponents.MINER_DATA)
         if (miners != null) {
-            e.toolTip.add(1, Translations.miningFuel(miners.miningFuel))
+            e.toolTip.add(1, Translations.miningFuel(MinerCalc.literToMb(miners.miningFuel)))
             e.toolTip.add(1, Translations.miningSpeed(miners.miningSpeed))
             e.toolTip.add(1, Translations.mass(miners.mass))
             return
@@ -61,7 +62,7 @@ object MinerComponentTooltipEvent {
 
         val cargoBay = e.itemStack.get(ModDataComponents.CARGO_BAY_DATA)
         if (cargoBay != null) {
-            e.toolTip.add(1, Translations.cargoCapacity(cargoBay.capacity))
+            e.toolTip.add(1, Translations.cargoCapacity(MinerCalc.literToMb(cargoBay.capacity), cargoBay.capacity))
             e.toolTip.add(1, Translations.mass(cargoBay.mass))
         }
     }

@@ -13,6 +13,10 @@ import kotlin.math.max
 object MinerCalc {
     fun dvPerKm(distance: Long): Double = max(.009, 2 * exp(-LN2 * (distance / 2000.toDouble())))
 
+    fun literToMb(l: Int) = l * 10
+    fun literToMb(l: Float) = l * 10f
+    fun kgPerLiterToKgPerMb(kgPerL: Float) = kgPerL / 10f
+
     /** distance: km, gravity: m/s², density: kg/block, dvPerKm: m/s/km */
     fun calculate(
         assembled: ItemStack,
@@ -65,10 +69,10 @@ object MinerCalc {
         val totalMissionTimeMinutes = flightTimeOneWayMinutes * 2 + miningTimeMinutes // B48
 
         return Result(
-            requiredFuel.toInt(),
+            literToMb(requiredFuel.toInt()),
             flightTimeOneWayMinutes.toLong(),
             miningTimeMinutes.toInt(),
-            minerFuelVolumeReq.toInt(),
+            literToMb(minerFuelVolumeReq.toInt()),
             totalMissionTimeMinutes.toLong()
         )
     }
