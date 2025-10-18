@@ -18,11 +18,12 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.client.model.data.ModelData
-import net.neoforged.neoforge.client.model.data.ModelProperty
 import net.neoforged.neoforge.items.IItemHandler
 import redcrafter07.processed.Translations
-import redcrafter07.processed.block.ItemPipeBlock
 import redcrafter07.processed.block.WrenchInteractableBlock
+import redcrafter07.processed.block.cable.CableBlockEntity.Companion.Connected
+import redcrafter07.processed.block.cable.CableBlockEntity.Companion.TRANSMITTER_PROPERTY
+import redcrafter07.processed.block.cable.CableBlockEntity.Companion.actualDirection
 import redcrafter07.processed.block.machine_abstractions.BlockSide
 import redcrafter07.processed.block.machine_abstractions.ItemCapableBlockEntity
 import redcrafter07.processed.materials.MaterialContainer
@@ -55,7 +56,7 @@ class ItemPipeBlockEntity(pos: BlockPos, blockState: BlockState) :
             slot: Int, item: ItemStack, simulate: Boolean
         ): ItemStack {
             val lvl = level ?: return item
-            var item = item
+            var item = item.copy()
             var simItemsTransferred = itemsTransferred
 
             for (entry in outputs.entries) {
@@ -199,7 +200,7 @@ class ItemPipeBlockEntity(pos: BlockPos, blockState: BlockState) :
     fun isConnected(level: Level, direction: Direction): Boolean {
         if (disallowedConnections[direction]) return false
         val pos = blockPos.relative(direction)
-        val be = level.getBlockEntity(pos) ?: return false
+        val be = level.getBlockEntity(pos)
         if (be is ItemPipeBlockEntity) return !be.disallowedConnections[direction.opposite]
         return level.getCapability(Capabilities.ItemHandler.BLOCK, pos, direction.opposite) != null
     }
@@ -222,49 +223,5 @@ class ItemPipeBlockEntity(pos: BlockPos, blockState: BlockState) :
             else Translations.pipeLikeStateDisconnected()
         }
         player.sendSystemMessage(Translations.pipeLikeState(state))
-    }
-
-    companion object {
-        fun actualDirection(originalX: Double, originalY: Double, originalZ: Double, direction: Direction): Direction {
-            var x = originalX
-            var y = originalY
-            var z = originalZ
-            when (direction) {
-                Direction.WEST -> x = 0.5
-                Direction.EAST -> x = 0.5
-                Direction.DOWN -> y = 0.5
-                Direction.UP -> y = 0.5
-                Direction.NORTH -> z = 0.5
-                Direction.SOUTH -> z = 0.5
-            }
-            if (x < ItemPipeBlock.START) return Direction.WEST
-            if (x >= ItemPipeBlock.END) return Direction.EAST
-            if (y < ItemPipeBlock.START) return Direction.DOWN
-            if (y >= ItemPipeBlock.END) return Direction.UP
-            if (z < ItemPipeBlock.START) return Direction.NORTH
-            if (z >= ItemPipeBlock.END) return Direction.SOUTH
-            return direction
-        }
-
-        val TRANSMITTER_PROPERTY = ModelProperty<Connected>()
-    }
-
-    class Connected(var value: Int) {
-        constructor() : this(0)
-
-        fun setSide(side: Direction) {
-            this.value = this.value or 1.shl(side.get3DDataValue())
-        }
-
-        fun clearSide(side: Direction) {
-            this.value = this.value and 1.shl(side.get3DDataValue()).inv()
-        }
-
-        operator fun set(side: Direction, value: Boolean) {
-            if (value) setSide(side)
-            else clearSide(side)
-        }
-
-        operator fun get(side: Direction): Boolean = (this.value and 1.shl(side.get3DDataValue())) > 0
     }
 }

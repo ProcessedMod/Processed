@@ -196,7 +196,7 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
     fun isConnected(level: Level, direction: Direction): Boolean {
         if (disallowedConnections[direction]) return false
         val pos = blockPos.relative(direction)
-        val be = level.getBlockEntity(pos) ?: return false
+        val be = level.getBlockEntity(pos)
         if (be is CableBlockEntity) return !be.disallowedConnections[direction.opposite]
         val cap1 = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, direction.opposite)
         if (cap1 != null) return true
@@ -247,24 +247,24 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
         }
 
         val TRANSMITTER_PROPERTY = ModelProperty<Connected>()
-    }
 
-    class Connected(var value: Int) {
-        constructor() : this(0)
+        class Connected(var value: Int) {
+            constructor() : this(0)
 
-        fun setSide(side: Direction) {
-            this.value = this.value or 1.shl(side.get3DDataValue())
+            fun setSide(side: Direction) {
+                this.value = this.value or 1.shl(side.get3DDataValue())
+            }
+
+            fun clearSide(side: Direction) {
+                this.value = this.value and 1.shl(side.get3DDataValue()).inv()
+            }
+
+            operator fun set(side: Direction, value: Boolean) {
+                if (value) setSide(side)
+                else clearSide(side)
+            }
+
+            operator fun get(side: Direction): Boolean = (this.value and 1.shl(side.get3DDataValue())) > 0
         }
-
-        fun clearSide(side: Direction) {
-            this.value = this.value and 1.shl(side.get3DDataValue()).inv()
-        }
-
-        operator fun set(side: Direction, value: Boolean) {
-            if (value) setSide(side)
-            else clearSide(side)
-        }
-
-        operator fun get(side: Direction): Boolean = (this.value and 1.shl(side.get3DDataValue())) > 0
     }
 }
