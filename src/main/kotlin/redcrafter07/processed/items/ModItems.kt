@@ -1,18 +1,16 @@
 package redcrafter07.processed.items
 
+import net.minecraft.core.component.DataComponentType
 import net.minecraft.world.item.Item
 import net.neoforged.neoforge.registries.DeferredItem
 import net.neoforged.neoforge.registries.DeferredRegister
 import redcrafter07.processed.ProcessedMod
-import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.materials.Material
 import redcrafter07.processed.materials.MaterialInfo
 import redcrafter07.processed.materials.MaterialItem
-import redcrafter07.processed.materials.MaterialItem.Dust
-import redcrafter07.processed.materials.MaterialItem.Ingot
-import redcrafter07.processed.materials.MaterialItem.Nugget
-import redcrafter07.processed.materials.MaterialItem.Raw
+import redcrafter07.processed.materials.MaterialItem.*
 import redcrafter07.processed.materials.Materials
+import redcrafter07.processed.miner.MinerData
 import java.util.function.Function
 import java.util.function.Supplier
 
@@ -22,11 +20,6 @@ object ModItems {
     val BLITZ_ORB = registerItem("blitz_orb") { ModItem(Item.Properties().stacksTo(64), "blitz_orb") }
     val WRENCH = registerItem("wrench") { WrenchItem() }
 
-    val BASIC_ENGINE = registerItem("engine_tier_0") { EngineItem(ProcessedTier.Basic) }
-    val ADVANCED_ENGINE = registerItem("engine_tier_1") { EngineItem(ProcessedTier.Advanced) }
-
-    val BASIC_MINER = registerItem("miner_tier_0") { MinerItem(ProcessedTier.Basic) }
-    val ADVANCED_MINER = registerItem("miner_tier_1") { MinerItem(ProcessedTier.Advanced) }
     val LOCATION_SELECTOR = registerItem("location_selector", ::LocationSelectorItem)
 
     val DUST_ITEMS = registerMaterialItem(Materials.MATERIALS, Material::dustPath, ::Dust, MaterialInfo.Types.Dust)
@@ -35,6 +28,19 @@ object ModItems {
     val NUGGET_ITEMS =
         registerMaterialItem(Materials.MATERIALS, Material::nuggetPath, ::Nugget, MaterialInfo.Types.IngotLike)
     val RAW_ITEMS = registerMaterialItem(Materials.MATERIALS, Material::rawPath, ::Raw, MaterialInfo.Types.OreLike)
+
+    val ASSEMBLED_MINER = registerItem("assembled_miner", ::AssembledMinerItem)
+
+    init {
+        registerWithComponent("hull", ModDataComponents.HULL_DATA, MinerData.Hull(1900, 50000))
+        registerWithComponent("tank", ModDataComponents.TANK_DATA, MinerData.Tank(5000, 50000))
+        registerWithComponent("engine", ModDataComponents.ENGINE_DATA, MinerData.Engine(50, 20, 2000))
+        registerWithComponent("miner", ModDataComponents.MINER_DATA, MinerData.Miners(400, 12, .15f))
+        registerWithComponent("cargo_bay", ModDataComponents.CARGO_BAY_DATA, MinerData.CargoBay(300, 7000))
+    }
+
+    fun <T> registerWithComponent(name: String, type: Supplier<DataComponentType<T>>, value: T): DeferredItem<Item> =
+        registerItem(name) { Item(Item.Properties().component(type, value)) }
 
     fun <T : Item> registerItem(name: String, item: Supplier<T>): DeferredItem<T> {
         return ITEMS.register(name, item)

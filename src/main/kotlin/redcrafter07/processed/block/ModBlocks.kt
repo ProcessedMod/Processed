@@ -72,7 +72,7 @@ object ModBlocks {
         Materials.MATERIALS, Material::oreBlockPath, ::OreBlock, ::OreBlockItem, MaterialInfo.Types.OreLike
     )
 
-    private fun <T : Block> registerBlock(id: String, block: Supplier<T>): DeferredBlock<T> {
+    fun <T : Block> registerBlock(id: String, block: Supplier<T>): DeferredBlock<T> {
         val regBlock = BLOCKS.register(id, block)
         ModItems.registerItem(id) { ModBlockItem(regBlock.get(), Item.Properties(), id) }
         return regBlock

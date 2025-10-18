@@ -1,6 +1,7 @@
 package redcrafter07.processed.events
 
 import net.minecraft.core.BlockPos
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.EntityBlock
 import net.neoforged.bus.api.SubscribeEvent
@@ -12,6 +13,8 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent
 import net.neoforged.neoforge.client.event.EntityRenderersEvent
 import net.neoforged.neoforge.client.event.ModelEvent
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
 import net.neoforged.neoforge.event.AddPackFindersEvent
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
 import net.neoforged.neoforge.registries.DataPackRegistryEvent
@@ -25,9 +28,11 @@ import redcrafter07.processed.block.machine_abstractions.ItemCapableBlockEntity
 import redcrafter07.processed.block.tile_entities.FluidTankBlockEntity
 import redcrafter07.processed.block.tile_entities.ModTileEntities
 import redcrafter07.processed.dynpack.DynPackSource
+import redcrafter07.processed.fluid.ModFluids
 import redcrafter07.processed.gui.GenericMachineMenuScreen
 import redcrafter07.processed.gui.ModMenuTypes
 import redcrafter07.processed.integration.theoneprobe.TheOneProbeIntegration
+import redcrafter07.processed.miner.MinerData
 import redcrafter07.processed.miner.Planetoid
 import redcrafter07.processed.network.IOChangePacket
 import redcrafter07.processed.network.MultiblockDestroyPacket
@@ -162,5 +167,24 @@ object Registering {
             Planetoid.CODEC,
             Planetoid.CODEC,
         )
+        e.dataPackRegistry(
+            MinerData.Fuel.REGISTRY_KEY,
+            MinerData.Fuel.CODEC,
+            MinerData.Fuel.CODEC,
+        )
+    }
+
+    @SubscribeEvent
+    fun registerClientExtensions(e: RegisterClientExtensionsEvent) {
+        // Registers client extensions for fluids. This gives it the flowing texture, still texture, tint color, and overlay texture.
+        // This is required for rendering the fluids.
+        class FluidExtension(val tint: Int) : IClientFluidTypeExtensions {
+            override fun getTintColor() = tint
+            override fun getFlowingTexture() = ResourceLocation.withDefaultNamespace("block/water_flow")
+            override fun getStillTexture() = ResourceLocation.withDefaultNamespace("block/water_still")
+            override fun getOverlayTexture() = ResourceLocation.withDefaultNamespace("block/water_overlay")
+        }
+
+        for (fluid in ModFluids.REGISTERED_FLUIDS) e.registerFluidType(FluidExtension(fluid.color), fluid.type.get())
     }
 }

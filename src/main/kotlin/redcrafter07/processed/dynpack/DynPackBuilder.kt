@@ -1,5 +1,6 @@
 package redcrafter07.processed.dynpack
 
+import com.google.gson.JsonObject
 import net.minecraft.core.Direction
 import net.minecraft.data.models.blockstates.MultiVariantGenerator
 import net.minecraft.data.models.blockstates.PropertyDispatch
@@ -12,6 +13,7 @@ import net.minecraft.world.level.block.Block
 import redcrafter07.processed.block.ModBlocks
 import redcrafter07.processed.block.machine_abstractions.ProcessedBlock
 import redcrafter07.processed.block.machine_abstractions.RotationType
+import redcrafter07.processed.fluid.ModFluids
 import redcrafter07.processed.items.ModItems
 import redcrafter07.processed.rl
 
@@ -31,6 +33,7 @@ object DynPackBuilder {
         val poweredFurnaceModel = DelegatedModel(poweredFurnaceRL).get()
         val creativePowerSourceRL = ResourceLocation.withDefaultNamespace("block/redstone_block")
         val createPowerSourceModel = DelegatedModel(creativePowerSourceRL).get()
+        val fluidRL = rl("block/fluid")
 
         for (block in ModBlocks.CABLES) {
             DynPackResources.addBlockState(block.id, createSimpleBlock(block.get(), cableRL).get())
@@ -66,6 +69,10 @@ object DynPackBuilder {
             DynPackResources.addBlockState(block.id, createProcessedBlock(block.get(), creativePowerSourceRL).get())
             DynPackResources.addItemModel(block.id, createPowerSourceModel)
         }
+
+        for (fluid in ModFluids.REGISTERED_FLUIDS) DynPackResources.addBlockState(
+            fluid.block.id, createSimpleBlock(fluid.block.get(), fluidRL).get()
+        )
     }
 
     fun addMaterialItems() {
@@ -85,6 +92,15 @@ object DynPackBuilder {
             item.id, nuggetModels[item.get().material.info.nuggetVariant.index]
         )
         for (item in ModItems.RAW_ITEMS) DynPackResources.addItemModel(item.id, rawModel)
+        for (fluid in ModFluids.REGISTERED_FLUIDS) {
+            // Make all fluids be an item using `neoforge:fluid_container`, with the parent being `neoforge:item/bucket` and the fluid being this bucket's fluid.
+            // This will cause them to render in a bucket! Yay!
+            val obj = JsonObject()
+            obj.addProperty("parent", "neoforge:item/bucket")
+            obj.addProperty("fluid", fluid.type.id.toString())
+            obj.addProperty("loader", "neoforge:fluid_container")
+            DynPackResources.addItemModel(fluid.bucket.id, obj)
+        }
     }
 
     fun createProcessedBlock(block: ProcessedBlock, modelLocation: ResourceLocation): MultiVariantGenerator =

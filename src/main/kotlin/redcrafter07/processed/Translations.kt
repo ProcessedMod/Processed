@@ -53,11 +53,15 @@ object Translations {
     inline fun cableTierTooltip(tier: C) = t("block.processed.cable.tooltip", tier)
     inline fun itemPipeTooltip(transferSpeed: Int) = t("block.processed.item_pipe.tooltip", transferSpeed)
 
-    inline fun tieredMachineInfo(maxPower: C, nameColored: C) = t("processed.tiered_machine_info", maxPower, nameColored)
+    inline fun tieredMachineInfo(maxPower: C, nameColored: C) =
+        t("processed.tiered_machine_info", maxPower, nameColored)
+
     inline fun poweredFurnaceName(tier: ProcessedTier) = t("block.processed.powered_furnace", tier)
     inline fun bigSmelterName() = t("block.processed.big_smelter")
 
-    inline fun planetoidWidgetTooltip(planetoidName: String) = t("processed.gui.planetoid_widget.tooltip", t(planetoidName))
+    inline fun planetoidWidgetTooltip(planetoidName: String) =
+        t("processed.gui.planetoid_widget.tooltip", t(planetoidName))
+
     inline fun planetoidDistance(distance: C) = t("processed.gui.planetoid.distance", distance)
     inline fun planetoidGravity(gravity: Float) = t("processed.gui.planetoid.gravity", gravity)
     inline fun unitKilometers(amount: Long) = t("processed.unit.kilometers", amount)
@@ -67,13 +71,28 @@ object Translations {
     inline fun locationSelectorChangeTooltip() = t("item.processed.location_selector.change_tooltip")
     inline fun locationSelectorUnbound() = t("item.processed.location_selector.unbound")
     inline fun locationSelectorBound(name: String) = t("item.processed.location_selector.bound", t(name))
+
+    inline fun mass(mass: Int) = t("processed.miner_attribute.mass", mass)
+    inline fun maxDistance(distance: Int) = t("processed.miner_attribute.max_distance", distance)
+    inline fun tankCapacity(capacity: Int) = t("processed.miner_attribute.tankCapacity", capacity)
+    inline fun density(density: Float) = t("processed.miner_attribute.density", density)
+    inline fun specificImpulse(specificImpulse: Int) = t("processed.miner_attribute.specific_impulse", specificImpulse)
+    inline fun thrust(thrustInNewton: Int) = t("processed.miner_attribute.thrust", thrustInNewton / 1000)
+    inline fun efficiency(efficiency: Int) = t("processed.miner_attribute.efficiency", efficiency)
+    inline fun miningSpeed(blocksPerMin: Int) = t("processed.miner_attribute.mining_speed", blocksPerMin)
+    inline fun miningFuel(litersPerBlock: Float) = t("processed.miner_attribute.mining_fuel", litersPerBlock)
+    inline fun cargoCapacity(capacity: Int) =
+        if (capacity % 64 == 0) t("processed.miner_attribute.cargo_capacity", capacity, capacity / 64)
+        else t("processed.miner_attribute.cargo_capacity.items", capacity, capacity / 64, capacity % 64)
+
+    inline fun assembledMinerItemComponents() = t("item.processed.assembled_miner.components")
 }
 
 inline fun t(key: String): MC = C.translatable(key)
 inline fun t(key: String, vararg args: Any): MC {
     val args = arrayOf(*args)
     for (i in 0..<args.size) {
-        args[i] = when(val v = args[i]) {
+        args[i] = when (val v = args[i]) {
             is C, String, Boolean, is Number -> v
             is TranslatableEnum -> v.translatedName
             is Material -> v.component
