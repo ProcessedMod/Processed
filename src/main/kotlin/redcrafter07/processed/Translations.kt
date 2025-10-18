@@ -47,10 +47,11 @@ object Translations {
     inline fun configuringItemsLabel() = t("processed.screen.block_config.items")
     inline fun configuringFluidsLabel() = t("processed.screen.block_config.fluids")
 
+    inline fun energyBarTooltip(amount: C, max: C) = t("processed.gui.widget.energy_bar", amount, max)
     inline fun energyBarUnitMillion(amount: Int) = t("processed.gui.widget.energy_bar.million", amount)
     inline fun energyBarUnitThousand(amount: Int) = t("processed.gui.widget.energy_bar.thousand", amount)
     inline fun energyBarUnitOnes(amount: Int) = t("processed.gui.widget.energy_bar.normal", amount)
-    inline fun energyBarTooltip(amount: C, max: C) = t("processed.gui.widget.energy_bar", amount, max)
+    val energy = IntUnit(1, ::energyBarUnitOnes, 1_000, ::energyBarUnitThousand, 1_000_000, ::energyBarUnitMillion)
 
     inline fun cableTierTooltip(tier: C) = t("block.processed.cable.tooltip", tier)
     inline fun itemPipeTooltip(transferSpeed: Int) = t("block.processed.item_pipe.tooltip", transferSpeed)
@@ -74,9 +75,13 @@ object Translations {
 
     inline fun unitKilometers(amount: Long) = t("processed.unit.kilometers", amount)
     inline fun unitKilometersLong(amount: Long) = t("processed.unit.kilometers.long", amount)
+    val km = LongUnit(1, ::unitKilometers)
+    val kilometer = LongUnit(1, ::unitKilometersLong)
+
     inline fun unitMillibucket(amount: Int) = t("processed.unit.millibuckets", amount)
     inline fun unitBucket(amount: Int) = t("processed.unit.buckets", amount)
-    val mb = IntUnit(Pair(1, ::unitMillibucket), Pair(1000, ::unitBucket))
+    val mb = IntUnit(1, ::unitMillibucket, 1_000, ::unitBucket)
+
     inline fun unitItems(items: Int) = t("processed.unit.items", items)
     inline fun unitStacks(stacks: Int) = t("processed.unit.stacks", stacks)
     inline fun unitStacksItems(stacks: Int, items: Int) = t("processed.unit.stacks_items", stacks, items)
@@ -109,6 +114,16 @@ class IntUnit(variants: List<Pair<Int, (Int) -> MC>>) : (Int) -> MC {
     val variants = variants.sortedWith { (i0, _), (i1, _) -> i0.compareTo(i1) }
 
     constructor(vararg variants: Pair<Int, (Int) -> MC>) : this(variants.toList())
+    constructor(amount1: Int, f1: (Int) -> MC) : this(listOf(Pair(amount1, f1)))
+    constructor(amount1: Int, f1: (Int) -> MC, amount2: Int, f2: (Int) -> MC) : this(
+        listOf(
+            Pair(amount1, f1), Pair(amount2, f2)
+        )
+    )
+
+    constructor(amount1: Int, f1: (Int) -> MC, amount2: Int, f2: (Int) -> MC, amount3: Int, f3: (Int) -> MC) : this(
+        listOf(Pair(amount1, f1), Pair(amount2, f2), Pair(amount3, f3))
+    )
 
     fun translate(amount: Int): MC {
         var last = variants.first()
@@ -123,6 +138,16 @@ class LongUnit(variants: List<Pair<Long, (Long) -> MC>>) : (Long) -> MC {
     val variants = variants.sortedWith { (i0, _), (i1, _) -> i0.compareTo(i1) }
 
     constructor(vararg variants: Pair<Long, (Long) -> MC>) : this(variants.toList())
+    constructor(amount1: Long, f1: (Long) -> MC) : this(listOf(Pair(amount1, f1)))
+    constructor(amount1: Long, f1: (Long) -> MC, amount2: Long, f2: (Long) -> MC) : this(
+        listOf(
+            Pair(amount1, f1), Pair(amount2, f2)
+        )
+    )
+
+    constructor(amount1: Long, f1: (Long) -> MC, amount2: Long, f2: (Long) -> MC, amount3: Long, f3: (Long) -> MC) : this(
+        listOf(Pair(amount1, f1), Pair(amount2, f2), Pair(amount3, f3))
+    )
 
     fun translate(amount: Long): MC {
         var last = variants.first()

@@ -76,5 +76,5 @@ object ModFluids {
         val block: DeferredBlock<Block>,
         val bucket: DeferredItem<Bucket>,
         val color: Int,
-    ) {}
+    )
 }

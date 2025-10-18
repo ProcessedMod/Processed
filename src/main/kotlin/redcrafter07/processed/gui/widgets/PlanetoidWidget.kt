@@ -67,7 +67,7 @@ class PlanetoidWidget(
     init {
         val tooltip = Translations.planetoidWidgetTooltip(planetoid.name)
         if (planetoid.distance.isPresent) {
-            val distance = Translations.unitKilometers(planetoid.distance.get())
+            val distance = Translations.km(planetoid.distance.get())
             tooltip.append("\n").append(Translations.planetoidDistance(distance))
         }
         if (planetoid.gravity.isPresent) tooltip.append("\n")
@@ -122,7 +122,7 @@ class PlanetoidWidget(
     override fun updateWidgetNarration(output: NarrationElementOutput) {
         output.add(NarratedElementType.TITLE, Translations.planetoidWidgetTooltip(planetoid.name))
         if (planetoid.distance.isPresent) {
-            val distance = Translations.unitKilometersLong(planetoid.distance.get())
+            val distance = Translations.kilometer(planetoid.distance.get())
             output.add(NarratedElementType.HINT, Translations.planetoidDistance(distance))
         }
         if (planetoid.gravity.isPresent) output.add(
