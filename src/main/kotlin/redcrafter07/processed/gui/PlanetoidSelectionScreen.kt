@@ -83,11 +83,14 @@ class PlanetoidSelectionScreen(
         if (parent != null) addRenderableWidget(Button.builder(Translations.planetoidSelectionScreenGoUp()) { this.goUp() }
             .pos(0, 0).build())
 
-        val offset = Vector2i(0)
         val scaleHoriz: Double = (width - 40) / 2000.toDouble()
         val scaleVert: Double = (height - 40) / 1100.toDouble()
 
         val scale = min(scaleHoriz, scaleVert)
+        val widthLeft = width - 2000 * scale
+        val heightLeft = height - 1100 * scale
+        val offset = Vector2i((widthLeft / 2).toInt(), (heightLeft / 2).toInt())
+
         for (key in elements) {
             val elem = registry.get(key) ?: continue
             val onPress = if (shouldSelect(key)) this::selectPlanetoid else this::parent::set
