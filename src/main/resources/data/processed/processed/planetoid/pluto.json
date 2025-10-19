@@ -1,7 +1,7 @@
 {
   "name": "processed.planetoid.pluto",
-  "x": 1600,
-  "y": 300,
+  "x": -900,
+  "y": -200,
   "size": 25,
   "texture": "processed:textures/planetoid/pluto.png",
   "parent": "processed:sun",

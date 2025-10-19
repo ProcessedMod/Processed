@@ -1,8 +1,8 @@
 {
   "name": "processed.planetoid.neptune",
-  "x": 1400,
+  "x": -700,
   "y": 100,
-  "size": 44,
+  "size": 80,
   "texture": "processed:textures/planetoid/neptune.png",
   "parent": "processed:sun",
   "color": "#3c5cff",

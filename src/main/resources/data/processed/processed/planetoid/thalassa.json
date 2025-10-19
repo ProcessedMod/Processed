@@ -1,8 +1,8 @@
 {
   "name": "processed.planetoid.thalassa",
-  "x": -90,
+  "x": -200,
   "y": 20,
-  "size": 10,
+  "size": 40,
   "texture": "processed:textures/planetoid/thalassa.png",
   "parent": "processed:neptune",
   "color": "#8aa2cf",

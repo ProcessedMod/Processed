@@ -1,8 +1,8 @@
 {
   "name": "processed.planetoid.hippocamp",
-  "x": 90,
-  "y": -30,
-  "size": 8,
+  "x": 0,
+  "y": -140,
+  "size": 30,
   "texture": "processed:textures/planetoid/hippocamp.png",
   "parent": "processed:neptune",
   "color": "#91a7d1",
