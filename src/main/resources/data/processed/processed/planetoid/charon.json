@@ -1,9 +1,9 @@
 {
-  "name": "Charon",
+  "name": "processed.planetoid.charon",
   "x": 110,
   "y": -40,
   "size": 18,
-  "texture": "processed:textures/planetoids/charon.png",
+  "texture": "processed:textures/planetoid/charon.png",
   "parent": "processed:pluto",
   "color": "#b1a698",
   "distance": 590000,

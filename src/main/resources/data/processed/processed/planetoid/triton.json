@@ -1,9 +1,9 @@
 {
-  "name": "Triton",
+  "name": "processed.planetoid.triton",
   "x": 180,
   "y": -70,
   "size": 28,
-  "texture": "processed:textures/planetoids/triton.png",
+  "texture": "processed:textures/planetoid/triton.png",
   "parent": "processed:neptune",
   "color": "#c4cbd2",
   "distance": 435400,

@@ -1,9 +1,9 @@
 {
-  "name": "Jupiter",
+  "name": "processed.planetoid.jupiter",
   "x": 800,
   "y": -200,
   "size": 100,
-  "texture": "processed:textures/planetoids/sun.png",
+  "texture": "processed:textures/planetoid/sun.png",
   "parent": "processed:sun",
   "color": "#d9b380",
   "distance": 62800,

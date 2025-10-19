@@ -1,9 +1,9 @@
 {
-  "name": "Thalassa",
+  "name": "processed.planetoid.thalassa",
   "x": -90,
   "y": 20,
   "size": 10,
-  "texture": "processed:textures/planetoids/thalassa.png",
+  "texture": "processed:textures/planetoid/thalassa.png",
   "parent": "processed:neptune",
   "color": "#8aa2cf",
   "distance": 435000,

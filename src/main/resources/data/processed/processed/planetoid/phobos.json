@@ -1,9 +1,9 @@
 {
-  "name": "Phobos",
+  "name": "processed.planetoid.phobos",
   "x": 30,
   "y": 0,
   "size": 15,
-  "texture": "processed:textures/planetoids/phobos.png",
+  "texture": "processed:textures/planetoid/phobos.png",
   "parent": "processed:mars",
   "color": "#726e6d",
   "distance": 9400,

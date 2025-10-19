@@ -1,9 +1,9 @@
 {
-  "name": "Mercury",
+  "name": "processed.planetoid.mercury",
   "x": 100,
   "y": -200,
   "size": 25,
-  "texture": "processed:textures/planetoids/sun.png",
+  "texture": "processed:textures/planetoid/sun.png",
   "parent": "processed:sun",
   "color": "#b5b5b5",
   "distance": 5790,

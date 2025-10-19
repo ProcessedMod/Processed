@@ -1,9 +1,9 @@
 {
-  "name": "Saturn",
+  "name": "processed.planetoid.saturn",
   "x": 1100,
   "y": 100,
   "size": 90,
-  "texture": "processed:textures/planetoids/saturn.png",
+  "texture": "processed:textures/planetoid/saturn.png",
   "parent": "processed:sun",
   "color": "#d9c48a",
   "distance": 1434000,

@@ -1,9 +1,9 @@
 {
-  "name": "Callisto",
+  "name": "processed.planetoid.callisto",
   "x": -200,
   "y": 60,
   "size": 30,
-  "texture": "processed:textures/planetoids/callisto.png",
+  "texture": "processed:textures/planetoid/callisto.png",
   "parent": "processed:jupiter",
   "color": "#8b8682",
   "distance": 62840,

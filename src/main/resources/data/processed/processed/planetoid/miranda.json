@@ -1,9 +1,9 @@
 {
-  "name": "Miranda",
+  "name": "processed.planetoid.miranda",
   "x": 160,
   "y": 60,
   "size": 15,
-  "texture": "processed:textures/planetoids/miranda.png",
+  "texture": "processed:textures/planetoid/miranda.png",
   "parent": "processed:uranus",
   "color": "#a8a9a3",
   "distance": 287000,
