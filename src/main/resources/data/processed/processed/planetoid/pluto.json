@@ -1,0 +1,11 @@
+{
+  "name": "processed.planetoid.pluto",
+  "x": -900,
+  "y": -200,
+  "size": 25,
+  "texture": "processed:textures/planetoid/pluto.png",
+  "parent": "processed:sun",
+  "color": "#c2b7a3",
+  "distance": 590000,
+  "gravity": 0.62
+}

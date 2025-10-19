@@ -24,7 +24,7 @@ class Planetoid(
     companion object {
         // The registry key of all planetoids that were registered by a datapack.
         // This is registered in the `DataPackRegistryEvent.NewRegistry` event.
-        val REGISTRY_KEY: ResourceKey<Registry<Planetoid>> = ResourceKey.createRegistryKey(rl("planetoids"))
+        val REGISTRY_KEY: ResourceKey<Registry<Planetoid>> = ResourceKey.createRegistryKey(rl("planetoid"))
 
         val CODEC: Codec<Planetoid> = RecordCodecBuilder.create {
             it.group(

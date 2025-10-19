@@ -1,0 +1,11 @@
+{
+  "name": "processed.planetoid.thalassa",
+  "x": -200,
+  "y": 20,
+  "size": 40,
+  "texture": "processed:textures/planetoid/thalassa.png",
+  "parent": "processed:neptune",
+  "color": "#8aa2cf",
+  "distance": 435000,
+  "gravity": 0.02
+}

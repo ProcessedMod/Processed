@@ -1,0 +1,11 @@
+{
+  "name": "processed.planetoid.uranus",
+  "x": -500,
+  "y": -400,
+  "size": 45,
+  "texture": "processed:textures/planetoid/uranus.png",
+  "parent": "processed:sun",
+  "color": "#7ad9f7",
+  "distance": 287000,
+  "gravity": 8.69
+}
