@@ -3,9 +3,8 @@
   "x": 300,
   "y": 0,
   "size": 50,
-  "texture": "processed:textures/planetoid/sun.png",
+  "texture": "processed:textures/planetoid/terra.png",
   "parent": "processed:sun",
-  "color": "#185e3f",
   "distance": 0,
   "gravity": 1.62
 }

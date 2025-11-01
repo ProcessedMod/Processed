@@ -3,9 +3,8 @@
   "x": 800,
   "y": -200,
   "size": 100,
-  "texture": "processed:textures/planetoid/sun.png",
+  "texture": "processed:textures/planetoid/jupiter.png",
   "parent": "processed:sun",
-  "color": "#d9b380",
   "distance": 62800,
   "gravity": 24.79
 }

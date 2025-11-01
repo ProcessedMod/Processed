@@ -8,7 +8,6 @@
   "texture": "processed:textures/planetoid/saturn.png",
 
   "parent": "processed:sun",
-  "color": "#d9c48a",
   "distance": 1434000,
   "gravity": 10.44
 }
