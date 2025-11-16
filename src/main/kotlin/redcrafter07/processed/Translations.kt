@@ -61,6 +61,7 @@ object Translations {
 
     inline fun poweredFurnaceName(tier: ProcessedTier) = t("block.processed.powered_furnace", tier)
     inline fun bigSmelterName() = t("block.processed.big_smelter")
+    inline fun launchControllerName() = t("block.processed.launch_controller")
 
     inline fun multiblockAssembled() = t("processed.multiblocks.state.assembled")
     inline fun multiblockBroken() = t("processed.multiblocks.state.broken")
@@ -74,8 +75,8 @@ object Translations {
     inline fun locationSelectorChangeTooltip() = t("item.processed.location_selector.change_tooltip")
     inline fun locationSelectorUnbound() = t("item.processed.location_selector.unbound")
     inline fun locationSelectorBound(name: String) = t("item.processed.location_selector.bound", t(name))
-    inline fun locationSelectorUnboundMessage() = t("item.processed.location_selector.unbound_message");
-    inline fun locationSelectorUnbindHint() = t("item.processed.location_selector.unbind_hint");
+    inline fun locationSelectorUnboundMessage() = t("item.processed.location_selector.unbound_message")
+    inline fun locationSelectorUnbindHint() = t("item.processed.location_selector.unbind_hint")
 
     inline fun unitKilometers(amount: Long) = t("processed.unit.kilometers", amount)
     inline fun unitKilometersLong(amount: Long) = t("processed.unit.kilometers.long", amount)

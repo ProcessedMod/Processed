@@ -19,6 +19,7 @@
   "block.processed.pipe_pressurizer": "Pipe Pressurizer",
   "block.processed.powered_furnace": "%d Powered Furnace",
   "block.processed.big_smelter": "Big Smelter",
+  "block.processed.launch_controller": "Launch Controller",
   "block.processed.creative_power_source": "%d Creative Power Source",
   "block.processed.basic_casing": "Basic Casing",
 
@@ -27,6 +28,7 @@
   "block.processed.pipe_pressurizer.tooltip": "§7The controller for item pipes.",
   "block.processed.powered_furnace.tooltip": "§7Smelts items using Power.",
   "block.processed.big_smelter.tooltip": "§7An arc furnace lol",
+  "block.processed.launch_controller.tooltip": "Launches mining rockets",
   "block.processed.cable.tooltip": "§7Cable Tier: %s",
   "block.processed.item_pipe.tooltip": "§7Transfers up to %d items per tick",
   "block.processed.blitz_ore.tooltip": "§7An ore which you can get Blitz Orbs from.",
@@ -137,11 +139,8 @@
   "processed.multiblocks.state.assembled": "Assembled",
   "processed.multiblocks.state.broken": "Not Assembled",
 
-  "processed.tiered_machine_info": "§7Max Power: %s§a/t of %s §aPower",
-
   "config.jade.plugin_processed.energy": "Processed Energy",
-  "config.jade.plugin_processed.multiblock_state": "Multiblock State"
-  "config.jade.plugin_processed.energy": "Processed Energy",
+  "config.jade.plugin_processed.multiblock_state": "Multiblock State",
 
   "processed.gui.planetoid_selection_screen.go_up": "Go Up",
   "processed.gui.planetoid_widget.tooltip": "Planetoid: %s",

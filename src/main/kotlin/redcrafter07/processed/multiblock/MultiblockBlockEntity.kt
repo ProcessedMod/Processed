@@ -31,7 +31,7 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
     private var blocks: Set<BlockPos>? = null
     protected var specialBlocks: Map<SpecialBlockType, BlockPos> = mapOf()
 
-    open fun state(): Component? = Component.empty()
+    open fun state(): Component? = null
 
     override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
         super.loadAdditional(tag, registries)
