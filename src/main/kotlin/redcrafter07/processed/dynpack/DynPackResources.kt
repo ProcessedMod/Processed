@@ -22,7 +22,7 @@ object DynPackResources : PackResources {
         Component.literal("Processed Dynamic Resource Pack"),
         PackSource.BUILT_IN,
         Optional.empty()
-    );
+    )
     val domains = mutableSetOf(ProcessedMod.ID, "minecraft", "forge", "c")
     val contents = DynPackContents()
 
@@ -46,7 +46,7 @@ object DynPackResources : PackResources {
     override fun getNamespaces(p0: PackType): Set<String?> = domains
 
     override fun <T> getMetadataSection(serializer: MetadataSectionSerializer<T>): T? {
-        if (serializer != PackMetadataSection.TYPE) return null;
+        if (serializer != PackMetadataSection.TYPE) return null
         val description = Component.literal("Processed dynamic data")
         val version = SharedConstants.getCurrentVersion().getPackVersion(PackType.CLIENT_RESOURCES)
         @Suppress("UNCHECKED_CAST") return PackMetadataSection(description, version, Optional.empty()) as T

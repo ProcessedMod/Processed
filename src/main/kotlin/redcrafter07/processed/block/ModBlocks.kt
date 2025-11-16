@@ -20,7 +20,6 @@ import redcrafter07.processed.materials.MaterialBlockItem
 import redcrafter07.processed.materials.MaterialBlockItem.*
 import redcrafter07.processed.materials.MaterialInfo
 import redcrafter07.processed.materials.Materials
-import redcrafter07.processed.multiblock.CasingBlock
 import java.util.function.BiFunction
 import java.util.function.Function
 import java.util.function.Supplier
@@ -39,9 +38,9 @@ object ModBlocks {
     val BLOCKS_POWERED_FURNACE = registerTieredBlock("powered_furnace", ProcessedTier.TIERS, ::PoweredFurnaceBlock)
     val CREATIVE_POWER_SOURCE =
         registerTieredBlock("creative_power_source", ProcessedTier.TIERS, ::CreativePowerSourceBlock)
-    val BASIC_CASING = registerBlock("basic_casing") { CasingBlock(BlockBehaviour.Properties.of()) }
+    val BASIC_CASING = registerBlock("basic_casing") { Block(BlockBehaviour.Properties.of()) }
     val BIG_SMELTER = registerBlock("big_smelter", ::BigSmelterBlock)
-
+    val ITEM_INPUT_HATCH = registerBlock("basic_item_input_hatch", ::InputItemHatchBlock)
 
     val CABLES = registerMaterialBlockExtra(
         Materials.MATERIALS, CableData::class.java, { m, _ -> "${m.identifier}_cable" }, ::CableBlock, ::CableBlockItem

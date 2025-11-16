@@ -9,8 +9,8 @@ import java.util.function.Consumer
 
 object DynPackSource : RepositorySource {
     override fun loadPacks(consumer: Consumer<Pack>) {
-        val supplier = BuiltInPackSource.fixedResources(DynPackResources);
-        val selection = PackSelectionConfig(true, Pack.Position.TOP, false);
+        val supplier = BuiltInPackSource.fixedResources(DynPackResources)
+        val selection = PackSelectionConfig(true, Pack.Position.TOP, false)
         val pack = Pack.readMetaAndCreate(DynPackResources.location, supplier, PackType.CLIENT_RESOURCES, selection) ?: return
         consumer.accept(pack)
     }

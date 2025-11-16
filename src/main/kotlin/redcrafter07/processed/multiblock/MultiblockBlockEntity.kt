@@ -4,119 +4,115 @@ import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.core.BlockPos
 import net.minecraft.core.BlockPos.MutableBlockPos
 import net.minecraft.core.HolderLookup
-import net.minecraft.core.SectionPos
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.Tag
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraft.world.level.chunk.status.ChunkStatus
 import net.neoforged.neoforge.items.IItemHandler
 import redcrafter07.processed.block.machine_abstractions.BlockSide
 import redcrafter07.processed.block.machine_abstractions.ProcessedMachine
 import redcrafter07.processed.getFacingDirection
-import redcrafter07.processed.loadBlockPositions
 import redcrafter07.processed.network.MultiblockDestroyPacket
-import redcrafter07.processed.saveBlockPositions
 
 abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, blockState: BlockState) :
     ProcessedMachine(type, pos, blockState) {
     protected abstract fun validator(): MultiblockValidator
 
     private var timeUntilNextCheck = 40
+
+    // The parts of this multiblock that were destroyed last tick.
+    private val partsDestroyed: ArrayList<BlockPos> = ArrayList()
     var isAssembled: Boolean = false
         private set
     private var blocks: Set<BlockPos>? = null
-    private var blocksOld: Set<BlockPos>? = null
+    protected var specialBlocks: Map<SpecialBlockType, BlockPos> = mapOf()
 
-    private fun synchroniseWithCache() {
-        if (blocksOld == null) return
-        val level = getLevel() ?: return
-
-        for (block in blocksOld) {
-            if (blocks != null && blocks!!.contains(block)) continue
-            val chunk = level.getChunk(
-                SectionPos.blockToSectionCoord(block.x),
-                SectionPos.blockToSectionCoord(block.z),
-                ChunkStatus.FULL,
-                false
-            )
-            if (chunk == null) return
-            val cache = MultiBlockCasingCache.get(chunk) ?: continue
-            if (!cache.multiblockMap.containsKey(block)) continue
-            if (cache.multiblockMap.get(block) != blockPos) continue
-            cache.multiblockMap.remove(block)
-            cache.set(chunk)
-        }
-
-        if (blocks == null) {
-            blocksOld = null
-            return
-        }
-        for (block in blocks) {
-            if (blocksOld!!.contains(block)) continue
-            val chunk = level.getChunk(
-                SectionPos.blockToSectionCoord(block.x),
-                SectionPos.blockToSectionCoord(block.z),
-                ChunkStatus.FULL,
-                false
-            )
-            if (chunk == null) return
-            val cache = MultiBlockCasingCache.getOrDefault(chunk)
-            cache.multiblockMap[block] = blockPos
-            cache.set(chunk)
-        }
-        blocksOld = null
-    }
+    open fun state(): Component? = Component.empty()
 
     override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
         super.loadAdditional(tag, registries)
         isAssembled = tag.getBoolean("isAssembled")
-        if (tag.contains("blocks", 11)) {
-            blocksOld = blocks ?: mutableSetOf()
-            blocks = setOf(*loadBlockPositions(tag.getIntArray("blocks")).toTypedArray())
-        } else {
-            blocksOld = blocks ?: mutableSetOf()
-            blocks = null
-            isAssembled = false
-        }
+
+        // blocks are stored relative to the controller as packed longs. This is fine because the MultiBlockCasingCache also assumes the controller is not too far.
+        if (tag.contains("blocks", Tag.TAG_LONG_ARRAY.toInt())) {
+            val blocks = mutableSetOf<BlockPos>()
+            val x = blockPos.x
+            val y = blockPos.y
+            val z = blockPos.z
+            val longs = tag.getLongArray("blocks")
+            longs.map(BlockPos::of).map { pos -> BlockPos(pos.x + x, pos.y + y, pos.z + z) }.forEach(blocks::add)
+            this.blocks = blocks
+
+            if (tag.contains("specialBlocks", Tag.TAG_INT_ARRAY.toInt())) {
+                val specialBlocksList = tag.getIntArray("specialBlocks")
+                val specialBlocks = hashMapOf<SpecialBlockType, BlockPos>()
+                for (specialBlock in SpecialBlockType.values) {
+                    if (specialBlocksList[specialBlock.id] != -1) {
+                        val pos = BlockPos.of(longs[specialBlocksList[specialBlock.id]])
+                        specialBlocks[specialBlock] = BlockPos(x + pos.x, y + pos.y, z + pos.z)
+                    }
+                }
+                this.specialBlocks = specialBlocks
+            } else specialBlocks = mapOf()
+        } else blocks = null
     }
 
     override fun saveAdditional(tag: CompoundTag, provider: HolderLookup.Provider) {
         super.saveAdditional(tag, provider)
         tag.putBoolean("isAssembled", isAssembled)
-        if (blocks != null) tag.put("blocks", saveBlockPositions(blocks!!.stream().toList()))
+        val blocks = blocks ?: return
+        val x = blockPos.x
+        val y = blockPos.y
+        val z = blockPos.z
+        val packedBlocks = blocks.stream().map { pos -> BlockPos.asLong(pos.x - x, pos.y - y, pos.z - z) }.toList()
+        tag.putLongArray("blocks", packedBlocks)
+        if (specialBlocks.isNotEmpty()) {
+            val array = IntArray(SpecialBlockType.values.size) { -1 }
+            for (entry in specialBlocks.entries) {
+                val long = BlockPos.asLong(entry.value.x - x, entry.value.y - y, entry.value.z - z)
+                array[entry.key.id] = packedBlocks.indexOf(long)
+            }
+            tag.putIntArray("specialBlocks", array)
+        }
     }
 
     fun onRemove(level: Level) {
-        if (blocks == null) return
+        val blocks = blocks ?: return
         if (level is ServerLevel && !level.isClientSide()) {
-            val packet = MultiblockDestroyPacket(blocks!!.stream().toList(), blockPos)
+            val x = blockPos.x
+            val y = blockPos.y
+            val z = blockPos.z
+            val relPos = blocks.stream().map { pos -> BlockPos.asLong(pos.x - x, pos.y - y, pos.z - z) }.toList()
+
+            val packet = MultiblockDestroyPacket(relPos, blockPos)
             for (player in level.players()) player.connection.send(packet)
         }
         for (pos in blocks) {
-            MultiBlockCasingCache.removeCasing(level, pos)
+            MultiBlockBlockCache.removeBlock(level, pos)
             level.invalidateCapabilities(pos)
         }
     }
 
-    fun tileTickCommon(level: Level, pos: BlockPos, state: BlockState) {
+    open fun tileTickCommon(level: Level, pos: BlockPos, state: BlockState) {
     }
 
-    fun tileTickServer(level: ServerLevel, pos: BlockPos, state: BlockState) {
+    open fun tileTickServer(level: ServerLevel, pos: BlockPos, state: BlockState) {
     }
 
-    fun tileTickClient(level: ClientLevel, pos: BlockPos, state: BlockState) {
+    open fun tileTickClient(level: ClientLevel, pos: BlockPos, state: BlockState) {
     }
 
-    override fun serverTick(level: ServerLevel, pos: BlockPos, state: BlockState) {
+    final override fun serverTick(level: ServerLevel, pos: BlockPos, state: BlockState) {
     }
 
-    override fun clientTick(level: ClientLevel, pos: BlockPos, state: BlockState) {
+    final override fun clientTick(level: ClientLevel, pos: BlockPos, state: BlockState) {
     }
 
-    override fun commonTick(level: Level, pos: BlockPos, state: BlockState) {
+    final override fun commonTick(level: Level, pos: BlockPos, state: BlockState) {
         if (!isAssembled || !isRunning) return
         tileTickCommon(level, pos, state)
         if (level is ServerLevel && !level.isClientSide()) tileTickServer(level, pos, state)
@@ -124,9 +120,13 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
     }
 
     override fun tickNoProcessing(level: Level, pos: BlockPos, state: BlockState) {
-        synchroniseWithCache()
-
         if (level is ServerLevel && !level.isClientSide()) {
+            if (partsDestroyed.isNotEmpty()) {
+                runRecheck()
+                partsDestroyed.clear()
+                timeUntilNextCheck = 40
+                return
+            }
             if (isAssembled) return
             if (timeUntilNextCheck > 0) {
                 timeUntilNextCheck -= 1
@@ -134,7 +134,7 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
             }
             timeUntilNextCheck = 40
 
-            recheck()
+            runRecheck()
         }
     }
 
@@ -150,15 +150,22 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
             return null
         }
 
-    fun recheck() {
+    /**
+     * Notifies the multiblock that a block that's a part of this multiblock was destroyed.
+     */
+    fun partBlockDestroyed(block: BlockPos) {
+        partsDestroyed.add(block)
+    }
+
+    private fun runRecheck() {
         val serverLevel = this.levelServer ?: return
 
-        var affectedBlocks =
-            validator().getBlocks(serverLevel, blockPos, getFacingDirection(blockState))
+        val result = validator().getBlocks(serverLevel, blockPos, getFacingDirection(blockState))
+        var affectedBlocks = result?.blocks
         if (affectedBlocks != null) {
             for (block in affectedBlocks) {
-                val controllerPos: BlockPos? = MultiBlockCasingCache.getControllerForCasing(serverLevel, block)
-                if (controllerPos != null && controllerPos !== blockPos) {
+                val controllerPos: BlockPos? = MultiBlockBlockCache.getController(serverLevel, block)
+                if (controllerPos != null && controllerPos != blockPos) {
                     affectedBlocks = null
                     break
                 }
@@ -168,31 +175,65 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
         val old = blocks ?: setOf()
         blocks = null
         val wasPreviouslyAssembled = isAssembled
-        isAssembled = affectedBlocks != null && !affectedBlocks.isEmpty()
-        if (affectedBlocks == null || affectedBlocks.isEmpty()) {
+        isAssembled = affectedBlocks != null && true && !affectedBlocks.isEmpty()
+        if (!isAssembled || affectedBlocks == null || result == null) {
             for (pos in old) {
-                MultiBlockCasingCache.removeCasing(serverLevel, pos)
+                MultiBlockBlockCache.removeBlock(serverLevel, pos)
                 serverLevel.invalidateCapabilities(pos)
             }
             invalidateCapabilities()
-            if (!old.isEmpty()) sync()
+            if (!old.isEmpty()) {
+                sync()
+                val x = blockPos.x
+                val y = blockPos.y
+                val z = blockPos.z
+                val blocks =
+                    old.stream().map { p -> BlockPos.asLong(p.x - x, p.y - y, p.z - z) }.toList().toMutableList()
+                for (block in partsDestroyed) if (!old.contains(block)) blocks.add(
+                    BlockPos.asLong(
+                        block.x - x, block.y - y, block.z - z
+                    )
+                )
+
+                val packet = MultiblockDestroyPacket(blocks, blockPos)
+                for (player in serverLevel.players()) player.connection.send(packet)
+            }
             return
         }
         for (pos in old) {
             if (pos == blockPos) continue
             if (affectedBlocks.contains(pos)) continue
-            MultiBlockCasingCache.removeCasing(serverLevel, pos)
+            MultiBlockBlockCache.removeBlock(serverLevel, pos)
             serverLevel.invalidateCapabilities(pos)
         }
 
         for (pos in affectedBlocks) {
             if (pos == blockPos) continue
 
-            MultiBlockCasingCache.setControllerForCasing(serverLevel, pos, blockPos)
+            MultiBlockBlockCache.setController(serverLevel, pos, blockPos)
             serverLevel.invalidateCapabilities(pos)
         }
         invalidateCapabilities()
         blocks = affectedBlocks
+        specialBlocks = result.importantBlocks
+
+        if (!old.isEmpty()) {
+            val x = blockPos.x
+            val y = blockPos.y
+            val z = blockPos.z
+
+            val blocks = old.stream().filter { p -> !affectedBlocks.contains(p) }
+                .map { p -> BlockPos.asLong(p.x - x, p.y - y, p.z - z) }.toList().toMutableList()
+
+            for (block in partsDestroyed) {
+                if (!old.contains(block)) blocks.add(BlockPos.asLong(block.x - x, block.y - y, block.z - z))
+            }
+
+            if (blocks.isNotEmpty()) {
+                val packet = MultiblockDestroyPacket(blocks, blockPos)
+                for (player in serverLevel.players()) player.connection.send(packet)
+            }
+        }
         sync()
 
         var min: MutableBlockPos? = null
@@ -257,5 +298,13 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
 
     private fun spawnAssembledParticle(x: Int, y: Int, z: Int, level: ServerLevel) {
         level.sendParticles(ParticleTypes.END_ROD, x + .5, y + .5, z + .5, 1, 0.0, 0.0, 0.0, 0.0)
+    }
+
+    enum class SpecialBlockType(val id: Int) {
+        None(-1), ItemInput(0);
+
+        companion object {
+            val values = entries.filter { it != None }.toList()
+        }
     }
 }

@@ -62,6 +62,8 @@ object Translations {
     inline fun poweredFurnaceName(tier: ProcessedTier) = t("block.processed.powered_furnace", tier)
     inline fun bigSmelterName() = t("block.processed.big_smelter")
 
+    inline fun multiblockAssembled() = t("processed.multiblocks.state.assembled")
+    inline fun multiblockBroken() = t("processed.multiblocks.state.broken")
     inline fun planetoidWidgetTooltip(planetoidName: String) =
         t("processed.gui.planetoid_widget.tooltip", t(planetoidName))
 

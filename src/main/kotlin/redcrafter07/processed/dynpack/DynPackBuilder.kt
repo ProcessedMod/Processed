@@ -70,6 +70,10 @@ object DynPackBuilder {
             DynPackResources.addItemModel(block.id, createPowerSourceModel)
         }
 
+        val itemInputHatchModel = rl("block/basic_item_input_hatch")
+        DynPackResources.addItemModel(ModBlocks.ITEM_INPUT_HATCH.id, DelegatedModel(itemInputHatchModel).get())
+        DynPackResources.addBlockState(ModBlocks.ITEM_INPUT_HATCH.id, createSided(ModBlocks.ITEM_INPUT_HATCH.get(), itemInputHatchModel).get()
+            
         for (fluid in ModFluids.REGISTERED_FLUIDS) DynPackResources.addBlockState(
             fluid.block.id, createSimpleBlock(fluid.block.get(), fluidRL).get()
         )

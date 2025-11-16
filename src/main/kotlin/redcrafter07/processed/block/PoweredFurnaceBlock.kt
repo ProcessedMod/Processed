@@ -22,7 +22,7 @@ class PoweredFurnaceBlock(tier: ProcessedTier) : TieredProcessedBlock(
     }
 
     override fun addBlockStateDefinition(stateDefinition: StateDefinition.Builder<Block, BlockState>) {
-        stateDefinition.add(WORKING);
+        stateDefinition.add(WORKING)
     }
 
     override fun useWithoutItem(

@@ -25,6 +25,7 @@ object ModTileEntities {
     val CREATIVE_POWER_SOURCE = register(
         "creative_power_source", ::CreativePowerSourceBlockEntity, *ModBlocks.CREATIVE_POWER_SOURCE.toTypedArray()
     )
+    val INPUT_ITEM_HATCH = register("input_item_hatch", ::InputItemHatchBlockEntity, ModBlocks.ITEM_INPUT_HATCH)
 
     private fun <T : BlockEntity> register(
         name: String, blockEntity: BlockEntitySupplier<T>, vararg blocks: DeferredBlock<*>
