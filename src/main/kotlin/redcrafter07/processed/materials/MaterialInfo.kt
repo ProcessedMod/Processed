@@ -1,10 +1,11 @@
 package redcrafter07.processed.materials
 
+import net.minecraft.tags.BlockTags
 import net.minecraft.tags.TagKey
 import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockBehaviour
 import redcrafter07.processed.gui.RenderUtils
-import redcrafter07.processed.toSubscript
 
 class MaterialInfo(
     var types: Types,
@@ -12,11 +13,10 @@ class MaterialInfo(
     var rawBlockVariant: RawBlockVariant,
     var color: Int,
     val identifier: String,
-    var chemicalDescription: String,
     var extraData: MutableList<Lazy<Any>>,
 ) {
     constructor(identifier: String) : this(
-        Types.None, NuggetVariant.LongHoriz, RawBlockVariant.IronLike, 0, identifier, "", ArrayList()
+        Types.None, NuggetVariant.LongHoriz, RawBlockVariant.IronLike, 0, identifier, ArrayList()
     )
 
     fun withExtraData(data: () -> Any): MaterialInfo {
@@ -53,26 +53,10 @@ class MaterialInfo(
 
     fun color(r: Int, g: Int, b: Int): MaterialInfo = color(RenderUtils.color(r, g, b))
 
-    /** Gets the chemical description based on the makeup of the material */
-    fun ofMaterials(vararg materials: Pair<Material, Int>): MaterialInfo {
-        val builder = StringBuilder()
-        for (material in materials) {
-            builder.append(material.first.info.chemicalDescription)
-            if (material.second != 1) builder.append(toSubscript(material.second.toString()))
-        }
-        this.chemicalDescription = builder.toString()
-        return this
-    }
-
-    fun chemicalDescription(chemicalDescription: String): MaterialInfo {
-        this.chemicalDescription = chemicalDescription
-        return this
-    }
-
     fun register(
-        materialTag: TagKey<Block>,
-        metalBlockProperties: BlockBehaviour.Properties,
-        oreBlockProperties: BlockBehaviour.Properties
+        materialTag: TagKey<Block> = BlockTags.NEEDS_IRON_TOOL,
+        metalBlockProperties: BlockBehaviour.Properties = BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK),
+        oreBlockProperties: BlockBehaviour.Properties = BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_ORE)
     ): Material = Materials.register(this, materialTag, metalBlockProperties, oreBlockProperties)
 
     enum class NuggetVariant(val index: Int) {
@@ -106,9 +90,5 @@ class MaterialInfo(
 
         infix fun and(other: Types): Types = Types(value or other.value)
         fun has(ty: Types) = (value and ty.value) > 0
-        val hasOreLike: Boolean get() = has(OreLike)
-        val hasDust: Boolean get() = has(Dust)
-        val hasIngotLike: Boolean get() = has(IngotLike)
-        val hasMetalBlock: Boolean get() = has(MetalBlock)
     }
 }

@@ -1,0 +1,10 @@
+{
+  "name": "processed.planetoid.luna",
+  "x": 120,
+  "y": 0,
+  "size": 30,
+  "texture": "processed:textures/planetoid/luna.png",
+  "parent": "processed:earth",
+  "distance": 384,
+  "gravity": 1.62
+}

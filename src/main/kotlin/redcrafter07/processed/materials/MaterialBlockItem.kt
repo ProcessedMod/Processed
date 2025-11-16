@@ -1,14 +1,13 @@
 package redcrafter07.processed.materials
 
-import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.level.block.Block
 import redcrafter07.processed.Translations
-import redcrafter07.processed.block.cable.CableData
-import redcrafter07.processed.block.itempipe.ItemPipeData
+import redcrafter07.processed.materials.data.CableData
+import redcrafter07.processed.materials.data.ItemPipeData
 
 abstract class MaterialBlockItem(block: Block, override val material: Material) : BlockItem(block, PROPS),
     MaterialContainer {
@@ -19,7 +18,6 @@ abstract class MaterialBlockItem(block: Block, override val material: Material) 
     override fun appendHoverText(
         stack: ItemStack, context: TooltipContext, tooltip: MutableList<Component>, tooltipFlag: TooltipFlag
     ) {
-        tooltip.add(Component.literal(material.info.chemicalDescription).withStyle(ChatFormatting.YELLOW))
         customHoverText(stack, context, tooltip, tooltipFlag)
         super.appendHoverText(stack, context, tooltip, tooltipFlag)
     }

@@ -10,9 +10,8 @@ import net.neoforged.neoforge.registries.DeferredRegister
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.block.cable.CableBlock
-import redcrafter07.processed.block.cable.CableData
-import redcrafter07.processed.block.itempipe.ItemPipeBlock
-import redcrafter07.processed.block.itempipe.ItemPipeData
+import redcrafter07.processed.materials.data.CableData
+import redcrafter07.processed.materials.data.ItemPipeData
 import redcrafter07.processed.block.machine_abstractions.TieredProcessedBlock
 import redcrafter07.processed.items.ModItems
 import redcrafter07.processed.materials.Material
@@ -71,7 +70,7 @@ object ModBlocks {
         Materials.MATERIALS, Material::oreBlockPath, ::OreBlock, ::OreBlockItem, MaterialInfo.Types.OreLike
     )
 
-    private fun <T : Block> registerBlock(id: String, block: Supplier<T>): DeferredBlock<T> {
+    fun <T : Block> registerBlock(id: String, block: Supplier<T>): DeferredBlock<T> {
         val regBlock = BLOCKS.register(id, block)
         ModItems.registerItem(id) { ModBlockItem(regBlock.get(), Item.Properties(), id) }
         return regBlock

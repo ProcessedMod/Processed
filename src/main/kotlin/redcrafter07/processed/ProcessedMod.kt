@@ -8,10 +8,12 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import redcrafter07.processed.block.ModBlocks
 import redcrafter07.processed.block.tile_entities.ModTileEntities
+import redcrafter07.processed.fluid.ModFluids
 import redcrafter07.processed.gui.ModMenuTypes
 import redcrafter07.processed.items.ModDataComponents
 import redcrafter07.processed.items.ModItemGroup
 import redcrafter07.processed.items.ModItems
+import redcrafter07.processed.recipe.ModRecipes
 
 fun rl(path: String): ResourceLocation = ResourceLocation.fromNamespaceAndPath(ProcessedMod.ID, path)
 
@@ -30,6 +32,9 @@ class ProcessedMod(bus: IEventBus, modContainer: ModContainer) {
         ModDataComponents.DATA_COMPONENTS.register(bus)
         ModMenuTypes.MENUS.register(bus)
         Attachments.ATTACHMENT_TYPES.register(bus)
+        ModRecipes.RECIPE_SERIALIZERS.register(bus)
+        ModFluids.FLUID_TYPES.register(bus)
+        ModFluids.FLUIDS.register(bus)
 
         LOG.info("Loaded processed :3")
     }

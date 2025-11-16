@@ -1,0 +1,11 @@
+{
+  "name": "processed.planetoid.europa",
+  "x": 120,
+  "y": 0,
+  "size": 25,
+  "texture": "processed:textures/planetoid/europa.png",
+  "parent": "processed:jupiter",
+  "color": "#cfd3d4",
+  "distance": 62820,
+  "gravity": 1.31
+}

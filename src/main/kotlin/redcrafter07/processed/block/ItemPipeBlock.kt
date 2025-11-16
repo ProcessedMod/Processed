@@ -1,4 +1,4 @@
-package redcrafter07.processed.block.itempipe
+package redcrafter07.processed.block
 
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -16,6 +16,8 @@ import net.minecraft.world.phys.shapes.BooleanOp
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
+import redcrafter07.processed.block.cable.CableBlockEntity.Companion.Connected
+import redcrafter07.processed.block.tile_entities.ItemPipeBlockEntity
 import redcrafter07.processed.block.tile_entities.ModTileEntities
 import redcrafter07.processed.materials.Material
 import redcrafter07.processed.materials.MaterialContainer
@@ -61,7 +63,6 @@ class ItemPipeBlock(override val material: Material) : Block(Properties.of().noO
 
     override fun getVisualShape(
         state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext
-
     ): VoxelShape = Shapes.empty()
 
     override fun propagatesSkylightDown(state: BlockState, level: BlockGetter, pos: BlockPos): Boolean = true
@@ -84,7 +85,7 @@ class ItemPipeBlock(override val material: Material) : Block(Properties.of().noO
             val list = arrayOfNulls<VoxelShape>(64) // 2^6 different states
 
             for (value in 0..<64) {
-                val connected = ItemPipeBlockEntity.Connected(value)
+                val connected = Connected(value)
                 // center
                 var shape = Shapes.box(START, START, START, END, END, END)
                 if (connected[Direction.NORTH]) shape = Shapes.join(shape, SHAPE_PIPE_NORTH, BooleanOp.OR)
