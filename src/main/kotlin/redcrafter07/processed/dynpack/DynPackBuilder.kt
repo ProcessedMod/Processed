@@ -66,6 +66,12 @@ object DynPackBuilder {
             DynPackResources.addBlockState(block.id, createProcessedBlock(block.get(), creativePowerSourceRL).get())
             DynPackResources.addItemModel(block.id, createPowerSourceModel)
         }
+
+        val itemInputHatchModel = rl("block/basic_item_input_hatch")
+        DynPackResources.addItemModel(ModBlocks.ITEM_INPUT_HATCH.id, DelegatedModel(itemInputHatchModel).get())
+        DynPackResources.addBlockState(
+            ModBlocks.ITEM_INPUT_HATCH.id, createSided(ModBlocks.ITEM_INPUT_HATCH.get(), itemInputHatchModel).get()
+        )
     }
 
     fun addMaterialItems() {

@@ -15,6 +15,7 @@ object ModMenuTypes {
     val MENUS: DeferredRegister<MenuType<*>> = DeferredRegister.create(Registries.MENU, ProcessedMod.ID)
 
     val POWERED_FURNACE_MENU = register("powered_furnace_menu", ::PoweredFurnaceMenu)
+    val INPUT_HATCH_MENU = register("input_hatch_menu", ::InputItemHatchMenu)
 
     fun <T : AbstractContainerMenu> register(
         name: String,

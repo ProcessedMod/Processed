@@ -24,6 +24,7 @@ import redcrafter07.processed.block.machine_abstractions.ItemCapableBlockEntity
 import redcrafter07.processed.block.tile_entities.FluidTankBlockEntity
 import redcrafter07.processed.block.tile_entities.ModTileEntities
 import redcrafter07.processed.dynpack.DynPackSource
+import redcrafter07.processed.gui.DynamicContainerScreen
 import redcrafter07.processed.gui.GenericMachineMenuScreen
 import redcrafter07.processed.gui.ModMenuTypes
 import redcrafter07.processed.integration.theoneprobe.TheOneProbeIntegration
@@ -131,8 +132,10 @@ object Registering {
     }
 
     @SubscribeEvent
-    fun registerMenuScreens(event: RegisterMenuScreensEvent) =
+    fun registerMenuScreens(event: RegisterMenuScreensEvent) {
         event.register(ModMenuTypes.POWERED_FURNACE_MENU.get(), ::GenericMachineMenuScreen)
+        event.register(ModMenuTypes.INPUT_HATCH_MENU.get(), ::DynamicContainerScreen)
+    }
 
     @SubscribeEvent
     fun registerRenderers(event: EntityRenderersEvent.RegisterRenderers) =

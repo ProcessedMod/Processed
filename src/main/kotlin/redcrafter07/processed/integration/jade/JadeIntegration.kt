@@ -1,5 +1,6 @@
 package redcrafter07.processed.integration.jade
 
+import net.minecraft.ChatFormatting
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraft.network.codec.ByteBufCodecs
@@ -7,7 +8,10 @@ import net.minecraft.network.codec.StreamCodec
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.Block
 import redcrafter07.processed.ProcessedPower
+import redcrafter07.processed.Translations
 import redcrafter07.processed.gui.widgets.EnergyBarWidget
+import redcrafter07.processed.multiblock.MultiblockBlock
+import redcrafter07.processed.multiblock.MultiblockBlockEntity
 import redcrafter07.processed.rl
 import snownee.jade.api.*
 import snownee.jade.api.config.IPluginConfig
@@ -20,6 +24,25 @@ class JadeIntegration : IWailaPlugin {
 
     override fun registerClient(registration: IWailaClientRegistration) {
         registration.registerBlockComponent(ProcessedEnergyProvider, Block::class.java)
+        registration.registerBlockComponent(MultiblockAssembledStateProvider, MultiblockBlock::class.java)
+    }
+
+    object MultiblockAssembledStateProvider : IBlockComponentProvider {
+        override fun appendTooltip(
+            tooltip: ITooltip, accessor: BlockAccessor, cfg: IPluginConfig
+        ) {
+            val be = accessor.blockEntity
+            if (be !is MultiblockBlockEntity) return
+            if (!be.isAssembled) tooltip.add(Translations.multiblockBroken().withStyle(ChatFormatting.RED))
+            else {
+                val assembled = Translations.multiblockAssembled().withStyle(ChatFormatting.GREEN)
+                val state = be.state() ?: return tooltip.add(assembled)
+                tooltip.add(Component.empty().append(assembled).append(" (").append(state).append(")"))
+            }
+        }
+
+        override fun getUid(): ResourceLocation = rl("multiblock_state")
+
     }
 
     object ProcessedEnergyProvider : IBlockComponentProvider {

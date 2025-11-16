@@ -61,12 +61,12 @@ class PoweredFurnaceBlockEntity(pos: BlockPos, blockState: BlockState) :
                 progress -= tier.speedMultiplier * 2
                 if (progress < 0) progress = 0
                 if (state.getValue(PoweredFurnaceBlock.WORKING))
-                    level.setBlockAndUpdate(pos, state.setValue(PoweredFurnaceBlock.WORKING, false));
+                    level.setBlockAndUpdate(pos, state.setValue(PoweredFurnaceBlock.WORKING, false))
                 setChanged(level, pos, state)
                 return
             }
             if (!state.getValue(PoweredFurnaceBlock.WORKING))
-                level.setBlockAndUpdate(pos, state.setValue(PoweredFurnaceBlock.WORKING, true));
+                level.setBlockAndUpdate(pos, state.setValue(PoweredFurnaceBlock.WORKING, true))
             progress += tier.speedMultiplier // we could also just do `maxProgress = recipe.cookingTime` in `hasRecipeAndSync`, but this takes less computation power!
 
             if (progress > maxProgress) {
@@ -80,7 +80,7 @@ class PoweredFurnaceBlockEntity(pos: BlockPos, blockState: BlockState) :
             setChanged(level, pos, state)
         }   else {
             if (state.getValue(PoweredFurnaceBlock.WORKING))
-                level.setBlockAndUpdate(pos,state.setValue(PoweredFurnaceBlock.WORKING, false));
+                level.setBlockAndUpdate(pos,state.setValue(PoweredFurnaceBlock.WORKING, false))
         }
     }
 
@@ -151,13 +151,13 @@ class PoweredFurnaceBlockEntity(pos: BlockPos, blockState: BlockState) :
         PoweredFurnaceMenu(containerId, inventory, this, data)
 
     override fun getDisplayName(): Component = Translations.poweredFurnaceName(tier)
-    override fun saveAdditional(nbt: CompoundTag, provider: HolderLookup.Provider) {
-        super.saveAdditional(nbt, provider)
-        nbt.putInt("progress", progress)
+    override fun saveAdditional(tag: CompoundTag, provider: HolderLookup.Provider) {
+        super.saveAdditional(tag, provider)
+        tag.putInt("progress", progress)
     }
 
-    override fun loadAdditional(nbt: CompoundTag, provider: HolderLookup.Provider) {
-        super.loadAdditional(nbt, provider)
-        progress = nbt.getInt("progress")
+    override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
+        super.loadAdditional(tag, registries)
+        progress = tag.getInt("progress")
     }
 }

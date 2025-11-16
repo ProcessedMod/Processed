@@ -1,0 +1,118 @@
+package redcrafter07.processed.multiblock
+
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Holder
+import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.tags.TagKey
+import net.minecraft.world.level.LevelAccessor
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.Block as McBlock
+
+fun interface Part {
+    fun blockType(state: BlockState, level: LevelAccessor, pos: BlockPos): MultiblockBlockEntity.SpecialBlockType?
+    fun or(vararg other: Part) = Union(this, *other)
+    fun itemInput() = SpecialBlock(this, MultiblockBlockEntity.SpecialBlockType.ItemInput)
+
+    companion object {
+        fun block(rl: ResourceLocation) = Block(rl)
+        fun block(key: ResourceKey<McBlock>) = Block(key)
+        fun block(holder: Holder<McBlock>) = Block(holder)
+        fun block(block: McBlock) = Block(block)
+        fun tag(tag: TagKey<McBlock>) = Tag(tag)
+        fun air() = block(Blocks.AIR)
+        fun ignored() = Empty
+        fun controller() = Controller
+    }
+
+    class SpecialBlock(val inner: Part, val type: MultiblockBlockEntity.SpecialBlockType) : Part {
+        override fun blockType(state: BlockState, level: LevelAccessor, pos: BlockPos) =
+            inner.blockType(state, level, pos)?.run { type }
+
+        override fun toString() = "SpecialBlock($inner, $type)"
+    }
+
+    object Empty : Part {
+        override fun blockType(state: BlockState, level: LevelAccessor, pos: BlockPos) =
+            MultiblockBlockEntity.SpecialBlockType.None
+        override fun toString() = "any"
+    }
+
+    object Controller : Part {
+        override fun blockType(
+            state: BlockState, level: LevelAccessor, pos: BlockPos
+        ) = throw IllegalStateException("Part.Controller's blockType called")
+
+        override fun or(vararg other: Part) = throw IllegalStateException("Part.Controller's or called")
+        override fun toString() = "controller"
+    }
+
+    class Union(val parts: MutableList<Part>) : Part {
+        constructor(vararg parts: Part) : this(parts.toMutableList())
+
+        init {
+            for (part in parts) if (part == Controller) throw IllegalStateException("Union contains a controller")
+        }
+
+        override fun blockType(
+            state: BlockState, level: LevelAccessor, pos: BlockPos
+        ): MultiblockBlockEntity.SpecialBlockType? {
+            for (part in parts) {
+                val ty = part.blockType(state, level, pos)
+                if (ty != null) return ty
+            }
+            return null
+        }
+
+        override fun or(vararg other: Part): Union {
+            this.parts.addAll(other)
+            return this
+        }
+
+        override fun toString(): String {
+            if (parts.isEmpty()) return "any"
+            else if (parts.size == 1) return parts[0].toString()
+            val builder = StringBuilder(parts[0].toString())
+            for (i in 1..<parts.size) builder.append(" | ").append(parts[i].toString())
+            return builder.toString()
+        }
+    }
+
+    class Block private constructor(val block: Any) : Part {
+        constructor(rl: ResourceLocation) : this(rl as Any)
+        constructor(key: ResourceKey<McBlock>) : this(key as Any)
+        constructor(holder: Holder<McBlock>) : this(holder as Any)
+        constructor(block: McBlock) : this(block as Any)
+
+        @Suppress("UNCHECKED_CAST")
+        override fun blockType(state: BlockState, level: LevelAccessor, pos: BlockPos) = when (block) {
+            is ResourceLocation -> state.blockHolder.`is`(block)
+            is ResourceKey<*> -> state.`is`(block as ResourceKey<McBlock>)
+            is Holder<*> -> state.`is`(block as Holder<McBlock>)
+            is McBlock -> state.`is`(block)
+            else -> throw IllegalStateException()
+        }.run { if (this) MultiblockBlockEntity.SpecialBlockType.None else null }
+
+        @Suppress("DEPRECATION")
+        override fun toString() = when (block) {
+            is ResourceLocation -> block.toString()
+            is ResourceKey<*> -> block.location().toString()
+            is Holder<*> -> {
+                val key = block.unwrapKey()
+                if (key.isPresent) key.get().location().toString()
+                else (block.value() as McBlock).builtInRegistryHolder().unwrapKey().get().location().toString()
+            }
+
+            is McBlock -> block.builtInRegistryHolder().unwrapKey().get().location().toString()
+            else -> throw IllegalStateException()
+        }
+    }
+
+    class Tag(val tag: TagKey<McBlock>) : Part {
+        override fun blockType(state: BlockState, level: LevelAccessor, pos: BlockPos) =
+            if (state.`is`(tag)) MultiblockBlockEntity.SpecialBlockType.None else null
+
+        override fun toString() = "#${tag.location}"
+    }
+}
