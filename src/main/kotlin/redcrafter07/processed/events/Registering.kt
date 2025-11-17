@@ -30,6 +30,9 @@ import redcrafter07.processed.block.machine_abstractions.ItemCapableBlockEntity
 import redcrafter07.processed.block.tile_entities.FluidTankBlockEntity
 import redcrafter07.processed.block.tile_entities.ModTileEntities
 import redcrafter07.processed.dynpack.DynPackSource
+import redcrafter07.processed.entity.ModEntities
+import redcrafter07.processed.entity.RocketEntityModel
+import redcrafter07.processed.entity.RocketEntityRenderer
 import redcrafter07.processed.fluid.ModFluids
 import redcrafter07.processed.gui.DynamicContainerScreen
 import redcrafter07.processed.gui.GenericMachineMenuScreen
@@ -158,8 +161,15 @@ object Registering {
     }
 
     @SubscribeEvent
-    fun registerRenderers(event: EntityRenderersEvent.RegisterRenderers) =
+    fun registerRenderers(event: EntityRenderersEvent.RegisterRenderers) {
         event.registerBlockEntityRenderer(ModTileEntities.FLUID_TANK.get()) { FluidTankBlockEntity.FluidTankEntityRenderer }
+        event.registerEntityRenderer(ModEntities.ROCKET.get(), ::RocketEntityRenderer)
+    }
+
+    @SubscribeEvent
+    fun registerLayerDefinitions(e: EntityRenderersEvent.RegisterLayerDefinitions) {
+        e.registerLayerDefinition(RocketEntityModel.LAYER_LOCATION, RocketEntityModel::createBodyLayer)
+    }
 
     @SubscribeEvent
     fun registerPackSources(event: AddPackFindersEvent) = event.addRepositorySource(DynPackSource)

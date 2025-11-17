@@ -2,10 +2,10 @@ package redcrafter07.processed.block.tile_entities
 
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.MoverType
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
@@ -17,6 +17,8 @@ import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.Translations
 import redcrafter07.processed.block.ModBlocks
 import redcrafter07.processed.block.machine_abstractions.ProcessedBlock.Companion.STATE_HORIZ_FACING
+import redcrafter07.processed.entity.ModEntities
+import redcrafter07.processed.entity.RocketEntity
 import redcrafter07.processed.multiblock.MultiblockBlockEntity
 import redcrafter07.processed.multiblock.Part
 import redcrafter07.processed.multiblock.SquareMultiblockValidator
@@ -54,7 +56,7 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
     }
 
     private var animProg = 0
-    private var animRocket: Entity? = null
+    private var animRocket: RocketEntity? = null
     private var rocketSpeed = .0
     private var landing = false
 
@@ -65,8 +67,17 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
     override fun getDisplayName() = Translations.launchControllerName()
     override fun createMenu(p0: Int, p1: Inventory, p2: Player): AbstractContainerMenu? = null
 
+    fun spawnRocket(level: ClientLevel, dir: Direction, x: Double, y: Double, z: Double): RocketEntity? {
+        val rocket = ModEntities.ROCKET.get().create(level) ?: return null
+        rocket.yRot = dir.get2DDataValue().toFloat() * 90f
+        rocket.setPos(x, y, z)
+        level.addEntity(rocket)
+        return rocket
+    }
+
     fun startLaunchAnimation(level: ClientLevel, pos: BlockPos, state: BlockState) {
-        val spawnPos = pos.relative(state.getValue(STATE_HORIZ_FACING), -2).offset(0, 2, 0)
+        val dir = state.getValue(STATE_HORIZ_FACING)
+        val spawnPos = pos.relative(dir, -2).offset(0, 1, 0)
 
         landing = false
         rocketSpeed = .03
@@ -76,39 +87,33 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
         if (animRocket != null) animRocket.moveTo(
             spawnPos.x.toDouble() + .5, spawnPos.y.toDouble(), spawnPos.z.toDouble() + .5
         )
-        else {
-            val minecart = EntityType.MINECART.create(level) ?: return
-            minecart.isNoGravity = true
-            minecart.noPhysics = true
-            minecart.setPos(spawnPos.x.toDouble() + .5, spawnPos.y.toDouble(), spawnPos.z.toDouble() + .5)
-            level.addEntity(minecart)
-            this.animRocket = minecart
-        }
+        else this.animRocket = spawnRocket(
+            level, dir, spawnPos.x.toDouble() + .5, spawnPos.y.toDouble(), spawnPos.z.toDouble() + .5
+        )
     }
 
     fun startLandingAnimation(level: ClientLevel, pos: BlockPos, state: BlockState) {
-        val spawnPos = pos.relative(state.getValue(STATE_HORIZ_FACING), -2).offset(0, 2, 0)
+        val dir = state.getValue(STATE_HORIZ_FACING)
+        val spawnPos = pos.relative(dir, -2)
 
         landing = true
         rocketSpeed = .0
-        animProg = 0
+        animProg = -1
+
 
         val animRocket = animRocket
         if (animRocket != null) animRocket.moveTo(
             spawnPos.x.toDouble() + .5, 500.0, spawnPos.z.toDouble() + .5
         )
-        else {
-            val minecart = EntityType.MINECART.create(level) ?: return
-            minecart.isNoGravity = true
-            minecart.noPhysics = true
-            minecart.setPos(spawnPos.x.toDouble() + .5, 500.0, spawnPos.z.toDouble() + .5)
-            level.addEntity(minecart)
-            this.animRocket = minecart
-        }
+        else this.animRocket = spawnRocket(
+            level, dir, spawnPos.x.toDouble() + .5, 500.0, spawnPos.z.toDouble() + .5
+        )
     }
 
     override fun tileTickClient(level: ClientLevel, pos: BlockPos, state: BlockState) {
         val animRocket = animRocket
+        if (animRocket != null) animRocket.hasStands = (!landing && animProg >= 40)
+
         if (!landing && animRocket != null && animProg < 40) {
             if (animRocket.position().y > 500.0) {
                 this.animRocket = null
@@ -120,18 +125,27 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
             }
         }
         if (landing && animRocket != null) {
-            val minY = pos.y + 1.5
-            if (animRocket.position().y <= minY) {
+            val minY = pos.y + 1
+
+            if (animProg > 0) {
+                animRocket.hasStands = true
+                animProg--
+            } else if (animProg == 0) {
                 this.animRocket = null
                 level.removeEntity(animRocket.id, Entity.RemovalReason.DISCARDED)
+            } else if (animRocket.position().y <= minY) {
+                animProg = 40
+                animRocket.hasStands = true
             } else {
+                animRocket.hasStands = false
                 val landingDistance = 500 - minY
                 val progress = (animRocket.position().y - minY) / landingDistance
-                val speed = Mth.lerp(1 - progress, 10.0, 0.01)
+                val speed = Mth.lerp(1 - progress, 10.0, 0.001)
                 animRocket.move(MoverType.SELF, Vec3(.0, -speed, .0))
             }
         }
-        if (animRocket != null && animProg < 140) {
+        val doParticles = if (landing) animProg < 0 else animProg < 140
+        if (animRocket != null && doParticles) {
             val smoke = ModParticles.SMOKE.get()
             val fire = ModParticles.FIRE.get()
             val y = animRocket.position().y
