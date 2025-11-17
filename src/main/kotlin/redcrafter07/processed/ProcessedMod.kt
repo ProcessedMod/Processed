@@ -13,6 +13,7 @@ import redcrafter07.processed.gui.ModMenuTypes
 import redcrafter07.processed.items.ModDataComponents
 import redcrafter07.processed.items.ModItemGroup
 import redcrafter07.processed.items.ModItems
+import redcrafter07.processed.particles.ModParticles
 import redcrafter07.processed.recipe.ModRecipes
 
 fun rl(path: String): ResourceLocation = ResourceLocation.fromNamespaceAndPath(ProcessedMod.ID, path)
@@ -25,6 +26,7 @@ class ProcessedMod(bus: IEventBus, modContainer: ModContainer) {
     }
 
     init {
+        ModParticles.PARTICLES.register(bus)
         ModBlocks.BLOCKS.register(bus)
         ModItems.ITEMS.register(bus)
         ModItemGroup.CREATIVE_MODE_TABS.register(bus)

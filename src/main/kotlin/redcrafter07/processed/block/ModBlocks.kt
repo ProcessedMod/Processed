@@ -41,6 +41,7 @@ object ModBlocks {
     val BASIC_CASING = registerBlock("basic_casing") { Block(BlockBehaviour.Properties.of()) }
     val BIG_SMELTER = registerBlock("big_smelter", ::BigSmelterBlock)
     val LAUNCH_CONTROLLER = registerBlock("launch_controller", ::LaunchControllerBlock)
+    val LANDING_PAD = registerBlock("landing_pad", ::LandingPadBlock)
     val ITEM_INPUT_HATCH = registerBlock("basic_item_input_hatch", ::InputItemHatchBlock)
 
     val CABLES = registerMaterialBlockExtra(

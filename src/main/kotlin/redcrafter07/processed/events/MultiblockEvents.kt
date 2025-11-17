@@ -34,6 +34,43 @@ object MultiblockEvents {
             }
 
         }
+    }
 
+    @SubscribeEvent
+    fun onBlockPlace(e: BlockEvent.EntityPlaceEvent) {
+        if (e.blockSnapshot.state.`is`(e.blockSnapshot.currentState.block)) return
+        val level = e.level
+        val pos = e.pos
+        if (level.isClientSide) return
+        val machineBlock = MultiBlockBlockCache.getController(level, pos) ?: return
+        if (machineBlock == pos) return
+
+        val chunkX = SectionPos.blockToSectionCoord(machineBlock.x)
+        val chunkZ = SectionPos.blockToSectionCoord(machineBlock.z)
+        if (level.hasChunk(chunkX, chunkZ)) {
+            val multiblock = level.getBlockEntity(machineBlock)
+            if (multiblock is MultiblockBlockEntity) multiblock.partBlockDestroyed(pos)
+        }
+    }
+
+    @SubscribeEvent
+    fun onBlockPlaceMany(e: BlockEvent.EntityMultiPlaceEvent) {
+        onBlockPlace(e)
+
+        val level = e.level
+        if (level.isClientSide) return
+        for (snapshot in e.replacedBlockSnapshots) {
+            if (snapshot.state.`is`(snapshot.currentState.block)) return
+            val pos = snapshot.pos
+            val machineBlock = MultiBlockBlockCache.getController(level, pos) ?: return
+            if (machineBlock == pos) return
+
+            val chunkX = SectionPos.blockToSectionCoord(machineBlock.x)
+            val chunkZ = SectionPos.blockToSectionCoord(machineBlock.z)
+            if (level.hasChunk(chunkX, chunkZ)) {
+                val multiblock = level.getBlockEntity(machineBlock)
+                if (multiblock is MultiblockBlockEntity) multiblock.partBlockDestroyed(pos)
+            }
+        }
     }
 }
