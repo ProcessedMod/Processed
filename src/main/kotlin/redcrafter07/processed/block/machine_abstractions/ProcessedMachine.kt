@@ -374,12 +374,7 @@ abstract class ProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, blockSt
         var energyStore: ProcessedEnergyHandler<CompoundTag>?
             get() = energyCapability?.energyStore
             set(value) {
-                energyCapability?.energyStore?.setOnChange(null)
-                if (value == null) energyCapability = null
-                else {
-                    value.setOnChange(attachedMachine::sync)
-                    energyCapability = ProcessedPowerStore(attachedMachine.tier, value)
-                }
+                energyCapability = if (value == null) null else ProcessedPowerStore(attachedMachine.tier, value)
             }
 
         var energyCapability: ProcessedPowerStore<ProcessedEnergyHandler<CompoundTag>>? = null
@@ -414,8 +409,6 @@ abstract class ProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, blockSt
         }
 
         fun setItemHandlerForState(state: IoState, handler: ProcessedItemHandler<CompoundTag>?) {
-            handler?.setOnChange(attachedMachine::sync)
-
             if (handler != null) {
                 supportedItemHandlers.add(state)
                 if ((state == IoState.Input && supportedItemHandlers.contains(IoState.Output)) || (state == IoState.Output && supportedItemHandlers.contains(
@@ -454,8 +447,6 @@ abstract class ProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, blockSt
         }
 
         fun setFluidHandlerForState(state: IoState, handler: ProcessedFluidHandler<CompoundTag>?) {
-            handler?.setOnChange(attachedMachine::sync)
-
             if (handler != null) {
                 supportedFluidHandlers.add(state)
                 if ((state == IoState.Input && supportedFluidHandlers.contains(IoState.Output)) || (state == IoState.Output && supportedFluidHandlers.contains(

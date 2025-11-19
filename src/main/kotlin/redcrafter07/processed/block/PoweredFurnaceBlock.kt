@@ -28,10 +28,11 @@ class PoweredFurnaceBlock(tier: ProcessedTier) : TieredProcessedBlock(
     override fun useWithoutItem(
         state: BlockState, level: Level, pos: BlockPos, player: Player, hitResult: BlockHitResult
     ): InteractionResult {
+        if (level.isClientSide) return InteractionResult.SUCCESS
         val be = level.getBlockEntity(pos)
         if (be is PoweredFurnaceBlockEntity) {
             player.openMenu(be) { data -> data.writeBlockPos(pos) }
-            return InteractionResult.sidedSuccess(level.isClientSide())
+            return InteractionResult.CONSUME
         }
         return InteractionResult.PASS
     }

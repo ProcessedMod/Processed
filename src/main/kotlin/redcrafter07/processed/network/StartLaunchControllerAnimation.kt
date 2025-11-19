@@ -30,8 +30,8 @@ class StartLaunchControllerAnimation(val controllerPos: BlockPos, val launch: Bo
             if (!level.isClientSide || level !is ClientLevel) return
             val be = level.getBlockEntity(controllerPos)
             if (be is LaunchControllerBlockEntity) {
-                if (launch) be.startLaunchAnimation(level, controllerPos, level.getBlockState(controllerPos))
-                else be.startLandingAnimation(level, controllerPos, level.getBlockState(controllerPos))
+                if (launch) be.animator.startLaunchAnimation(level, controllerPos, level.getBlockState(controllerPos))
+                else be.animator.startLandingAnimation(level, controllerPos, level.getBlockState(controllerPos))
             }
         } catch (_: IOException) {
         } catch (_: UnsupportedOperationException) {

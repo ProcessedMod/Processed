@@ -49,17 +49,18 @@ class ItemPipeBlockEntity(pos: BlockPos, blockState: BlockState) :
     val disallowedConnections = Connected()
     var itemsTransferred = 0
 
-    val itemHandler = object : IItemHandler {
+    class ItemHandler(val pipe: ItemPipeBlockEntity, val block: BlockPos) : IItemHandler {
         override fun getSlots(): Int = 1
         override fun getStackInSlot(p0: Int): ItemStack = ItemStack.EMPTY
         override fun insertItem(
             slot: Int, item: ItemStack, simulate: Boolean
         ): ItemStack {
-            val lvl = level ?: return item
+            val lvl = pipe.level ?: return item
             var item = item.copy()
-            var simItemsTransferred = itemsTransferred
+            var simItemsTransferred = pipe.itemsTransferred
 
-            for (entry in outputs.entries) {
+            for (entry in pipe.outputs.entries) {
+                if (entry.key == block) continue
                 if (item.isEmpty) break
                 val cap = lvl.getCapability(Capabilities.ItemHandler.BLOCK, entry.key, entry.value.second) ?: continue
                 try {
@@ -83,7 +84,7 @@ class ItemPipeBlockEntity(pos: BlockPos, blockState: BlockState) :
                 }
             }
 
-            if (!simulate) itemsTransferred = simItemsTransferred
+            if (!simulate) pipe.itemsTransferred = simItemsTransferred
             return item
         }
 
@@ -95,7 +96,8 @@ class ItemPipeBlockEntity(pos: BlockPos, blockState: BlockState) :
         override fun isItemValid(p0: Int, p1: ItemStack): Boolean = true
     }
 
-    override fun itemCapabilityForSide(side: BlockSide?, state: BlockState) = itemHandler
+    override fun itemCapabilityForSide(side: BlockSide?, state: BlockState) =
+        ItemHandler(this, if (side == null) blockPos else blockPos.relative(side.asDirectionNotRotated))
 
     private var outputCacheInner: Map<BlockPos, Pair<Int, Direction>>? = null
     val outputs: Map<BlockPos, Pair<Int, Direction>>

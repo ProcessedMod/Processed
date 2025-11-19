@@ -17,6 +17,7 @@ import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
 import net.neoforged.neoforge.event.AddPackFindersEvent
+import net.neoforged.neoforge.fluids.capability.wrappers.FluidBucketWrapper
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
 import net.neoforged.neoforge.registries.DataPackRegistryEvent
 import redcrafter07.processed.particles.ModParticles
@@ -132,6 +133,12 @@ object Registering {
                 } else null
             },
             *fluidCapable(blocks),
+        )
+
+        event.registerItem(
+            Capabilities.FluidHandler.ITEM,
+            { item, _ -> FluidBucketWrapper(item) },
+            *ModFluids.REGISTERED_FLUIDS.map { it.bucket }.toList().toTypedArray()
         )
     }
 

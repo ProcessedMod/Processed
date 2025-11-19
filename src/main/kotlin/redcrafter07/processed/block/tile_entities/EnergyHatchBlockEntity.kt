@@ -6,8 +6,6 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
-import net.minecraft.server.level.ServerLevel
-import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import redcrafter07.processed.ProcessedPower
@@ -22,19 +20,6 @@ class EnergyHatchBlockEntity(pos: BlockPos, blockState: BlockState) : BlockEntit
 ), EnergyCapableBlockEntity {
     val handler = SimpleEnergyStore(ProcessedTier.Nuclear.maxPower, ProcessedTier.Nuclear.energyMultiplier, 0)
     val wrapper = ProcessedPowerStore(ProcessedTier.Nuclear, handler)
-
-    init {
-        handler.setOnChange(this::sync)
-    }
-
-    fun sync() {
-        val level = level
-        if (level is ServerLevel) {
-            val state = blockState
-            level.sendBlockUpdated(this.worldPosition, state, state, Block.UPDATE_ALL)
-            setChanged()
-        }
-    }
 
     override fun getUpdatePacket(): Packet<ClientGamePacketListener>? = ClientboundBlockEntityDataPacket.create(this)
     override fun getUpdateTag(provider: HolderLookup.Provider): CompoundTag = saveWithoutMetadata(provider)

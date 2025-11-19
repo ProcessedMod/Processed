@@ -50,7 +50,7 @@ class BigSmelterBlockEntity(pos: BlockPos, blockState: BlockState) :
     override val tier: ProcessedTier = ProcessedTier.Advanced
 
     override fun tileTickServer(level: ServerLevel, pos: BlockPos, state: BlockState) {
-        val input = specialBlocks[SpecialBlockType.ItemInput] ?: return
+        val input = specialBlock(SpecialBlockType.ItemInput) ?: return
         val be = level.getBlockEntity(input)
         if (be !is InputItemHatchBlockEntity) return
         for (slot in 0..<be.handler.slots) {

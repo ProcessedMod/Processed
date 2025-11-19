@@ -7,11 +7,9 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
-import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.MenuProvider
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import redcrafter07.processed.block.machine_abstractions.BlockSide
@@ -28,19 +26,6 @@ class InputFluidHatchBlockEntity(pos: BlockPos, blockState: BlockState) : BlockE
     val wrapper = InputFluidHandlerWrapper(handler)
     override fun inventoryHandler() = handler
     override fun pos(): BlockPos = blockPos
-
-    init {
-        handler.setOnChange(this::sync)
-    }
-
-    fun sync() {
-        val level = level
-        if (level is ServerLevel) {
-            val state = blockState
-            level.sendBlockUpdated(this.worldPosition, state, state, Block.UPDATE_ALL)
-            setChanged()
-        }
-    }
 
     override fun getUpdatePacket(): Packet<ClientGamePacketListener>? = ClientboundBlockEntityDataPacket.create(this)
     override fun getUpdateTag(provider: HolderLookup.Provider): CompoundTag = saveWithoutMetadata(provider)

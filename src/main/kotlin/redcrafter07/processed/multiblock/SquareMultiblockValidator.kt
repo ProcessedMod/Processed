@@ -64,7 +64,7 @@ class SquareMultiblockValidator(val data: List<Part>, val size: Vector3i, val re
         val positions = HashSet<BlockPos>()
 
         val restrictionOccurrences = restrictions.stream().map { 0 }.toList().toMutableList()
-        val specialBlocks = mutableMapOf<MultiblockBlockEntity.SpecialBlockType, BlockPos>()
+        val specialBlocks = mutableMapOf<MultiblockBlockEntity.SpecialBlockType, MutableList<BlockPos>>()
 
         for (x in -controllerPosition.x..<size.x - controllerPosition.x) {
             val offsetX = controller.relative(facing, x)
@@ -78,8 +78,11 @@ class SquareMultiblockValidator(val data: List<Part>, val size: Vector3i, val re
                     val pos = offsetZ.offset(0, y, 0)
                     val state = level.getBlockState(pos)
                     val specialBlockType = part.blockType(state, level, pos) ?: return null
-                    if (specialBlockType != MultiblockBlockEntity.SpecialBlockType.None) specialBlocks[specialBlockType] =
-                        pos
+                    if (specialBlockType == MultiblockBlockEntity.SpecialBlockType.Ignored) continue
+
+                    if (specialBlockType != MultiblockBlockEntity.SpecialBlockType.None) {
+                        specialBlocks.getOrPut(specialBlockType) { mutableListOf() }.add(pos)
+                    }
                     val controllerPos = MultiBlockBlockCache.getController(level, pos)
                     if (controllerPos != null && controllerPos != controller) return null
                     for (i in 0..<restrictions.size) {

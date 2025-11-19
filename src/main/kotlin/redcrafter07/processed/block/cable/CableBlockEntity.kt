@@ -47,19 +47,20 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
     val connected = Connected()
     val disallowedConnections = Connected()
 
-    val energyHandler = object : IEnergyStorage {
+    class EnergyHandler(val cable: CableBlockEntity, val block: BlockPos) : IEnergyStorage {
         override fun receiveEnergy(amount: Int, sim: Boolean): Int {
-            val lvl = level ?: return 0
+            val lvl = cable.level ?: return 0
             var energyLeft = amount
 
-            for (entry in outputs.entries) {
+            for (entry in cable.outputs.entries) {
+                if (entry.key == block) continue
                 if (energyLeft <= 0) return amount
                 val cap: IEnergyStorage
                 val cap1 = lvl.getCapability(Capabilities.EnergyStorage.BLOCK, entry.key, entry.value.second)
                 if (cap1 != null) cap = cap1
                 else {
                     val cap2 = lvl.getCapability(ProcessedPower.BLOCK, entry.key, entry.value.second) ?: continue
-                    if (!cableTier.value.canInsertEnergy(cap2.minTier())) continue
+                    if (!cable.cableTier.value.canInsertEnergy(cap2.minTier())) continue
                     cap = cap2.energy()
                 }
 
@@ -78,10 +79,14 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
         override fun canExtract(): Boolean = false
         override fun canReceive(): Boolean = true
     }
-    val energyCapability = ProcessedPowerStore(cableTier.value, energyHandler)
 
-    override fun energyCapabilityForSide(side: BlockSide?, state: BlockState) =
-        if (side == null) energyCapability else if (connected[side.asDirectionNotRotated]) energyCapability else null
+    override fun energyCapabilityForSide(side: BlockSide?, state: BlockState): ProcessedPower? {
+        val handler = if (side == null) EnergyHandler(this, blockPos)
+        else if (connected[side.asDirectionNotRotated]) EnergyHandler(this, blockPos)
+        else return null
+
+        return ProcessedPowerStore(cableTier.value, handler)
+    }
 
     private var outputCacheInner: Map<BlockPos, Pair<ProcessedTier, Direction>>? = null
     val outputs: Map<BlockPos, Pair<ProcessedTier, Direction>>

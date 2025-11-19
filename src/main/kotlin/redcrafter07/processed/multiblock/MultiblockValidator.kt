@@ -10,5 +10,5 @@ interface MultiblockValidator {
      */
     fun getBlocks(level: LevelAccessor, controller: BlockPos, facing: Direction): Result?
 
-    data class Result(val blocks: Set<BlockPos>, val importantBlocks: Map<MultiblockBlockEntity.SpecialBlockType, BlockPos>)
+    data class Result(val blocks: Set<BlockPos>, val importantBlocks: Map<MultiblockBlockEntity.SpecialBlockType, List<BlockPos>>)
 }
