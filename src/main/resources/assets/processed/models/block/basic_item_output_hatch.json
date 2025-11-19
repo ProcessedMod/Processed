@@ -2,6 +2,6 @@
   "parent": "processed:block/hatch",
   "textures": {
     "all": "processed:block/basic_casing",
-    "overlay": "processed:block/item_input_hatch_overlay"
+    "overlay": "processed:block/item_output_hatch_overlay"
   }
 }

@@ -27,6 +27,10 @@ object ModTileEntities {
         "creative_power_source", ::CreativePowerSourceBlockEntity, *ModBlocks.CREATIVE_POWER_SOURCE.toTypedArray()
     )
     val INPUT_ITEM_HATCH = register("input_item_hatch", ::InputItemHatchBlockEntity, ModBlocks.ITEM_INPUT_HATCH)
+    val OUTPUT_ITEM_HATCH = register("output_item_hatch", ::OutputItemHatchBlockEntity, ModBlocks.ITEM_OUTPUT_HATCH)
+    val INPUT_FLUID_HATCH = register("input_fluid_hatch", ::InputFluidHatchBlockEntity, ModBlocks.FLUID_INPUT_HATCH)
+    val OUTPUT_FLUID_HATCH = register("output_fluid_hatch", ::InputFluidHatchBlockEntity, ModBlocks.FLUID_OUTPUT_HATCH)
+    val ENERGY_HATCH = register("energy_hatch", ::EnergyHatchBlockEntity, ModBlocks.ENERGY_HATCH)
 
     private fun <T : BlockEntity> register(
         name: String, blockEntity: BlockEntitySupplier<T>, vararg blocks: DeferredBlock<*>
@@ -34,9 +38,7 @@ object ModTileEntities {
         return BLOCK_TYPES.register(
             name, Supplier {
                 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") BlockEntityType(
-                    blockEntity,
-                    blocks.map { it.get() }.toSet(),
-                    null
+                    blockEntity, blocks.map { it.get() }.toSet(), null
                 )
             })
     }

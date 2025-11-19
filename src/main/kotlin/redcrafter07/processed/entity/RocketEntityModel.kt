@@ -25,118 +25,116 @@ class RocketEntityModel(root: ModelPart) : EntityModel<RocketEntity>() {
 
         fun createBodyLayer(): LayerDefinition {
             val meshDefinition = MeshDefinition()
-            val root = meshDefinition.root
+            val partDefinition = meshDefinition.getRoot()
 
-            root.addOrReplaceChild(
+            partDefinition.addOrReplaceChild(
                 "engine",
-                CubeListBuilder.create().texOffs(-6, -4)
-                    .addBox(-3.0F, -6.0F, -3.0F, 6.0F, 3.0F, 6.0F, CubeDeformation(0.0F)).texOffs(-9, -6)
-                    .addBox(-4.0F, -3.0F, -4.0F, 8.0F, 4.0F, 8.0F, CubeDeformation(0.0F)).texOffs(-3, -2)
-                    .addBox(-2.0F, -8.0F, -2.0F, 4.0F, 2.0F, 4.0F, CubeDeformation(0.0F)),
-                PartPose.offset(0.0F, 14.0F, 0.0F)
+                CubeListBuilder.create().texOffs(72, 1)
+                    .addBox(-3.0f, -6.0f, -3.0f, 6.0f, 3.0f, 6.0f, CubeDeformation(0.0f)).texOffs(81, 11)
+                    .addBox(-2.0f, -8.0f, -2.0f, 4.0f, 2.0f, 4.0f, CubeDeformation(0.0f)).texOffs(56, 11)
+                    .addBox(-4.0f, -3.0f, -4.0f, 8.0f, 4.0f, 8.0f, CubeDeformation(0.0f)),
+                PartPose.offset(0.0f, 14.0f, 0.0f)
             )
 
-            root.addOrReplaceChild(
+            partDefinition.addOrReplaceChild(
                 "body",
-                CubeListBuilder.create().texOffs(-18, -12)
-                    .addBox(-7.0F, -39.0F, -7.0F, 14.0F, 35.0F, 14.0F, CubeDeformation(0.0F)).texOffs(-12, -8)
-                    .addBox(-5.0F, -4.0F, -5.0F, 10.0F, 1.0F, 10.0F, CubeDeformation(0.0F)),
-                PartPose.offset(0.0F, 9.0F, 0.0F)
+                CubeListBuilder.create().texOffs(0, 0)
+                    .addBox(-7.0f, -39.0f, -7.0f, 14.0f, 35.0f, 14.0f, CubeDeformation(0.0f)).texOffs(42, 0)
+                    .addBox(-5.0f, -4.0f, -5.0f, 10.0f, 1.0f, 10.0f, CubeDeformation(0.0f)),
+                PartPose.offset(0.0f, 9.0f, 0.0f)
             )
 
-            root.addOrReplaceChild(
+            partDefinition.addOrReplaceChild(
                 "engineLeft",
-                CubeListBuilder.create().texOffs(-12, -6)
-                    .addBox(-4.0F, -12.0F, -4.0F, 8.0F, 29.0F, 8.0F, CubeDeformation(0.0F)).texOffs(-10, -6)
-                    .addBox(0.0F, -18.0F, -4.0F, 6.0F, 2.0F, 8.0F, CubeDeformation(0.0F)).texOffs(-12, -6)
-                    .addBox(-2.0F, -16.0F, -4.0F, 8.0F, 2.0F, 8.0F, CubeDeformation(0.0F)).texOffs(-14, -6)
-                    .addBox(-4.0F, -14.0F, -4.0F, 9.0F, 2.0F, 8.0F, CubeDeformation(0.0F)).texOffs(-1, 0)
-                    .addBox(4.0F, 1.0F, -2.0F, 2.0F, 2.0F, 2.0F, CubeDeformation(0.0F)).texOffs(-6, -4)
-                    .addBox(-3.0F, 18.0F, -3.0F, 6.0F, 2.0F, 6.0F, CubeDeformation(0.0F)).texOffs(-3, -2)
-                    .addBox(-2.0F, 17.0F, -2.0F, 4.0F, 1.0F, 4.0F, CubeDeformation(0.0F)).texOffs(-9, -6)
-                    .addBox(-4.0F, 20.0F, -4.0F, 8.0F, 3.0F, 8.0F, CubeDeformation(0.0F)),
-                PartPose.offset(-13.0F, -3.0F, 0.0F)
+                CubeListBuilder.create().texOffs(0, 49)
+                    .addBox(-4.0f, -12.0f, -4.0f, 8.0f, 29.0f, 8.0f, CubeDeformation(0.0f)).texOffs(32, 66)
+                    .addBox(0.0f, -18.0f, -4.0f, 6.0f, 2.0f, 8.0f, CubeDeformation(0.0f)).texOffs(32, 56)
+                    .addBox(-2.0f, -16.0f, -4.0f, 8.0f, 2.0f, 8.0f, CubeDeformation(0.0f)).texOffs(32, 76)
+                    .addBox(-4.0f, -14.0f, -4.0f, 9.0f, 2.0f, 8.0f, CubeDeformation(0.0f)).texOffs(8, 109)
+                    .addBox(4.0f, 1.0f, -2.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.0f)).texOffs(24, 86)
+                    .addBox(-3.0f, 18.0f, -3.0f, 6.0f, 2.0f, 6.0f, CubeDeformation(0.0f)).texOffs(24, 52)
+                    .addBox(-2.0f, 17.0f, -2.0f, 4.0f, 1.0f, 4.0f, CubeDeformation(0.0f)).texOffs(0, 86)
+                    .addBox(-4.0f, 20.0f, -4.0f, 8.0f, 3.0f, 8.0f, CubeDeformation(0.0f)),
+                PartPose.offset(-13.0f, -3.0f, 0.0f)
             )
 
-            root.addOrReplaceChild(
+            partDefinition.addOrReplaceChild(
                 "engineRight",
-                CubeListBuilder.create().texOffs(-12, -6).mirror()
-                    .addBox(7.0F, -12.0F, -4.0F, 8.0F, 29.0F, 8.0F, CubeDeformation(0.0F)).mirror(false).texOffs(-9, -6)
-                    .mirror().addBox(5.0F, -18.0F, -4.0F, 6.0F, 2.0F, 8.0F, CubeDeformation(0.0F)).mirror(false)
-                    .texOffs(-11, -6).mirror().addBox(5.0F, -16.0F, -4.0F, 8.0F, 2.0F, 8.0F, CubeDeformation(0.0F))
-                    .mirror(false).texOffs(-13, -6).mirror()
-                    .addBox(6.0F, -14.0F, -4.0F, 9.0F, 2.0F, 8.0F, CubeDeformation(0.0F)).mirror(false).texOffs(-1, 0)
-                    .addBox(5.0F, 1.0F, -2.0F, 2.0F, 2.0F, 2.0F, CubeDeformation(0.0F)).texOffs(-3, -2)
-                    .addBox(9.0F, 17.0F, -2.0F, 4.0F, 1.0F, 4.0F, CubeDeformation(0.0F)).texOffs(-6, -4)
-                    .addBox(8.0F, 18.0F, -3.0F, 6.0F, 2.0F, 6.0F, CubeDeformation(0.0F)).texOffs(-9, -6)
-                    .addBox(7.0F, 20.0F, -4.0F, 8.0F, 3.0F, 8.0F, CubeDeformation(0.0F)),
-                PartPose.offset(2.0F, -3.0F, 0.0F)
+                CubeListBuilder.create().texOffs(0, 49)
+                    .addBox(7.0f, -12.0f, -4.0f, 8.0f, 29.0f, 8.0f, CubeDeformation(0.0f)).texOffs(32, 66)
+                    .addBox(5.0f, -18.0f, -4.0f, 6.0f, 2.0f, 8.0f, CubeDeformation(0.0f)).texOffs(32, 56)
+                    .addBox(5.0f, -16.0f, -4.0f, 8.0f, 2.0f, 8.0f, CubeDeformation(0.0f)).texOffs(32, 76)
+                    .addBox(6.0f, -14.0f, -4.0f, 9.0f, 2.0f, 8.0f, CubeDeformation(0.0f)).texOffs(8, 109)
+                    .addBox(5.0f, 1.0f, -2.0f, 2.0f, 2.0f, 2.0f, CubeDeformation(0.0f)).texOffs(24, 52)
+                    .addBox(9.0f, 17.0f, -2.0f, 4.0f, 1.0f, 4.0f, CubeDeformation(0.0f)).texOffs(24, 86)
+                    .addBox(8.0f, 18.0f, -3.0f, 6.0f, 2.0f, 6.0f, CubeDeformation(0.0f)).texOffs(0, 86)
+                    .addBox(7.0f, 20.0f, -4.0f, 8.0f, 3.0f, 8.0f, CubeDeformation(0.0f)),
+                PartPose.offset(2.0f, -3.0f, 0.0f)
             )
 
-            val stands = root.addOrReplaceChild(
-                "stands", CubeListBuilder.create(), PartPose.offset(13.0F, 6.0F, 0.0F)
-            )
-
-            val stand1 =
-                stands.addOrReplaceChild("stand1", CubeListBuilder.create(), PartPose.offset(-29.0F, 0.0F, -5.0F))
-
-            stand1.addOrReplaceChild(
-                "cube_r3",
-                CubeListBuilder.create().texOffs(0, 0)
-                    .addBox(-1.0F, -1.0F, -4.0F, 2.0F, 19.0F, 2.0F, CubeDeformation(0.0F)).texOffs(-3, -3)
-                    .addBox(-1.0F, -1.0F, -2.0F, 2.0F, 2.0F, 5.0F, CubeDeformation(0.0F)),
-                PartPose.offsetAndRotation(-2.0F, 0.0F, 0.0F, 0.0F, 0.7854F, 0.0F)
-            )
-
-            val stand2 = stands.addOrReplaceChild(
-                "stand2", CubeListBuilder.create(), PartPose.offsetAndRotation(-26.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F)
-            )
-
-            stand2.addOrReplaceChild(
-                "cube_r4",
-                CubeListBuilder.create().texOffs(0, 0)
-                    .addBox(-1.0F, -1.0F, -4.0F, 2.0F, 19.0F, 2.0F, CubeDeformation(0.0F)).texOffs(-3, -3)
-                    .addBox(-1.0F, -1.0F, -2.0F, 2.0F, 2.0F, 5.0F, CubeDeformation(0.0F)),
-                PartPose.offsetAndRotation(-5.0F, 0.0F, -5.0F, 0.0F, 0.7854F, 0.0F)
-            )
+            val stands =
+                partDefinition.addOrReplaceChild("stands", CubeListBuilder.create(), PartPose.offset(13.0f, 6.0f, 0.0f))
 
             val stand4 = stands.addOrReplaceChild(
-                "stand4", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F)
+                "stand4", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0f, 0.0f, 0.0f, 0.0f, -1.5708f, 0.0f)
             )
 
             stand4.addOrReplaceChild(
                 "cube_r1",
-                CubeListBuilder.create().texOffs(0, 0).mirror()
-                    .addBox(-1.0F, -1.0F, -4.0F, 2.0F, 19.0F, 2.0F, CubeDeformation(0.0F)).mirror(false).texOffs(-3, -3)
-                    .mirror().addBox(-1.0F, -1.0F, -2.0F, 2.0F, 2.0F, 5.0F, CubeDeformation(0.0F)).mirror(false),
-                PartPose.offsetAndRotation(5.0F, 0.0F, -5.0F, 0.0F, -0.7854F, 0.0F)
+                CubeListBuilder.create().texOffs(0, 97)
+                    .addBox(-1.0f, -1.0f, -4.0f, 2.0f, 19.0f, 2.0f, CubeDeformation(0.0f)).texOffs(3, 113)
+                    .addBox(-1.0f, -1.0f, -2.0f, 2.0f, 2.0f, 5.0f, CubeDeformation(0.0f)),
+                PartPose.offsetAndRotation(5.0f, 0.0f, -5.0f, 0.0f, -0.7854f, 0.0f)
             )
 
             val stand3 =
-                stands.addOrReplaceChild("stand3", CubeListBuilder.create(), PartPose.offset(3.0F, 0.0F, -5.0F))
+                stands.addOrReplaceChild("stand3", CubeListBuilder.create(), PartPose.offset(3.0f, 0.0f, -5.0f))
 
             stand3.addOrReplaceChild(
                 "cube_r2",
-                CubeListBuilder.create().texOffs(0, 0).mirror()
-                    .addBox(-1.0F, -1.0F, -4.0F, 2.0F, 19.0F, 2.0F, CubeDeformation(0.0F)).mirror(false).texOffs(-3, -3)
-                    .mirror().addBox(-1.0F, -1.0F, -2.0F, 2.0F, 2.0F, 5.0F, CubeDeformation(0.0F)).mirror(false),
-                PartPose.offsetAndRotation(2.0F, 0.0F, 0.0F, 0.0F, -0.7854F, 0.0F)
+                CubeListBuilder.create().texOffs(0, 97)
+                    .addBox(-1.0f, -1.0f, -4.0f, 2.0f, 19.0f, 2.0f, CubeDeformation(0.0f)).texOffs(3, 113)
+                    .addBox(-1.0f, -1.0f, -2.0f, 2.0f, 2.0f, 5.0f, CubeDeformation(0.0f)),
+                PartPose.offsetAndRotation(2.0f, 0.0f, 0.0f, 0.0f, -0.7854f, 0.0f)
             )
 
-            root.addOrReplaceChild(
+            val stand1 =
+                stands.addOrReplaceChild("stand1", CubeListBuilder.create(), PartPose.offset(-29.0f, 0.0f, -5.0f))
+
+            stand1.addOrReplaceChild(
+                "cube_r3",
+                CubeListBuilder.create().texOffs(0, 97)
+                    .addBox(-1.0f, -1.0f, -4.0f, 2.0f, 19.0f, 2.0f, CubeDeformation(0.0f)).texOffs(3, 113)
+                    .addBox(-1.0f, -1.0f, -2.0f, 2.0f, 2.0f, 5.0f, CubeDeformation(0.0f)),
+                PartPose.offsetAndRotation(-2.0f, 0.0f, 0.0f, 0.0f, 0.7854f, 0.0f)
+            )
+
+            val stand2 = stands.addOrReplaceChild(
+                "stand2", CubeListBuilder.create(), PartPose.offsetAndRotation(-26.0f, 0.0f, 0.0f, 0.0f, 1.5708f, 0.0f)
+            )
+
+            stand2.addOrReplaceChild(
+                "cube_r4",
+                CubeListBuilder.create().texOffs(0, 97)
+                    .addBox(-1.0f, -1.0f, -4.0f, 2.0f, 19.0f, 2.0f, CubeDeformation(0.0f)).texOffs(3, 113)
+                    .addBox(-1.0f, -1.0f, -2.0f, 2.0f, 2.0f, 5.0f, CubeDeformation(0.0f)),
+                PartPose.offsetAndRotation(-5.0f, 0.0f, -5.0f, 0.0f, 0.7854f, 0.0f)
+            )
+
+            partDefinition.addOrReplaceChild(
                 "drill",
-                CubeListBuilder.create().texOffs(-3, -2)
-                    .addBox(-2.0F, -51.0F, -2.0F, 4.0F, 1.0F, 4.0F, CubeDeformation(0.0F)).texOffs(-12, -8)
-                    .addBox(-5.0F, -52.0F, -5.0F, 10.0F, 1.0F, 10.0F, CubeDeformation(0.0F)).texOffs(-15, -10)
-                    .addBox(-6.0F, -53.0F, -6.0F, 12.0F, 1.0F, 12.0F, CubeDeformation(0.0F)).texOffs(-12, -8)
-                    .addBox(-5.0F, -55.0F, -5.0F, 10.0F, 2.0F, 10.0F, CubeDeformation(0.0F)).texOffs(-9, -6)
-                    .addBox(-4.0F, -57.0F, -4.0F, 8.0F, 2.0F, 8.0F, CubeDeformation(0.0F)).texOffs(-6, -4)
-                    .addBox(-3.0F, -58.0F, -3.0F, 6.0F, 1.0F, 6.0F, CubeDeformation(0.0F)).texOffs(0, 0)
-                    .addBox(-1.0F, -59.0F, -1.0F, 2.0F, 1.0F, 2.0F, CubeDeformation(0.0F)),
-                PartPose.offset(0.0F, 20.0F, 0.0F)
+                CubeListBuilder.create().texOffs(112, 123)
+                    .addBox(-2.0f, -51.0f, -2.0f, 4.0f, 1.0f, 4.0f, CubeDeformation(0.0f)).texOffs(72, 117)
+                    .addBox(-5.0f, -52.0f, -5.0f, 10.0f, 1.0f, 10.0f, CubeDeformation(0.0f)).texOffs(80, 103)
+                    .addBox(-6.0f, -53.0f, -6.0f, 12.0f, 1.0f, 12.0f, CubeDeformation(0.0f)).texOffs(88, 91)
+                    .addBox(-5.0f, -55.0f, -5.0f, 10.0f, 2.0f, 10.0f, CubeDeformation(0.0f)).texOffs(50, 117)
+                    .addBox(-4.0f, -57.0f, -4.0f, 8.0f, 2.0f, 8.0f, CubeDeformation(0.0f)).texOffs(102, 116)
+                    .addBox(-3.0f, -58.0f, -3.0f, 6.0f, 1.0f, 6.0f, CubeDeformation(0.0f)).texOffs(120, 110)
+                    .addBox(-1.0f, -59.0f, -1.0f, 2.0f, 1.0f, 2.0f, CubeDeformation(0.0f)),
+                PartPose.offset(0.0f, 20.0f, 0.0f)
             )
 
-            return LayerDefinition.create(meshDefinition, 64, 64)
+            return LayerDefinition.create(meshDefinition, 128, 128)
         }
     }
 

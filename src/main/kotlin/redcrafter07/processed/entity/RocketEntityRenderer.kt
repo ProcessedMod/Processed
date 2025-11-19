@@ -3,6 +3,7 @@ package redcrafter07.processed.entity
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.math.Axis
+import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
@@ -13,7 +14,13 @@ import redcrafter07.processed.rl
 open class RocketEntityRenderer(context: EntityRendererProvider.Context) : EntityRenderer<RocketEntity>(context) {
     val model = RocketEntityModel(context.bakeLayer(RocketEntityModel.LAYER_LOCATION))
 
-    override fun getTextureLocation(p0: RocketEntity) = rl("textures/entity/rocket.png")
+    companion object {
+        val TEXTURE = rl("textures/entity/rocket.png")
+        val TEXTURE_DEBUG = rl("textures/entity/rocket-debug.png")
+    }
+
+    override fun getTextureLocation(p0: RocketEntity) =
+        if (Minecraft.getInstance().player?.isShiftKeyDown ?: false) TEXTURE_DEBUG else TEXTURE
 
     override fun render(
         entity: RocketEntity,

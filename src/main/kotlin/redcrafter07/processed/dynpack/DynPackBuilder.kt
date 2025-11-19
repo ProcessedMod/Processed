@@ -75,7 +75,29 @@ object DynPackBuilder {
         DynPackResources.addBlockState(
             ModBlocks.ITEM_INPUT_HATCH.id, createSided(ModBlocks.ITEM_INPUT_HATCH.get(), itemInputHatchModel).get()
         )
+        val itemOutputHatchModel = rl("block/basic_item_output_hatch")
+        DynPackResources.addItemModel(ModBlocks.ITEM_OUTPUT_HATCH.id, DelegatedModel(itemOutputHatchModel).get())
+        DynPackResources.addBlockState(
+            ModBlocks.ITEM_OUTPUT_HATCH.id, createSided(ModBlocks.ITEM_OUTPUT_HATCH.get(), itemOutputHatchModel).get()
+        )
 
+        val fluidInputHatchModel = rl("block/basic_fluid_input_hatch")
+        DynPackResources.addItemModel(ModBlocks.FLUID_INPUT_HATCH.id, DelegatedModel(fluidInputHatchModel).get())
+        DynPackResources.addBlockState(
+            ModBlocks.FLUID_INPUT_HATCH.id, createSided(ModBlocks.FLUID_INPUT_HATCH.get(), fluidInputHatchModel).get()
+        )
+        val fluidOutputHatchModel = rl("block/basic_fluid_output_hatch")
+        DynPackResources.addItemModel(ModBlocks.FLUID_OUTPUT_HATCH.id, DelegatedModel(fluidOutputHatchModel).get())
+        DynPackResources.addBlockState(
+            ModBlocks.FLUID_OUTPUT_HATCH.id, createSided(ModBlocks.FLUID_OUTPUT_HATCH.get(), fluidOutputHatchModel).get()
+        )
+
+        val energyHatchModel = rl("block/basic_energy_hatch")
+        DynPackResources.addItemModel(ModBlocks.ENERGY_HATCH.id, DelegatedModel(energyHatchModel).get())
+        DynPackResources.addBlockState(
+            ModBlocks.ENERGY_HATCH.id, createSided(ModBlocks.ENERGY_HATCH.get(), energyHatchModel).get()
+        )
+        
         for (fluid in ModFluids.REGISTERED_FLUIDS) DynPackResources.addBlockState(
             fluid.block.id, createSimpleBlock(fluid.block.get(), fluidRL).get()
         )

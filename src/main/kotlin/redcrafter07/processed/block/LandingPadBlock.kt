@@ -68,6 +68,17 @@ class LandingPadBlock : Block(Properties.ofFullCopy(Blocks.DEEPSLATE)) {
         upd(BlockPos(center.x - 1, center.y, center.z - 1)) { setValue(STATE, State.None) }
     }
 
+    fun getCenter(level: Level, pos: BlockPos): BlockPos? {
+        for (x in pos.x - 1..pos.x + 1) {
+            for (z in pos.z - 1..pos.z + 1) {
+                val state = level.getBlockState(BlockPos(x, pos.y, z))
+                if (!state.`is`(this)) continue
+                if (state.getValue(STATE) == State.Center) return BlockPos(x, pos.y, z)
+            }
+        }
+        return null
+    }
+
     override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, movedByPiston: Boolean) {
         for (x in -1..1) for (z in -1..1) {
             val center = BlockPos(pos.x + x, pos.y, pos.z + z)
@@ -78,13 +89,15 @@ class LandingPadBlock : Block(Properties.ofFullCopy(Blocks.DEEPSLATE)) {
     override fun onRemove(
         state: BlockState, level: Level, pos: BlockPos, newState: BlockState, movedByPiston: Boolean
     ) {
+        if(newState.`is`(this)) return
+
         when (state.getValue(STATE)) {
             State.Center -> removeCenter(level, pos, pos)
-            State.NorthWest -> removeCenter(level, BlockPos(pos.x - 1, pos.y, pos.z - 1), pos)
-            State.NorthEast -> removeCenter(level, BlockPos(pos.x - 1, pos.y, pos.z + 1), pos)
-            State.SouthWest -> removeCenter(level, BlockPos(pos.x + 1, pos.y, pos.z - 1), pos)
-            State.SouthEast -> removeCenter(level, BlockPos(pos.x + 1, pos.y, pos.z + 1), pos)
-            State.None -> Unit
+            else -> {
+                val center = getCenter(level, pos) ?: return
+                val block = level.getBlockState(center).block
+                if (block is LandingPadBlock) block.removeCenter(level, center, pos)
+            }
         }
 
         super.onRemove(state, level, pos, newState, movedByPiston)

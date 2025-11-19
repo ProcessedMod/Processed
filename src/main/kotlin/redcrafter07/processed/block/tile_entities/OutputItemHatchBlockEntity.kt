@@ -18,17 +18,17 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import redcrafter07.processed.block.machine_abstractions.BlockSide
 import redcrafter07.processed.block.machine_abstractions.ItemCapableBlockEntity
-import redcrafter07.processed.block.tile_entities.capabilities.InputItemHandlerWrapper
+import redcrafter07.processed.block.tile_entities.capabilities.OutputItemHandlerWrapper
 import redcrafter07.processed.block.tile_entities.capabilities.ProcessedItemStackHandler
 import redcrafter07.processed.gui.ItemHatchMenu
 import java.util.OptionalInt
 
-class InputItemHatchBlockEntity(pos: BlockPos, blockState: BlockState) : BlockEntity(
-    ModTileEntities.INPUT_ITEM_HATCH.get(), pos, blockState
+class OutputItemHatchBlockEntity(pos: BlockPos, blockState: BlockState) : BlockEntity(
+    ModTileEntities.OUTPUT_ITEM_HATCH.get(), pos, blockState
 ), ItemCapableBlockEntity, MenuProvider, ItemHatch {
     val handler = ProcessedItemStackHandler(4)
-    val wrapper = InputItemHandlerWrapper(handler)
-    override fun inventoryHandler() = handler
+    val wrapper = OutputItemHandlerWrapper(handler)
+    override fun inventoryHandler() = wrapper
     override fun pos(): BlockPos = blockPos
     override fun dropContents(level: Level, pos: BlockPos) = Containers.dropContents(level, pos, handler.items)
 

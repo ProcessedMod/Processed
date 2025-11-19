@@ -140,7 +140,7 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
                 animRocket.hasStands = false
                 val landingDistance = 500 - minY
                 val progress = (animRocket.position().y - minY) / landingDistance
-                val speed = Mth.lerp(1 - progress, 10.0, 0.001)
+                val speed = Mth.lerp(1 - progress, 10.0, 0.025)
                 animRocket.move(MoverType.SELF, Vec3(.0, -speed, .0))
             }
         }

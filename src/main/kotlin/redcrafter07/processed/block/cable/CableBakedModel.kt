@@ -20,7 +20,6 @@ import net.neoforged.neoforge.client.model.IDynamicBakedModel
 import net.neoforged.neoforge.client.model.data.ModelData
 import net.neoforged.neoforge.client.model.pipeline.QuadBakingVertexConsumer
 import org.joml.Vector3f
-import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.block.cable.CableBlockEntity.Companion.Connected
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.minus
 
@@ -35,7 +34,6 @@ class CableBakedModel(center: ResourceLocation, side: ResourceLocation, val s: D
     ): List<BakedQuad> {
         val quads = ArrayList<BakedQuad>()
         val connected = modelData.get(CableBlockEntity.TRANSMITTER_PROPERTY) ?: itemConnected
-        ProcessedMod.LOG.info("model data: {}", modelData.properties)
 
         val center = center.value
         val side = side.value

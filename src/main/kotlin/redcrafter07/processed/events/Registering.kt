@@ -35,11 +35,13 @@ import redcrafter07.processed.entity.RocketEntityModel
 import redcrafter07.processed.entity.RocketEntityRenderer
 import redcrafter07.processed.fluid.ModFluids
 import redcrafter07.processed.gui.DynamicContainerScreen
+import redcrafter07.processed.gui.FluidHatchScreen
 import redcrafter07.processed.gui.GenericMachineMenuScreen
 import redcrafter07.processed.gui.ModMenuTypes
 import redcrafter07.processed.integration.theoneprobe.TheOneProbeIntegration
 import redcrafter07.processed.miner.MinerData
 import redcrafter07.processed.miner.Planetoid
+import redcrafter07.processed.network.FluidHandlerClickPacket
 import redcrafter07.processed.network.IOChangePacket
 import redcrafter07.processed.network.MultiblockDestroyPacket
 import redcrafter07.processed.network.PlanetoidSelectPacket
@@ -143,6 +145,9 @@ object Registering {
         )
         registrar.playToServer(IOChangePacket.TYPE, IOChangePacket.CODEC, IOChangePacket::handleServer)
         registrar.playToServer(
+            FluidHandlerClickPacket.TYPE, FluidHandlerClickPacket.CODEC, FluidHandlerClickPacket::handleServer
+        )
+        registrar.playToServer(
             PlanetoidSelectPacket.TYPE, PlanetoidSelectPacket.CODEC, PlanetoidSelectPacket::handleServer
         )
 
@@ -150,14 +155,17 @@ object Registering {
             MultiblockDestroyPacket.TYPE, MultiblockDestroyPacket.CODEC, MultiblockDestroyPacket::handleClient
         )
         registrar.playToClient(
-            StartLaunchControllerAnimation.TYPE, StartLaunchControllerAnimation.CODEC, StartLaunchControllerAnimation::handleClient
+            StartLaunchControllerAnimation.TYPE,
+            StartLaunchControllerAnimation.CODEC,
+            StartLaunchControllerAnimation::handleClient
         )
     }
 
     @SubscribeEvent
     fun registerMenuScreens(event: RegisterMenuScreensEvent) {
         event.register(ModMenuTypes.POWERED_FURNACE_MENU.get(), ::GenericMachineMenuScreen)
-        event.register(ModMenuTypes.INPUT_HATCH_MENU.get(), ::DynamicContainerScreen)
+        event.register(ModMenuTypes.ITEM_HATCH_MENU.get(), ::DynamicContainerScreen)
+        event.register(ModMenuTypes.FLUID_HATCH_MENU.get(), ::FluidHatchScreen)
     }
 
     @SubscribeEvent

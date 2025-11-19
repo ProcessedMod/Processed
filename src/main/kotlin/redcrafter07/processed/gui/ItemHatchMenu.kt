@@ -8,20 +8,20 @@ import net.minecraft.world.inventory.ContainerLevelAccess
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.neoforged.neoforge.items.SlotItemHandler
-import redcrafter07.processed.block.tile_entities.InputItemHatchBlockEntity
+import redcrafter07.processed.block.tile_entities.ItemHatch
 import redcrafter07.processed.gui.inventory.ProcessedContainerMenu
 
-class InputItemHatchMenu(
+class ItemHatchMenu(
     containerId: Int, playerInventory: Inventory, blockEntity: BlockEntity?
 ) : ProcessedContainerMenu(
-    ModMenuTypes.INPUT_HATCH_MENU.get(), containerId, playerInventory
+    ModMenuTypes.ITEM_HATCH_MENU.get(), containerId, playerInventory
 ) {
-    val be = requiteBlockEntity(blockEntity)
+    val hatch = hatch(blockEntity)
 
     companion object {
-        fun requiteBlockEntity(b: BlockEntity?): InputItemHatchBlockEntity {
+        fun hatch(b: BlockEntity?): ItemHatch {
             if (b == null) throw IllegalStateException("no block entity found  :<")
-            if (b !is InputItemHatchBlockEntity) throw IllegalStateException("non-powered furnace block entity found :<")
+            if (b !is ItemHatch) throw IllegalStateException("non-item-hatch block entity found :<")
             return b
         }
 
@@ -33,14 +33,14 @@ class InputItemHatchMenu(
     val level: Level = playerInventory.player.level()
 
     init {
-        val slotsRowColumn = Mth.sqrt(be.handler.slots.toFloat()).toInt()
+        val slotsRowColumn = Mth.sqrt(hatch.inventoryHandler().slots.toFloat()).toInt()
         val size = 18 * slotsRowColumn
         val xOff = (SCREEN_WIDTH - size) / 2
         val yOff = (SCREEN_HEIGHT - size) / 2
 
         for (y in 0..<slotsRowColumn) {
             for (x in 0..<slotsRowColumn) {
-                addSlot(SlotItemHandler(be.handler, x + y * slotsRowColumn, xOff + x * 18, yOff + y * 18))
+                addSlot(SlotItemHandler(hatch.inventoryHandler(), x + y * slotsRowColumn, xOff + x * 18, yOff + y * 18))
             }
         }
     }
@@ -49,10 +49,10 @@ class InputItemHatchMenu(
         id, inventory, inventory.player.level().getBlockEntity(extraData.readBlockPos())
     )
 
-    override fun customSlotCount(): Int = be.handler.slots
+    override fun customSlotCount(): Int = hatch.inventoryHandler().slots
 
     override fun stillValid(player: Player): Boolean =
-        ContainerLevelAccess.create(level, be.blockPos).evaluate { _, pos ->
+        ContainerLevelAccess.create(level, hatch.pos()).evaluate { _, pos ->
             player.distanceToSqr(
                 pos.x.toDouble() + 0.5,
                 pos.y.toDouble() + 0.5,

@@ -11,10 +11,10 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.phys.BlockHitResult
-import redcrafter07.processed.block.tile_entities.InputItemHatchBlockEntity
 import redcrafter07.processed.block.tile_entities.ItemHatch
+import redcrafter07.processed.block.tile_entities.OutputItemHatchBlockEntity
 
-class InputItemHatchBlock : Block(Properties.of()), EntityBlock {
+class OutputItemHatchBlock : Block(Properties.of()), EntityBlock {
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
         builder.add(BlockStateProperties.FACING)
     }
@@ -26,26 +26,23 @@ class InputItemHatchBlock : Block(Properties.of()), EntityBlock {
         state: BlockState, level: Level, pos: BlockPos, player: Player, hitResult: BlockHitResult
     ): InteractionResult {
         val be = level.getBlockEntity(pos)
-        if (be is InputItemHatchBlockEntity) {
+        if (be is OutputItemHatchBlockEntity) {
             be.openMenu(player)
             return InteractionResult.sidedSuccess(level.isClientSide())
         }
         return InteractionResult.PASS
     }
 
-    override fun newBlockEntity(pos: BlockPos, state: BlockState) = InputItemHatchBlockEntity(pos, state)
+    override fun newBlockEntity(pos: BlockPos, state: BlockState) = OutputItemHatchBlockEntity(pos, state)
 
     override fun onRemove(
-        state: BlockState,
-        level: Level,
-        pos: BlockPos,
-        newState: BlockState,
-        movedByPiston: Boolean
+        state: BlockState, level: Level, pos: BlockPos, newState: BlockState, movedByPiston: Boolean
     ) {
-        if(!newState.`is`(state.block)) {
+        if (!newState.`is`(state.block)) {
             val be = level.getBlockEntity(pos)
-            if(be is ItemHatch) be.dropContents(level, pos)
+            if (be is ItemHatch) be.dropContents(level, pos)
         }
+
         super.onRemove(state, level, pos, newState, movedByPiston)
     }
 }

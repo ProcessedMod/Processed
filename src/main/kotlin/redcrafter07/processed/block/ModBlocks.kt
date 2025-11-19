@@ -43,6 +43,10 @@ object ModBlocks {
     val LAUNCH_CONTROLLER = registerBlock("launch_controller", ::LaunchControllerBlock)
     val LANDING_PAD = registerBlock("landing_pad", ::LandingPadBlock)
     val ITEM_INPUT_HATCH = registerBlock("basic_item_input_hatch", ::InputItemHatchBlock)
+    val ITEM_OUTPUT_HATCH = registerBlock("basic_item_output_hatch", ::OutputItemHatchBlock)
+    val FLUID_INPUT_HATCH = registerBlock("basic_fluid_input_hatch", ::InputFluidHatchBlock)
+    val FLUID_OUTPUT_HATCH = registerBlock("basic_fluid_output_hatch", ::OutputFluidHatchBlock)
+    val ENERGY_HATCH = registerBlock("basic_energy_hatch", ::EnergyHatchBlock)
 
     val CABLES = registerMaterialBlockExtra(
         Materials.MATERIALS, CableData::class.java, { m, _ -> "${m.identifier}_cable" }, ::CableBlock, ::CableBlockItem

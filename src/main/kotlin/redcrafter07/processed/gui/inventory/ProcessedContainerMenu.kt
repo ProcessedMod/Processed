@@ -51,7 +51,6 @@ abstract class ProcessedContainerMenu(menuType: MenuType<*>?, containerId: Int, 
 
 
         val sourceStack = sourceSlot.item
-        val copyOfSourceStack = sourceStack.copy()
 
         // Check if the slot clicked is one of the vanilla container slots
         if (pIndex < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
@@ -80,6 +79,6 @@ abstract class ProcessedContainerMenu(menuType: MenuType<*>?, containerId: Int, 
             sourceSlot.setChanged()
         }
         sourceSlot.onTake(playerIn, sourceStack)
-        return copyOfSourceStack
+        return ItemStack.EMPTY
     }
 }

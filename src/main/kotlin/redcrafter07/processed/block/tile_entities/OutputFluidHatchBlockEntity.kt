@@ -8,29 +8,26 @@ import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.world.Containers
 import net.minecraft.world.MenuProvider
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import redcrafter07.processed.block.machine_abstractions.BlockSide
-import redcrafter07.processed.block.machine_abstractions.ItemCapableBlockEntity
-import redcrafter07.processed.block.tile_entities.capabilities.InputItemHandlerWrapper
-import redcrafter07.processed.block.tile_entities.capabilities.ProcessedItemStackHandler
-import redcrafter07.processed.gui.ItemHatchMenu
-import java.util.OptionalInt
+import redcrafter07.processed.block.machine_abstractions.FluidCapableBlockEntity
+import redcrafter07.processed.block.tile_entities.capabilities.OutputFluidHandlerWrapper
+import redcrafter07.processed.block.tile_entities.capabilities.SimpleFluidStore
+import redcrafter07.processed.gui.FluidHatchMenu
+import java.util.*
 
-class InputItemHatchBlockEntity(pos: BlockPos, blockState: BlockState) : BlockEntity(
-    ModTileEntities.INPUT_ITEM_HATCH.get(), pos, blockState
-), ItemCapableBlockEntity, MenuProvider, ItemHatch {
-    val handler = ProcessedItemStackHandler(4)
-    val wrapper = InputItemHandlerWrapper(handler)
-    override fun inventoryHandler() = handler
+class OutputFluidHatchBlockEntity(pos: BlockPos, blockState: BlockState) : BlockEntity(
+    ModTileEntities.OUTPUT_FLUID_HATCH.get(), pos, blockState
+), FluidCapableBlockEntity, MenuProvider, FluidHatch {
+    val handler = SimpleFluidStore(1, 4000)
+    val wrapper = OutputFluidHandlerWrapper(handler)
+    override fun inventoryHandler() = wrapper
     override fun pos(): BlockPos = blockPos
-    override fun dropContents(level: Level, pos: BlockPos) = Containers.dropContents(level, pos, handler.items)
 
     init {
         handler.setOnChange(this::sync)
@@ -48,14 +45,14 @@ class InputItemHatchBlockEntity(pos: BlockPos, blockState: BlockState) : BlockEn
     override fun getUpdatePacket(): Packet<ClientGamePacketListener>? = ClientboundBlockEntityDataPacket.create(this)
     override fun getUpdateTag(provider: HolderLookup.Provider): CompoundTag = saveWithoutMetadata(provider)
 
-    override fun itemCapabilityForSide(side: BlockSide?, state: BlockState) =
-        if (side == null || side == BlockSide.Front) wrapper else null
+    override fun fluidCapabilityForSide(side: BlockSide?, state: BlockState) =
+        if(side == null || side == BlockSide.Front) wrapper else null
 
     override fun getDisplayName(): Component = Component.empty()
 
     override fun createMenu(
         containerId: Int, inventory: Inventory, player: Player
-    ) = ItemHatchMenu(containerId, inventory, this)
+    ) = FluidHatchMenu(containerId, inventory, this)
 
     fun openMenu(player: Player): OptionalInt = player.openMenu(this) { data -> data.writeBlockPos(blockPos) }
 
@@ -68,5 +65,4 @@ class InputItemHatchBlockEntity(pos: BlockPos, blockState: BlockState) : BlockEn
         super.loadAdditional(tag, registries)
         handler.deserializeNBT(registries, tag.getCompound("inventory"))
     }
-
 }
