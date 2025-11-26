@@ -422,6 +422,17 @@ abstract class ProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, blockSt
 
             when (state) {
                 IoState.None, IoState.InputOutput -> Unit
+                IoState.Input -> inputItemHandler?.setOnChange(null)
+                IoState.Output -> outputItemHandler?.setOnChange(null)
+                IoState.Additional -> additionalItemHandler?.setOnChange(null)
+                IoState.Extra -> extraItemHandler?.setOnChange(null)
+            }
+            when (state) {
+                IoState.None, IoState.InputOutput -> Unit
+                else -> handler?.setOnChange(this.attachedMachine::setChanged)
+            }
+            when (state) {
+                IoState.None, IoState.InputOutput -> Unit
                 IoState.Input -> inputItemHandler = handler
                 IoState.Output -> outputItemHandler = handler
                 IoState.Additional -> additionalItemHandler = handler
@@ -458,6 +469,17 @@ abstract class ProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, blockSt
                 if (state == IoState.Input || state == IoState.Output) supportedFluidHandlers.remove(IoState.InputOutput)
             }
 
+            when (state) {
+                IoState.None, IoState.InputOutput -> Unit
+                IoState.Input -> inputFluidHandler?.setOnChange(null)
+                IoState.Output -> outputFluidHandler?.setOnChange(null)
+                IoState.Additional -> additionalFluidHandler?.setOnChange(null)
+                IoState.Extra -> extraFluidHandler?.setOnChange(null)
+            }
+            when (state) {
+                IoState.None, IoState.InputOutput -> Unit
+                else -> handler?.setOnChange(this.attachedMachine::setChanged)
+            }
             when (state) {
                 IoState.None, IoState.InputOutput -> Unit
                 IoState.Input -> inputFluidHandler = handler

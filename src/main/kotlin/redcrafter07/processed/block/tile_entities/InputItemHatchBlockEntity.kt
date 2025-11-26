@@ -23,6 +23,8 @@ class InputItemHatchBlockEntity(pos: BlockPos, blockState: BlockState) : BlockEn
 ), ItemCapableBlockEntity, MenuProvider, ItemHatch {
     val handler = ProcessedItemStackHandler(4)
     val wrapper = InputItemHandlerWrapper(handler)
+    init { handler.setOnChange(this::setChanged) }
+
     override fun inventoryHandler() = handler
     override fun pos(): BlockPos = blockPos
     override fun dropContents(level: Level, pos: BlockPos) = Containers.dropContents(level, pos, handler.items)

@@ -46,7 +46,9 @@ import redcrafter07.processed.network.FluidHandlerClickPacket
 import redcrafter07.processed.network.IOChangePacket
 import redcrafter07.processed.network.MultiblockDestroyPacket
 import redcrafter07.processed.network.PlanetoidSelectPacket
+import redcrafter07.processed.network.SetFluidMenuContentsPacket
 import redcrafter07.processed.network.StartLaunchControllerAnimation
+import redcrafter07.processed.network.UpdateFluidMenuContentPacket
 import redcrafter07.processed.network.WrenchModeChangePacket
 import redcrafter07.processed.particles.FireParticle.FireParticleProvider
 import redcrafter07.processed.particles.SmokeParticle.SmokeParticleProvider
@@ -160,6 +162,14 @@ object Registering {
 
         registrar.playToClient(
             MultiblockDestroyPacket.TYPE, MultiblockDestroyPacket.CODEC, MultiblockDestroyPacket::handleClient
+        )
+        registrar.playToClient(
+            SetFluidMenuContentsPacket.TYPE, SetFluidMenuContentsPacket.CODEC, SetFluidMenuContentsPacket::handleClient
+        )
+        registrar.playToClient(
+            UpdateFluidMenuContentPacket.TYPE,
+            UpdateFluidMenuContentPacket.CODEC,
+            UpdateFluidMenuContentPacket::handleClient
         )
         registrar.playToClient(
             StartLaunchControllerAnimation.TYPE,

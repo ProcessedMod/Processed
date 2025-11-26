@@ -30,6 +30,11 @@ class FluidHatchMenu(
         id, inventory, inventory.player.level().getBlockEntity(extraData.readBlockPos())
     )
 
+    init {
+        addFluidSlot(hatch.inventoryHandler())
+    }
+
+
     override fun customSlotCount() = 0
 
     override fun stillValid(player: Player): Boolean =

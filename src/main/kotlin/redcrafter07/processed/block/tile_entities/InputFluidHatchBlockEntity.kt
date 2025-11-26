@@ -24,6 +24,8 @@ class InputFluidHatchBlockEntity(pos: BlockPos, blockState: BlockState) : BlockE
 ), FluidCapableBlockEntity, MenuProvider, FluidHatch {
     val handler = SimpleFluidStore(1, 4000)
     val wrapper = InputFluidHandlerWrapper(handler)
+    init { handler.setOnChange(this::setChanged) }
+
     override fun inventoryHandler() = handler
     override fun pos(): BlockPos = blockPos
 
