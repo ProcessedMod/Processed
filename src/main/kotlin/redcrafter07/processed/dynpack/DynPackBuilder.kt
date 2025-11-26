@@ -34,6 +34,8 @@ object DynPackBuilder {
         val creativePowerSourceRL = ResourceLocation.withDefaultNamespace("block/redstone_block")
         val createPowerSourceModel = DelegatedModel(creativePowerSourceRL).get()
         val fluidRL = rl("block/fluid")
+        val energyHatchModelRL = rl("block/basic_energy_hatch")
+        val energyHatchModel = DelegatedModel(energyHatchModelRL).get()
 
         for (block in ModBlocks.CABLES) {
             DynPackResources.addBlockState(block.id, createSimpleBlock(block.get(), cableRL).get())
@@ -89,15 +91,15 @@ object DynPackBuilder {
         val fluidOutputHatchModel = rl("block/basic_fluid_output_hatch")
         DynPackResources.addItemModel(ModBlocks.FLUID_OUTPUT_HATCH.id, DelegatedModel(fluidOutputHatchModel).get())
         DynPackResources.addBlockState(
-            ModBlocks.FLUID_OUTPUT_HATCH.id, createSided(ModBlocks.FLUID_OUTPUT_HATCH.get(), fluidOutputHatchModel).get()
+            ModBlocks.FLUID_OUTPUT_HATCH.id,
+            createSided(ModBlocks.FLUID_OUTPUT_HATCH.get(), fluidOutputHatchModel).get()
         )
 
-        val energyHatchModel = rl("block/basic_energy_hatch")
-        DynPackResources.addItemModel(ModBlocks.ENERGY_HATCH.id, DelegatedModel(energyHatchModel).get())
-        DynPackResources.addBlockState(
-            ModBlocks.ENERGY_HATCH.id, createSided(ModBlocks.ENERGY_HATCH.get(), energyHatchModel).get()
-        )
-        
+        for (block in ModBlocks.ENERGY_HATCHES) {
+            DynPackResources.addItemModel(block.id, energyHatchModel)
+            DynPackResources.addBlockState(block.id, createSided(block.get(), energyHatchModelRL).get())
+        }
+
         for (fluid in ModFluids.REGISTERED_FLUIDS) DynPackResources.addBlockState(
             fluid.block.id, createSimpleBlock(fluid.block.get(), fluidRL).get()
         )

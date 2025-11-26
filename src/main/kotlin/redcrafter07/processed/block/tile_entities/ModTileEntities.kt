@@ -30,7 +30,7 @@ object ModTileEntities {
     val OUTPUT_ITEM_HATCH = register("output_item_hatch", ::OutputItemHatchBlockEntity, ModBlocks.ITEM_OUTPUT_HATCH)
     val INPUT_FLUID_HATCH = register("input_fluid_hatch", ::InputFluidHatchBlockEntity, ModBlocks.FLUID_INPUT_HATCH)
     val OUTPUT_FLUID_HATCH = register("output_fluid_hatch", ::InputFluidHatchBlockEntity, ModBlocks.FLUID_OUTPUT_HATCH)
-    val ENERGY_HATCH = register("energy_hatch", ::EnergyHatchBlockEntity, ModBlocks.ENERGY_HATCH)
+    val ENERGY_HATCH = register("energy_hatch", ::EnergyHatchBlockEntity, *ModBlocks.ENERGY_HATCHES.toTypedArray())
 
     private fun <T : BlockEntity> register(
         name: String, blockEntity: BlockEntitySupplier<T>, vararg blocks: DeferredBlock<*>

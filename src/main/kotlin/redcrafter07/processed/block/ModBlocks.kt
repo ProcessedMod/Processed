@@ -10,9 +10,6 @@ import net.neoforged.neoforge.registries.DeferredRegister
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.block.cable.CableBlock
-import redcrafter07.processed.materials.data.CableData
-import redcrafter07.processed.materials.data.ItemPipeData
-import redcrafter07.processed.block.machine_abstractions.TieredProcessedBlock
 import redcrafter07.processed.items.ModItems
 import redcrafter07.processed.materials.Material
 import redcrafter07.processed.materials.MaterialBlock.*
@@ -20,6 +17,8 @@ import redcrafter07.processed.materials.MaterialBlockItem
 import redcrafter07.processed.materials.MaterialBlockItem.*
 import redcrafter07.processed.materials.MaterialInfo
 import redcrafter07.processed.materials.Materials
+import redcrafter07.processed.materials.data.CableData
+import redcrafter07.processed.materials.data.ItemPipeData
 import java.util.function.BiFunction
 import java.util.function.Function
 import java.util.function.Supplier
@@ -42,11 +41,12 @@ object ModBlocks {
     val BIG_SMELTER = registerBlock("big_smelter", ::BigSmelterBlock)
     val LAUNCH_CONTROLLER = registerBlock("launch_controller", ::LaunchControllerBlock)
     val LANDING_PAD = registerBlock("landing_pad", ::LandingPadBlock)
-    val ITEM_INPUT_HATCH = registerBlock("basic_item_input_hatch", ::InputItemHatchBlock)
-    val ITEM_OUTPUT_HATCH = registerBlock("basic_item_output_hatch", ::OutputItemHatchBlock)
-    val FLUID_INPUT_HATCH = registerBlock("basic_fluid_input_hatch", ::InputFluidHatchBlock)
-    val FLUID_OUTPUT_HATCH = registerBlock("basic_fluid_output_hatch", ::OutputFluidHatchBlock)
-    val ENERGY_HATCH = registerBlock("basic_energy_hatch", ::EnergyHatchBlock)
+    val ITEM_INPUT_HATCH = registerBlock("item_input_hatch", ::InputItemHatchBlock)
+    val ITEM_OUTPUT_HATCH = registerBlock("item_output_hatch", ::OutputItemHatchBlock)
+    val FLUID_INPUT_HATCH = registerBlock("fluid_input_hatch", ::InputFluidHatchBlock)
+    val FLUID_OUTPUT_HATCH = registerBlock("fluid_output_hatch", ::OutputFluidHatchBlock)
+
+    val ENERGY_HATCHES = registerTieredBlock("energy_hatch", ProcessedTier.TIERS, ::EnergyHatchBlock)
 
     val CABLES = registerMaterialBlockExtra(
         Materials.MATERIALS, CableData::class.java, { m, _ -> "${m.identifier}_cable" }, ::CableBlock, ::CableBlockItem
@@ -127,9 +127,9 @@ object ModBlocks {
         return list
     }
 
-    private fun <T : TieredProcessedBlock> registerTieredBlock(
+    private fun <T> registerTieredBlock(
         id: String, tiers: List<ProcessedTier>, block: TieredBlockProvider<T>
-    ): Set<DeferredBlock<T>> {
+    ): Set<DeferredBlock<T>> where T : Block, T : TieredBlock {
         return tiers.stream().map { tier ->
             val regBlock = BLOCKS.register("${id}_${tier.named}", Supplier { block.provide(tier) })
             ModItems.registerItem("${id}_${tier.named}") { TieredModBlockItem(regBlock.get(), Item.Properties()) }

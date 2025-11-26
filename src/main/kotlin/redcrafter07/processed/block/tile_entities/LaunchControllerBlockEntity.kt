@@ -46,13 +46,13 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
         val wallBlocks = Part.block(ModBlocks.BASIC_CASING).or(Part.block(ModBlocks.ITEM_INPUT_HATCH).itemInput())
             .or(Part.block(ModBlocks.ITEM_OUTPUT_HATCH).itemOutput())
             .or(Part.block(ModBlocks.FLUID_INPUT_HATCH).fluidInput())
-            .or(Part.block(ModBlocks.ENERGY_HATCH).energyInput())
+            .or(Part.blocks(ModBlocks.ENERGY_HATCHES.toList()).energyInput())
 
         val validator =
             SquareMultiblockValidator.Builder(5, 5, 5).addMapping('c', Part.controller()).addMapping('o', wallBlocks)
                 .addMapping('i', Part.block(ModBlocks.BASIC_CASING)).addMapping('p', Part.block(ModBlocks.LANDING_PAD))
                 .addMapping('t', copper_grates).addMapping(' ', Part.ignored()).addMapping('x', Part.block(Blocks.AIR))
-                .addRestriction(Part.block(ModBlocks.ENERGY_HATCH), 1, 1)
+                .addRestriction(Part.blocks(ModBlocks.ENERGY_HATCHES.toList()), 1, 1)
                 .addRestriction(Part.block(ModBlocks.ITEM_OUTPUT_HATCH), 1, 1)
                 .addRestriction(Part.block(ModBlocks.ITEM_INPUT_HATCH), 1, 1)
                 .addRestriction(Part.block(ModBlocks.FLUID_INPUT_HATCH), 1, 2).addLayer(
@@ -91,7 +91,7 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
 
         val output = specialBlock(SpecialBlockType.ItemOutput) ?: return
         val be = level.getBlockEntity(output) ?: return
-        if(be !is OutputItemHatchBlockEntity) return
+        if (be !is OutputItemHatchBlockEntity) return
 
         if (!storedResources.isEmpty()) {
             val forRemoval = mutableSetOf<ResourceLocation>()
@@ -206,7 +206,7 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
                     val data = data as LaunchSprayData
                     val amount = (120 - data.ticksLeft).coerceAtMost(30)
                     sprayWater(level, launchPadCenter(pos, state), amount)
-                    if(data.ticksLeft < 100) rocketParticles(.05, level)
+                    if (data.ticksLeft < 100) rocketParticles(.05, level)
 
                     data.ticksLeft--
                     if (data.ticksLeft <= 0) {

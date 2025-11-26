@@ -2,6 +2,7 @@
 
 package redcrafter07.processed
 
+import net.minecraft.ChatFormatting
 import net.neoforged.neoforge.common.TranslatableEnum
 import org.apache.commons.lang3.time.DurationFormatUtils
 import redcrafter07.processed.block.machine_abstractions.IoState
@@ -22,7 +23,7 @@ object Translations {
     inline fun materialCable(material: Material) = t("processed.material_cable", material)
     inline fun materialItemPipe(material: Material) = t("processed.material_item_pipe", material)
     inline fun materialName(identifier: String) = t("processed.material.$identifier")
-    inline fun blockItemTooltip(id: String) = t("block.processed.$id.tooltip")
+    inline fun blockItemTooltip(id: String): MC = t("block.processed.$id.tooltip").withStyle(ChatFormatting.GRAY)
     inline fun itemTooltip(id: String) = t("item.processed.$id.tooltip")
     inline fun wrenchMode(modeName: String) = t("item.processed.wrench.mode.$modeName")
     inline fun wrenchModeTooltip(mode: WrenchMode) = t("item.processed.wrench.mode", mode)
@@ -60,6 +61,10 @@ object Translations {
         t("processed.tiered_machine_info", maxPower, nameColored)
 
     inline fun poweredFurnaceName(tier: ProcessedTier) = t("block.processed.powered_furnace", tier)
+    inline fun energyHatchName(tier: ProcessedTier) = t("block.processed.energy_hatch", tier)
+    inline fun energyHatchTooltip(amount: Int) =
+        t("block.processed.energy_hatch.tooltip", energy.translate(amount).withStyle(ChatFormatting.GREEN))
+
     inline fun bigSmelterName() = t("block.processed.big_smelter")
     inline fun launchControllerName() = t("block.processed.launch_controller")
 
@@ -101,7 +106,9 @@ object Translations {
     inline fun efficiency(efficiency: Int) = t("processed.miner_attribute.efficiency", efficiency)
     inline fun miningSpeed(blocksPerMin: Int) = t("processed.miner_attribute.mining_speed", blocksPerMin)
     inline fun miningFuel(litersPerBlock: Float) = t("processed.miner_attribute.mining_fuel", litersPerBlock)
-    inline fun cargoCapacity(capacityMb: Int, capacity: Int) = t("processed.miner_attribute.cargo_capacity", capacityMb, items(capacity))
+    inline fun cargoCapacity(capacityMb: Int, capacity: Int) =
+        t("processed.miner_attribute.cargo_capacity", capacityMb, items(capacity))
+
     inline fun itemYield(amount: Int) = t("processed.miner_attribute.item_yield", items(amount))
     inline fun requiredFuel(amount: Int) = t("processed.miner_attribute.required_miner_fuel", mb(amount))
     inline fun miningTime(secs: Long) = t("processed.miner_attribute.mining_time", duration(secs))
@@ -150,7 +157,9 @@ class LongUnit(variants: List<Pair<Long, (Long) -> MC>>) : (Long) -> MC {
         )
     )
 
-    constructor(amount1: Long, f1: (Long) -> MC, amount2: Long, f2: (Long) -> MC, amount3: Long, f3: (Long) -> MC) : this(
+    constructor(
+        amount1: Long, f1: (Long) -> MC, amount2: Long, f2: (Long) -> MC, amount3: Long, f3: (Long) -> MC
+    ) : this(
         listOf(Pair(amount1, f1), Pair(amount2, f2), Pair(amount3, f3))
     )
 

@@ -27,6 +27,7 @@ fun interface Part {
         fun block(key: ResourceKey<McBlock>) = Block(key)
         fun block(holder: Holder<McBlock>) = Block(holder)
         fun block(block: McBlock) = Block(block)
+        fun blocks(holders: List<Holder<McBlock>>) = Union(holders.map(::Block).toMutableList())
         fun tag(tag: TagKey<McBlock>) = Tag(tag)
         fun air() = block(Blocks.AIR)
         fun ignored() = Empty
