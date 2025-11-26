@@ -25,7 +25,7 @@ class RocketEntityModel(root: ModelPart) : EntityModel<RocketEntity>() {
 
         fun createBodyLayer(): LayerDefinition {
             val meshDefinition = MeshDefinition()
-            val partDefinition = meshDefinition.getRoot()
+            val partDefinition = meshDefinition.root
 
             partDefinition.addOrReplaceChild(
                 "engine",
