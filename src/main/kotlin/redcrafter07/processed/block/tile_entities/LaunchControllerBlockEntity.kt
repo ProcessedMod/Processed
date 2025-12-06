@@ -8,6 +8,7 @@ import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.Mth
@@ -28,12 +29,20 @@ import redcrafter07.processed.block.ModBlocks
 import redcrafter07.processed.block.machine_abstractions.ProcessedBlock.Companion.STATE_HORIZ_FACING
 import redcrafter07.processed.entity.ModEntities
 import redcrafter07.processed.entity.RocketEntity
+import redcrafter07.processed.items.ModDataComponents
+import redcrafter07.processed.items.ModItems
+import redcrafter07.processed.miner.LevelMinerData
+import redcrafter07.processed.miner.Planetoid
 import redcrafter07.processed.multiblock.MultiblockBlockEntity
 import redcrafter07.processed.multiblock.Part
 import redcrafter07.processed.multiblock.SquareMultiblockValidator
+import redcrafter07.processed.network.StartLaunchControllerAnimation
 import redcrafter07.processed.particles.ModParticles
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.deepCopy
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.toVector3d
+import java.time.Instant
+import java.util.*
+import kotlin.jvm.optionals.getOrNull
 
 class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
     MultiblockBlockEntity(ModTileEntities.LAUNCH_CONTROLLER.get(), pos, blockState) {
@@ -74,10 +83,81 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
 
     val storedResources = HashMap<ResourceLocation, Long>()
     val animator = Animator()
+    var minerData: UUID? = null
 
     override fun validator() = validator
 
     override val tier = ProcessedTier.Advanced
+
+    override fun state(): Component? {
+        val level = level
+        if (level == null || level.isClientSide || level !is ServerLevel) return null
+        val minerData = minerData ?: return Translations.launchControllerStateIdle()
+        val now = Instant.now().epochSecond
+        val minerDataProper = LevelMinerData.get(level, minerData)
+
+        return if (minerDataProper == null) {
+            this.minerData = null
+            setChanged()
+            Translations.launchControllerStateIdle()
+        } else if (minerDataProper.miningFinishEpoch <= now) Translations.launchControllerStateTravellingBack()
+        else if (minerDataProper.planetArrivalEpoch <= now) Translations.launchControllerStateMining()
+        else Translations.launchControllerStateTravelling()
+    }
+
+    fun tryLaunchMiner() {
+        val lvl = level
+        if (lvl == null || lvl.isClientSide || lvl !is ServerLevel) return
+        val minerDataUUID = minerData
+        if (minerDataUUID != null && LevelMinerData.get(lvl, minerDataUUID) != null) return
+        this.minerData = null
+
+        val input = specialBlocks[SpecialBlockType.ItemInput]?.firstOrNull() ?: return
+        val be = lvl.getBlockEntity(input)
+        if (be !is InputItemHatchBlockEntity) return
+        var dest: ResourceLocation? = null
+        var rocket: ItemStack? = null
+        var destSlot: Int = -1
+        var rocketSlot: Int = -1
+
+        be.handler.items.forEachIndexed { idx, it ->
+            if (it.`is`(ModItems.LOCATION_SELECTOR) && dest == null) {
+                dest = it.get(ModDataComponents.BOUND_PLANETOID)?.location
+                destSlot = idx
+            } else if (it.has(ModDataComponents.ASSEMBLED_MINER) && rocket == null) {
+                rocket = it
+                rocketSlot = idx
+            }
+        }
+        if (dest == null || rocket == null || destSlot < 0 || rocketSlot < 0) return
+        val realDest = lvl.registryAccess().registry(Planetoid.REGISTRY_KEY).getOrNull()?.get(dest) ?: return
+        if (!realDest.isTargetable) return
+        be.handler.items[destSlot] = ItemStack.EMPTY
+        be.handler.items[rocketSlot] = ItemStack.EMPTY
+        be.setChanged()
+
+        val now = Instant.now()
+        val planetArrival = now.plusSeconds(30)
+        val miningFinish = planetArrival.plusSeconds(5)
+        val arrival = miningFinish.plusSeconds(7)
+
+        val minerData = LevelMinerData.LaunchedMinerData(
+            realDest.resource.get(), 128, arrival, planetArrival, miningFinish, blockPos
+        )
+        this.minerData = LevelMinerData.put(lvl, minerData)
+        setChanged()
+
+        val x = blockPos.x
+        val y = blockPos.y
+        // max distance: 10 chunks (160 blocks), max distance^2: 25600
+        for (player in lvl.players()) {
+            val x = player.position().x - x
+            val y = player.position().y - y
+            if (x * x + y * y <= 25600) player.connection.send(
+                StartLaunchControllerAnimation(blockPos, true)
+            )
+        }
+    }
 
     override fun getDisplayName() = Translations.launchControllerName()
     override fun createMenu(p0: Int, p1: Inventory, p2: Player): AbstractContainerMenu? = null
@@ -124,6 +204,8 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
             )
             tag.put("resources", resources)
         }
+        val minerData = minerData
+        if (minerData != null) tag.putUUID("minerData", minerData)
     }
 
     override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
@@ -137,6 +219,8 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
                 if (amount > 0.toLong()) storedResources[ResourceLocation.parse(key)] = amount
             }
         }
+
+        if (tag.contains("minerData")) minerData = tag.getUUID("minerData")
     }
 
     class Animator {

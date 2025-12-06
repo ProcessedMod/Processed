@@ -11,7 +11,6 @@ import net.minecraft.world.level.material.PushReaction
 import net.minecraft.world.phys.BlockHitResult
 import redcrafter07.processed.block.tile_entities.LaunchControllerBlockEntity
 import redcrafter07.processed.multiblock.MultiblockBlock
-import redcrafter07.processed.network.StartLaunchControllerAnimation
 
 class LaunchControllerBlock : MultiblockBlock(Properties.of().pushReaction(PushReaction.BLOCK)) {
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity = LaunchControllerBlockEntity(pos, state)
@@ -23,12 +22,13 @@ class LaunchControllerBlock : MultiblockBlock(Properties.of().pushReaction(PushR
         val be = level.getBlockEntity(pos)
         if (be !is LaunchControllerBlockEntity || !be.isAssembled) return InteractionResult.CONSUME
 
-        // max distance: 10 chunks (160 blocks), max distance^2: 25600
-        for (player in level.players()) {
-            val x = player.position().x
-            val y = player.position().y
-            if (x * x + y * y <= 25600) player.connection.send(StartLaunchControllerAnimation(pos, player.isShiftKeyDown))
-        }
+//        for (player in level.players()) {
+//            val x = player.position().x
+//            val y = player.position().y
+//            if (x * x + y * y <= 25600) player.connection.send(StartLaunchControllerAnimation(pos, player.isShiftKeyDown))
+//        }
+
+        be.tryLaunchMiner()
 
         return InteractionResult.CONSUME
     }

@@ -3,6 +3,8 @@
 package redcrafter07.processed
 
 import net.minecraft.ChatFormatting
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.resources.ResourceLocation
 import net.neoforged.neoforge.common.TranslatableEnum
 import org.apache.commons.lang3.time.DurationFormatUtils
 import redcrafter07.processed.block.machine_abstractions.IoState
@@ -68,6 +70,11 @@ object Translations {
     inline fun bigSmelterName() = t("block.processed.big_smelter")
     inline fun launchControllerName() = t("block.processed.launch_controller")
 
+    inline fun launchControllerStateIdle() = t("block.processed.launch_controller.state.idle")
+    inline fun launchControllerStateMining() = t("block.processed.launch_controller.state.mining")
+    inline fun launchControllerStateTravelling() = t("block.processed.launch_controller.state.travelling")
+    inline fun launchControllerStateTravellingBack() = t("block.processed.launch_controller.state.travelling_back")
+
     inline fun multiblockAssembled() = t("processed.multiblocks.state.assembled")
     inline fun multiblockBroken() = t("processed.multiblocks.state.broken")
     inline fun planetoidWidgetTooltip(planetoidName: String) =
@@ -75,7 +82,9 @@ object Translations {
 
     inline fun planetoidDistance(distance: C) = t("processed.gui.planetoid.distance", distance)
     inline fun planetoidGravity(gravity: Float) = t("processed.gui.planetoid.gravity", gravity)
+    inline fun planetoidResource(resource: ResourceLocation) = t("processed.gui.planetoid.resource", itemName(resource))
     inline fun planetoidSelectionScreenGoUp() = t("processed.gui.planetoid_selection_screen.go_up")
+    inline fun itemName(rl: ResourceLocation) = BuiltInRegistries.ITEM.get(rl).description
 
     inline fun locationSelectorChangeTooltip() = t("item.processed.location_selector.change_tooltip")
     inline fun locationSelectorUnbound() = t("item.processed.location_selector.unbound")

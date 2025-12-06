@@ -1,10 +1,11 @@
 {
-  "name": "processed.planetoid.neptune",
-  "x": -700,
-  "y": 100,
-  "size": 80,
-  "texture": "processed:textures/planetoid/neptune.png",
-  "parent": "processed:sun",
-  "distance": 435000,
-  "gravity": 11.15
+    "name": "processed.planetoid.neptune",
+    "x": -700,
+    "y": 100,
+    "size": 80,
+    "texture": "processed:textures/planetoid/neptune.png",
+    "parent": "processed:sun",
+    "distance": 435000,
+    "gravity": 11.15,
+    "resource": "processed:titanium_ore"
 }

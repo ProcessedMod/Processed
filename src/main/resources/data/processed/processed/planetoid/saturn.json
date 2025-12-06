@@ -1,13 +1,13 @@
 {
-  "name": "processed.planetoid.saturn",
-  "x": -200,
-  "y": 100,
+    "name": "processed.planetoid.saturn",
+    "x": -200,
+    "y": 100,
 
+    "size": 90,
+    "texture": "processed:textures/planetoid/saturn.png",
 
-  "size": 90,
-  "texture": "processed:textures/planetoid/saturn.png",
-
-  "parent": "processed:sun",
-  "distance": 1434000,
-  "gravity": 10.44
+    "parent": "processed:sun",
+    "distance": 1434000,
+    "gravity": 10.44,
+    "resource": "processed:uranium_ore"
 }

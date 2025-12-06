@@ -71,6 +71,11 @@ class LocationSelectorItem : Item(Properties()) {
                         Translations.planetoidGravity(planetoid.gravity.get()).withStyle(ChatFormatting.DARK_GRAY)
                     tooltip.add(Component.literal("  ").append(gravity))
                 }
+                if (planetoid.resource.isPresent) {
+                    val gravity =
+                        Translations.planetoidResource(planetoid.resource.get()).withStyle(ChatFormatting.DARK_GRAY)
+                    tooltip.add(Component.literal("  ").append(gravity))
+                }
 
             }
         }

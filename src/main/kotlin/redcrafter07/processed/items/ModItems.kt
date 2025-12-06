@@ -32,11 +32,11 @@ object ModItems {
     val ASSEMBLED_MINER = registerItem("assembled_mining_rocket", ::AssembledMinerItem)
 
     init {
-        registerWithComponent("space_hull", ModDataComponents.HULL_DATA, MinerData.Hull(1050, 500))
-        registerWithComponent("space_tank", ModDataComponents.TANK_DATA, MinerData.Tank(800, 10000))
-        registerWithComponent("space_engine", ModDataComponents.ENGINE_DATA, MinerData.Engine(450, 150000, 90))
-        registerWithComponent("space_miner", ModDataComponents.MINER_DATA, MinerData.Miners(300, 1, 1f))
-        registerWithComponent("space_cargo_bay", ModDataComponents.CARGO_BAY_DATA, MinerData.CargoBay(900, 100))
+        registerWithComponent("space_hull", ModDataComponents.HULL_DATA, MinerData.Hull(1, 5000000))
+        registerWithComponent("space_tank", ModDataComponents.TANK_DATA, MinerData.Tank(1, 10000))
+        registerWithComponent("space_engine", ModDataComponents.ENGINE_DATA, MinerData.Engine(1, 15000000, 200))
+        registerWithComponent("space_miner", ModDataComponents.MINER_DATA, MinerData.Miners(1, 1000000, 0f))
+        registerWithComponent("space_cargo_bay", ModDataComponents.CARGO_BAY_DATA, MinerData.CargoBay(1, 10000))
     }
 
     fun <T> registerWithComponent(name: String, type: Supplier<DataComponentType<T>>, value: T): DeferredItem<Item> =

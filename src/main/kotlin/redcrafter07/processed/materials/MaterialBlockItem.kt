@@ -27,20 +27,22 @@ abstract class MaterialBlockItem(block: Block, override val material: Material) 
     ) {
     }
 
+    override fun getName(stack: ItemStack): Component = description
+
     class MetalBlockItem(block: Block, material: Material) : MaterialBlockItem(block, material) {
-        override fun getName(stack: ItemStack): Component = Translations.materialMetalBlock(material)
+        override fun getDescription(): Component = Translations.materialMetalBlock(material)
     }
 
     class OreBlockItem(block: Block, material: Material) : MaterialBlockItem(block, material) {
-        override fun getName(stack: ItemStack): Component = Translations.materialOre(material)
+        override fun getDescription(): Component = Translations.materialOre(material)
     }
 
     class RawMetalBlockItem(block: Block, material: Material) : MaterialBlockItem(block, material) {
-        override fun getName(stack: ItemStack): Component = Translations.materialRawMetalBlock(material)
+        override fun getDescription(): Component = Translations.materialRawMetalBlock(material)
     }
 
     class CableBlockItem(block: Block, material: Material) : MaterialBlockItem(block, material) {
-        override fun getName(stack: ItemStack): Component = Translations.materialCable(material)
+        override fun getDescription(): Component = Translations.materialCable(material)
 
         override fun customHoverText(
             stack: ItemStack, context: TooltipContext, tooltip: MutableList<Component>, tooltipFlag: TooltipFlag
@@ -51,7 +53,7 @@ abstract class MaterialBlockItem(block: Block, override val material: Material) 
     }
 
     class ItemPipeBlockItem(block: Block, material: Material) : MaterialBlockItem(block, material) {
-        override fun getName(stack: ItemStack): Component = Translations.materialItemPipe(material)
+        override fun getDescription(): Component = Translations.materialItemPipe(material)
 
         override fun customHoverText(
             stack: ItemStack, context: TooltipContext, tooltip: MutableList<Component>, tooltipFlag: TooltipFlag

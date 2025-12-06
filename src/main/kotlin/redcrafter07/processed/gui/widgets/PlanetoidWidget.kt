@@ -1,6 +1,7 @@
 package redcrafter07.processed.gui.widgets
 
 import com.mojang.blaze3d.platform.NativeImage
+import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
@@ -68,10 +69,12 @@ class PlanetoidWidget(
         val tooltip = Translations.planetoidWidgetTooltip(planetoid.name)
         if (planetoid.distance.isPresent) {
             val distance = Translations.km(planetoid.distance.get())
-            tooltip.append("\n").append(Translations.planetoidDistance(distance))
+            tooltip.append("\n").append(Translations.planetoidDistance(distance).withStyle(ChatFormatting.DARK_GRAY))
         }
         if (planetoid.gravity.isPresent) tooltip.append("\n")
-            .append(Translations.planetoidGravity(planetoid.gravity.get()))
+            .append(Translations.planetoidGravity(planetoid.gravity.get()).withStyle(ChatFormatting.DARK_GRAY))
+        if (planetoid.resource.isPresent) tooltip.append("\n")
+            .append(Translations.planetoidResource(planetoid.resource.get()).withStyle(ChatFormatting.DARK_GRAY))
         this.tooltip = Tooltip.create(tooltip)
         setTooltipDelay(Duration.ZERO)
     }

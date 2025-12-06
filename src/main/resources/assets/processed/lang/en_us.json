@@ -44,6 +44,11 @@
 
     "block.processed.energy_hatch.tooltip": "§7Stores %s",
 
+    "block.processed.launch_controller.state.idle": "§dIdle",
+    "block.processed.launch_controller.state.travelling": "§dTravelling",
+    "block.processed.launch_controller.state.mining": "§dMining",
+    "block.processed.launch_controller.state.travelling_back": "§dTravelling Back",
+
     "item.processed.wrench.mode": "§7Mode: %d",
     "item.processed.wrench.mode.config": "§9Config",
     "item.processed.wrench.mode.upgrade": "§2Upgrade",
@@ -155,6 +160,7 @@
     "processed.gui.planetoid_widget.tooltip": "Planetoid: %s",
     "processed.gui.planetoid.distance": "Distance: %s",
     "processed.gui.planetoid.gravity": "Gravity (gₒ): %s m/s²",
+    "processed.gui.planetoid.resource": "Contains %s",
     "processed.unit.kilometers": "%d km",
     "processed.unit.kilometers.long": "%d Kilometers",
     "processed.unit.millibuckets": "%d mB",

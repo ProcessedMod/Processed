@@ -20,7 +20,10 @@ class Planetoid(
     val color: Optional<TextColor>,
     val distance: Optional<Long>,
     val gravity: Optional<Float>,
+    val resource: Optional<ResourceLocation>,
 ) {
+    val isTargetable: Boolean get() = distance.isPresent && gravity.isPresent && resource.isPresent
+
     companion object {
         // The registry key of all planetoids that were registered by a datapack.
         // This is registered in the `DataPackRegistryEvent.NewRegistry` event.
@@ -39,6 +42,7 @@ class Planetoid(
                 TextColor.CODEC.optionalFieldOf("color").forGetter(Planetoid::color),
                 Codec.LONG.optionalFieldOf("distance").forGetter(Planetoid::distance),
                 Codec.FLOAT.optionalFieldOf("gravity").forGetter(Planetoid::gravity),
+                ResourceLocation.CODEC.optionalFieldOf("resource").forGetter(Planetoid::resource)
             ).apply(it, ::Planetoid)
         }
     }

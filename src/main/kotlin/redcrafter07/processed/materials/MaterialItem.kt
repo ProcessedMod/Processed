@@ -11,24 +11,25 @@ abstract class MaterialItem(override val material: Material) : Item(DEFAULT_PROP
     companion object { val DEFAULT_PROPERTIES: Properties = Properties().stacksTo(64); }
 
     abstract val tag: TagKey<Item>
+    override fun getName(stack: ItemStack): Component = description
 
     class Dust(material: Material) : MaterialItem(material) {
         override val tag: TagKey<Item> = material.dustTag
-        override fun getName(stack: ItemStack): Component = Translations.materialDust(material)
+        override fun getDescription(): Component = Translations.materialDust(material)
     }
 
     class Nugget(material: Material) : MaterialItem(material) {
         override val tag: TagKey<Item> = material.nuggetTag
-        override fun getName(stack: ItemStack): Component = Translations.materialNugget(material)
+        override fun getDescription(): Component = Translations.materialNugget(material)
     }
 
     class Ingot(material: Material) : MaterialItem(material) {
         override val tag: TagKey<Item> = material.ingotTag
-        override fun getName(stack: ItemStack): Component = Translations.materialIngot(material)
+        override fun getDescription(): Component = Translations.materialIngot(material)
     }
 
     class Raw(material: Material) : MaterialItem(material) {
         override val tag: TagKey<Item> = material.rawTag
-        override fun getName(stack: ItemStack): Component = Translations.materialRaw(material)
+        override fun getDescription(): Component = Translations.materialRaw(material)
     }
 }

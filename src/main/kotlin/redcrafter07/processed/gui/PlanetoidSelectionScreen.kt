@@ -67,7 +67,7 @@ class PlanetoidSelectionScreen(
 
     fun selectPlanetoid(key: ResourceKey<Planetoid>) {
         val planetoid = registry.get(key) ?: return
-        if (planetoid.gravity.isEmpty || planetoid.distance.isEmpty) return
+        if (!planetoid.isTargetable) return
         val conn = Minecraft.getInstance().connection ?: return
         conn.send(PlanetoidSelectPacket(key.location(), planetoid.name, hand))
         Minecraft.getInstance().setScreen(null)
