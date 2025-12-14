@@ -1,6 +1,9 @@
 package redcrafter07.processed.miner
 
+import io.netty.buffer.ByteBuf
 import net.minecraft.core.RegistryAccess
+import net.minecraft.network.codec.ByteBufCodecs
+import net.minecraft.network.codec.StreamCodec
 import net.minecraft.world.item.ItemStack
 import org.openjdk.nashorn.internal.objects.NativeMath.LN2
 import redcrafter07.processed.items.ModDataComponents
@@ -18,7 +21,9 @@ object MinerCalc {
     const val DEFAULT_DENSITY: Double = 2.0
 
     /** density: kg/block */
-    fun calculate(assembled: ItemStack, registries: RegistryAccess, destination: Planetoid, blockDensity: Double = DEFAULT_DENSITY): Result? {
+    fun calculate(
+        assembled: ItemStack, registries: RegistryAccess, destination: Planetoid, blockDensity: Double = DEFAULT_DENSITY
+    ): Result? {
         val distance = destination.distance.getOrNull() ?: return null
         val gravity = destination.gravity.getOrNull() ?: return null
         return calculate(assembled, registries, distance, gravity.toDouble(), blockDensity)
@@ -67,20 +72,32 @@ object MinerCalc {
         // B42 and B43 are unused
         val requiredFuel = totalRequiredPropellantVolume // B44
         val avgAccel = engine.thrust.toDouble() / ((liftoffMass + returnFuelMass) / 2) // B45
-        val flightTimeOneWayMinutes = dvOneWay / avgAccel / 60 + 0.5 // B46, +0.5 for launch animation (which should have finished in 30 seconds)
+        val flightTimeOneWayMinutes =
+            dvOneWay / avgAccel / 60 + 0.5 // B46, +0.5 for launch animation (which should have finished in 30 seconds)
         val miningTimeMinutes = (orePerMission.toDouble() / miners.miningSpeed.toDouble()) // B47
         val totalMissionTimeMinutes = flightTimeOneWayMinutes * 2 + miningTimeMinutes // B48
 
         return Result(
-            literToMb(requiredFuel.toInt()),
-            flightTimeOneWayMinutes,
-            miningTimeMinutes,
-            totalMissionTimeMinutes
+            literToMb(requiredFuel.toInt()), flightTimeOneWayMinutes, miningTimeMinutes, totalMissionTimeMinutes
         )
     }
 
     /** requiredFuel: mB, flightTimeOneWay: minutes, miningTime: minutes, totalTime: minutes */
     data class Result(
         val requiredFuel: Int, val flightTimeOneWay: Double, val miningTime: Double, val totalTime: Double
-    )
+    ) {
+        companion object {
+            val STREAM_CODEC: StreamCodec<ByteBuf, Result> = StreamCodec.composite(
+                ByteBufCodecs.INT,
+                Result::requiredFuel,
+                ByteBufCodecs.DOUBLE,
+                Result::flightTimeOneWay,
+                ByteBufCodecs.DOUBLE,
+                Result::miningTime,
+                ByteBufCodecs.DOUBLE,
+                Result::totalTime,
+                ::Result
+            )
+        }
+    }
 }

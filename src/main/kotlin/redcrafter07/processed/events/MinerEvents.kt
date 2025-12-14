@@ -61,6 +61,7 @@ object MinerEvents {
                 StartLaunchControllerAnimation(data.controllerPos, false)
             )
         }
+        controller.updateClient()
 
         return true
     }

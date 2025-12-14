@@ -132,6 +132,27 @@ object Translations {
     inline fun assembledMinerItemStats() = t("item.processed.assembled_mining_rocket.stats")
     inline fun fluidWidgetTooltip(fluid: C, amount: Int) = t("processed.gui.widget.fluid", fluid, mb(amount))
 
+    inline fun launchControllerScreenResult(item: C) = t("processed.gui.launch_controller_screen.result", item)
+    inline fun launchControllerScreenResultAmount(amount: Int) =
+        t("processed.gui.launch_controller_screen.result_amount", items(amount))
+
+    inline fun launchControllerScreenMining(secondsRemaining: Long) =
+        t("processed.gui.launch_controller_screen.mining", duration(secondsRemaining))
+
+    inline fun launchControllerScreenTravelling(secondsRemaining: Long) =
+        t("processed.gui.launch_controller_screen.travelling", duration(secondsRemaining))
+
+    inline fun launchControllerScreenTravellingBack(secondsRemaining: Long) =
+        t("processed.gui.launch_controller_screen.travelling_back", duration(secondsRemaining))
+
+    inline fun launchControllerScreenWaiting() = t("processed.gui.launch_controller_screen.waiting")
+    inline fun launchControllerScreenStored(amount: Int) = t("processed.gui.launch_controller_screen.stored", items(amount))
+    inline fun launchControllerScreenStoredInfinity() = t("processed.gui.launch_controller_screen.stored.infinity")
+    inline fun launchControllerScreenFuel(amount: Int, max: Int) = t("processed.gui.launch_controller_screen.fuel", mb(amount), mb(max))
+    inline fun launchControllerScreenDestination(name: C) = t("processed.gui.launch_controller_screen.destination", name)
+    inline fun launchControllerScreenDuration(seconds: Long) = t("processed.gui.launch_controller_screen.duration", duration(seconds))
+
+
     inline fun duration(secs: Long): MC {
         // TODO: Make this configurable
         return C.literal(DurationFormatUtils.formatDuration(TimeUnit.SECONDS.toMillis(secs), "HH:mm:ss", true))

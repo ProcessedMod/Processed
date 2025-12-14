@@ -3,9 +3,11 @@ package redcrafter07.processed.gui
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
+import net.minecraft.network.chat.FormattedText
 import net.minecraft.util.FastColor
 import net.minecraft.world.inventory.InventoryMenu
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions
@@ -17,6 +19,14 @@ object RenderUtils {
     val GUI_BASE_TEXTURE = rl("textures/gui/gui_base.png")
     const val GUI_BASE_TEXTURE_WIDTH = 176
     const val GUI_BASE_TEXTURE_HEIGHT = 166
+    val CRT_FG = color(0x00, 0xff, 0x66)
+    val CRT_FG_MUTED = color(0x66, 0xff, 0x66)
+
+    fun renderCrt(graphics: GuiGraphics, x: Int, y: Int, width: Int, height: Int) {
+        graphics.fill(x, y, x + width, y + height, color(0x28, 0x28, 0x28))
+        graphics.fill(x, y + height - 1, x + width, y + height, color(0x15, 0x15, 0x15))
+        graphics.fill(x + width - 1, y, x + width, y + height, color(0x15, 0x15, 0x15))
+    }
 
     fun renderSlot(graphics: GuiGraphics, x: Int, y: Int, width: Int = 18, height: Int = 18) {
         graphics.blitWithBorder(WIDGETS_TEXTURE, x, y, 0, 22, width, height, 18, 18, 1)
@@ -29,6 +39,17 @@ object RenderUtils {
             GUI_BASE_TEXTURE, xOff, yOff, 0, 0, GUI_BASE_TEXTURE_WIDTH, GUI_BASE_TEXTURE_HEIGHT
         )
         for (slot in screen.getMenu().slots) renderSlot(graphics, xOff + slot.x - 1, yOff + slot.y - 1)
+    }
+
+    fun drawWrapping(
+        graphics: GuiGraphics, font: Font, s: FormattedText, x: Int, y: Int, width: Int
+    ) {
+        var y = y
+        for (seq in font.split(s, width)) {
+            graphics.drawString(font, seq, x, y, 0x00ff66, true)
+            y += 9
+        }
+
     }
 
     fun color(red: Int, green: Int, blue: Int, alpha: Int): Int {

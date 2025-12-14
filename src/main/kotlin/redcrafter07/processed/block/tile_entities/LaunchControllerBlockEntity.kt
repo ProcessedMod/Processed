@@ -12,11 +12,13 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.Mth
+import net.minecraft.world.MenuProvider
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.MoverType
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
+import net.minecraft.world.inventory.ContainerData
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
@@ -31,6 +33,7 @@ import redcrafter07.processed.block.ModBlocks
 import redcrafter07.processed.block.machine_abstractions.ProcessedBlock.Companion.STATE_HORIZ_FACING
 import redcrafter07.processed.entity.ModEntities
 import redcrafter07.processed.entity.RocketEntity
+import redcrafter07.processed.gui.LaunchControllerMenu
 import redcrafter07.processed.items.ModDataComponents
 import redcrafter07.processed.miner.LevelMinerData
 import redcrafter07.processed.miner.MinerCalc
@@ -39,6 +42,7 @@ import redcrafter07.processed.miner.Planetoid
 import redcrafter07.processed.multiblock.MultiblockBlockEntity
 import redcrafter07.processed.multiblock.Part
 import redcrafter07.processed.multiblock.SquareMultiblockValidator
+import redcrafter07.processed.network.LaunchControllerUpdatePacket
 import redcrafter07.processed.network.StartLaunchControllerAnimation
 import redcrafter07.processed.particles.ModParticles
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.deepCopy
@@ -48,7 +52,7 @@ import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
 class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
-    MultiblockBlockEntity(ModTileEntities.LAUNCH_CONTROLLER.get(), pos, blockState) {
+    MultiblockBlockEntity(ModTileEntities.LAUNCH_CONTROLLER.get(), pos, blockState), MenuProvider {
     companion object {
         val copper_grates = Part.block(Blocks.COPPER_GRATE).or(Part.block(Blocks.WAXED_COPPER_GRATE))
             .or(Part.block(Blocks.EXPOSED_COPPER_GRATE)).or(Part.block(Blocks.WEATHERED_COPPER_GRATE))
@@ -91,6 +95,45 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
     var lastLoadedMiner: Pair<ItemStack, Int>? = null
     var lastDestination: Pair<Planetoid, Int>? = null
     var lastResult: MinerCalc.Result? = null
+
+    var clientLastDest: Planetoid? = null
+    var clientLastResult: MinerCalc.Result? = null
+    var clientLastLaunchedMinerData: LevelMinerData.LaunchedMinerData? = null
+
+    val data = object : ContainerData {
+        override fun get(index: Int): Int = when (index) {
+            0 -> lastLoadedMiner?.first?.get(ModDataComponents.ASSEMBLED_MINER)?.storedFuel?.amount ?: -1
+            1 -> lastResult?.requiredFuel ?: -1
+            2 -> lastLoadedMiner?.first?.get(ModDataComponents.CARGO_BAY_DATA)?.capacity ?: 0
+            3 -> {
+                var stored = 0
+                for (resource in storedResources.values) {
+                    if (resource >= Int.MAX_VALUE.toLong() || resource + stored.toLong() >= Int.MAX_VALUE.toLong()) {
+                        stored = -1
+                        break
+                    }
+                    stored += resource.toInt()
+                }
+                stored
+            }
+
+            else -> 0
+        }
+
+        override fun set(index: Int, value: Int) = Unit
+        override fun getCount(): Int = 4
+    }
+
+    fun updateClient() {
+        val lvl = level ?: return
+        if (lvl !is ServerLevel || lvl.isClientSide) return
+        val dst = lastDestination?.first
+        val planetoid =
+            if (dst == null) null else lvl.registryAccess().registry(Planetoid.REGISTRY_KEY).get().getKey(dst)
+        val data = if (minerData == null) null else LevelMinerData.get(lvl, minerData!!)
+        val packet = LaunchControllerUpdatePacket(blockPos, planetoid, lastResult, data)
+        for (player in lvl.players()) player.connection.send(packet)
+    }
 
     override fun validator() = validator
 
@@ -152,6 +195,7 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
         )
         this.minerData = LevelMinerData.put(lvl, minerData)
         setChanged()
+        updateClient()
 
         val x = blockPos.x
         val y = blockPos.y
@@ -166,7 +210,9 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
     }
 
     override fun getDisplayName() = Translations.launchControllerName()
-    override fun createMenu(p0: Int, p1: Inventory, p2: Player): AbstractContainerMenu? = null
+    override fun createMenu(id: Int, inventory: Inventory, p2: Player): AbstractContainerMenu =
+        LaunchControllerMenu(id, inventory, this, data)
+
     override fun tileTickClient(level: ClientLevel, pos: BlockPos, state: BlockState) {
         animator.tick(level, pos, state)
         super.tileTickClient(level, pos, state)
@@ -207,10 +253,12 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
         val lvl = level
         val dst = destination()
         val miner = getRocket()
+        val upd = lastLoadedMiner != null || lastDestination != null || lastResult != null
         if (miner == null || lvl == null || dst == null) {
             lastLoadedMiner = null
             lastDestination = null
             lastResult = null
+            if (upd) updateClient()
             return
         }
         val planetoidRegistry = lvl.registryAccess().registry(Planetoid.REGISTRY_KEY).getOrNull() ?: return
@@ -219,6 +267,7 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
             lastLoadedMiner = null
             lastDestination = null
             lastResult = null
+            if (upd) updateClient()
             return
         }
         if (lastDestination == null || lastResult == null || lastLoadedMiner == null || lastLoadedMiner?.second != miner.second || !ItemStack.isSameItemSameComponents(
@@ -229,6 +278,7 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
             lastLoadedMiner = if (lastResult != null) miner else null
         }
         if (lastLoadedMiner != null && lastResult != null) lastDestination = Pair(planetoid, dst.second)
+        updateClient()
     }
 
     fun getRocket(): Pair<ItemStack, Int>? {

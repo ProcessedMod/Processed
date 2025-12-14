@@ -2,8 +2,11 @@ package redcrafter07.processed.miner
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import io.netty.buffer.ByteBuf
 import net.minecraft.core.BlockPos
 import net.minecraft.core.UUIDUtil
+import net.minecraft.network.codec.ByteBufCodecs
+import net.minecraft.network.codec.StreamCodec
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import redcrafter07.processed.Attachments
@@ -107,5 +110,23 @@ class LevelMinerData(private val launchedMiners: HashMap<UUID, LaunchedMinerData
         val arrivalEpoch: Long get() = arrival.epochSecond
         val planetArrivalEpoch: Long get() = planetArrival.epochSecond
         val miningFinishEpoch: Long get() = miningFinish.epochSecond
+
+        companion object {
+            val STREAM_CODEC: StreamCodec<ByteBuf, LaunchedMinerData> = StreamCodec.composite(
+                ResourceLocation.STREAM_CODEC,
+                LaunchedMinerData::item,
+                ByteBufCodecs.INT,
+                LaunchedMinerData::itemAmount,
+                ByteBufCodecs.VAR_LONG,
+                LaunchedMinerData::arrivalEpoch,
+                ByteBufCodecs.VAR_LONG,
+                LaunchedMinerData::planetArrivalEpoch,
+                ByteBufCodecs.VAR_LONG,
+                LaunchedMinerData::miningFinishEpoch,
+                BlockPos.STREAM_CODEC,
+                LaunchedMinerData::controllerPos,
+                ::LaunchedMinerData
+            )
+        }
     }
 }

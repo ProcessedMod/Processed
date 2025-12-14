@@ -38,12 +38,14 @@ import redcrafter07.processed.fluid.ModFluids
 import redcrafter07.processed.gui.DynamicContainerScreen
 import redcrafter07.processed.gui.FluidHatchScreen
 import redcrafter07.processed.gui.GenericMachineMenuScreen
+import redcrafter07.processed.gui.LaunchControllerMenuScreen
 import redcrafter07.processed.gui.ModMenuTypes
 import redcrafter07.processed.integration.theoneprobe.TheOneProbeIntegration
 import redcrafter07.processed.miner.MinerData
 import redcrafter07.processed.miner.Planetoid
 import redcrafter07.processed.network.FluidHandlerClickPacket
 import redcrafter07.processed.network.IOChangePacket
+import redcrafter07.processed.network.LaunchControllerUpdatePacket
 import redcrafter07.processed.network.MultiblockDestroyPacket
 import redcrafter07.processed.network.PlanetoidSelectPacket
 import redcrafter07.processed.network.SetFluidMenuContentsPacket
@@ -167,6 +169,11 @@ object Registering {
             SetFluidMenuContentsPacket.TYPE, SetFluidMenuContentsPacket.CODEC, SetFluidMenuContentsPacket::handleClient
         )
         registrar.playToClient(
+            LaunchControllerUpdatePacket.TYPE,
+            LaunchControllerUpdatePacket.CODEC,
+            LaunchControllerUpdatePacket::handleClient
+        )
+        registrar.playToClient(
             UpdateFluidMenuContentPacket.TYPE,
             UpdateFluidMenuContentPacket.CODEC,
             UpdateFluidMenuContentPacket::handleClient
@@ -181,6 +188,7 @@ object Registering {
     @SubscribeEvent
     fun registerMenuScreens(event: RegisterMenuScreensEvent) {
         event.register(ModMenuTypes.POWERED_FURNACE_MENU.get(), ::GenericMachineMenuScreen)
+        event.register(ModMenuTypes.LAUNCH_CONTROLLER_MENU.get(), ::LaunchControllerMenuScreen)
         event.register(ModMenuTypes.ITEM_HATCH_MENU.get(), ::DynamicContainerScreen)
         event.register(ModMenuTypes.FLUID_HATCH_MENU.get(), ::FluidHatchScreen)
     }

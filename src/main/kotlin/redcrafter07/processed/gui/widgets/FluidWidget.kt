@@ -38,19 +38,13 @@ class FluidWidget(
     val tank: Int = 0,
     val carriedItem: Supplier<ItemStack>
 ) : AbstractWidget(x, y, width, if (big) 60 else 30, Component.empty()) {
-    var lastFluid: FluidStack = FluidStack.EMPTY
-
     override fun renderWidget(
         guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float
     ) {
         RenderUtils.renderSlot(guiGraphics, x, y, width, height)
 
         val fluid = fluidHandler.getFluidInTank(tank)
-        if (!FluidStack.isSameFluidSameComponents(fluid, lastFluid)) {
-            lastFluid = fluid.copy()
-            val name = lastFluid.hoverName
-            tooltip = Tooltip.create(Translations.fluidWidgetTooltip(name, fluid.amount))
-        }
+        tooltip = Tooltip.create(Translations.fluidWidgetTooltip(fluid.hoverName, fluid.amount))
         if (!fluid.isEmpty) {
             val sprite = getFluidTexture(fluid, false)
             val color = getFluidColor(fluid)
