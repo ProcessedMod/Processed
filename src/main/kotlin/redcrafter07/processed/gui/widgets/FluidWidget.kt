@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
+import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.core.BlockPos
@@ -18,6 +19,7 @@ import net.minecraft.world.level.material.Fluids
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.fluids.FluidStack
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction
+import redcrafter07.processed.Translations
 import redcrafter07.processed.block.tile_entities.capabilities.FluidHandlerModifiable
 import redcrafter07.processed.gui.RenderUtils
 import redcrafter07.processed.gui.RenderUtils.getFluidColor
@@ -36,12 +38,19 @@ class FluidWidget(
     val tank: Int = 0,
     val carriedItem: Supplier<ItemStack>
 ) : AbstractWidget(x, y, width, if (big) 60 else 30, Component.empty()) {
+    var lastFluid: FluidStack = FluidStack.EMPTY
+
     override fun renderWidget(
         guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float
     ) {
         RenderUtils.renderSlot(guiGraphics, x, y, width, height)
 
         val fluid = fluidHandler.getFluidInTank(tank)
+        if (!FluidStack.isSameFluidSameComponents(fluid, lastFluid)) {
+            lastFluid = fluid.copy()
+            val name = lastFluid.hoverName
+            tooltip = Tooltip.create(Translations.fluidWidgetTooltip(name, fluid.amount))
+        }
         if (!fluid.isEmpty) {
             val sprite = getFluidTexture(fluid, false)
             val color = getFluidColor(fluid)

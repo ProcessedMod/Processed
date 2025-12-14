@@ -34,7 +34,7 @@ class JadeIntegration : IWailaPlugin {
             tooltip: ITooltip, accessor: BlockAccessor, cfg: IPluginConfig
         ) {
             val state = MultiblockAssembledStateServerProvider.decodeFromData(accessor)
-            if(state.isPresent) tooltip.add(state.get())
+            if(state.isPresent) tooltip.add(state.get().copy().withStyle(ChatFormatting.LIGHT_PURPLE))
         }
 
         override fun getUid(): ResourceLocation = rl("multiblock_state")

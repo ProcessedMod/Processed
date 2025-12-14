@@ -1,47 +1,51 @@
 package redcrafter07.processed.miner
 
 import net.minecraft.core.RegistryAccess
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import org.openjdk.nashorn.internal.objects.NativeMath.LN2
 import redcrafter07.processed.items.ModDataComponents
-import java.lang.Integer.min
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.exp
 import kotlin.math.max
 
 object MinerCalc {
-    fun dvPerKm(distance: Long): Double = max(.009, 2 * exp(-LN2 * (distance / 2000.toDouble())))
+    private fun dvPerKm(distance: Long): Double = max(.009, 2 * exp(-LN2 * (distance / 2000.toDouble())))
 
     fun literToMb(l: Int) = l * 10
-    fun literToMb(l: Float) = l * 10f
     fun kgPerLiterToKgPerMb(kgPerL: Float) = kgPerL / 10f
+    // TODO: Make this configurable
+    /** density: kg/block */
+    const val DEFAULT_DENSITY: Double = 2.0
+
+    /** density: kg/block */
+    fun calculate(assembled: ItemStack, registries: RegistryAccess, destination: Planetoid, blockDensity: Double = DEFAULT_DENSITY): Result? {
+        val distance = destination.distance.getOrNull() ?: return null
+        val gravity = destination.gravity.getOrNull() ?: return null
+        return calculate(assembled, registries, distance, gravity.toDouble(), blockDensity)
+    }
 
     /** distance: km, gravity: m/s², density: kg/block, dvPerKm: m/s/km */
     fun calculate(
         assembled: ItemStack,
-        fuel: ResourceLocation,
         registries: RegistryAccess,
         distance: Long,
         gravity: Double,
         blockDensity: Double,
-        dvPerKm: Double
     ): Result? {
-        val fuel = registries.registry(MinerData.Fuel.REGISTRY_KEY).getOrNull()?.get(fuel) ?: return null
+        val dvPerKm = dvPerKm(distance)
         val hull = assembled.get(ModDataComponents.HULL_DATA) ?: return null
         val tank = assembled.get(ModDataComponents.TANK_DATA) ?: return null
         val engine = assembled.get(ModDataComponents.ENGINE_DATA) ?: return null
         val miners = assembled.get(ModDataComponents.MINER_DATA) ?: return null
         val cargoBay = assembled.get(ModDataComponents.CARGO_BAY_DATA) ?: return null
-        val orePerMission = min(cargoBay.capacity, (cargoBay.capacity.toFloat() / miners.miningFuel).toInt())
+        val orePerMission = cargoBay.capacity
+        val fuel = registries.registry(MinerData.Fuel.REGISTRY_KEY).getOrNull()?.get(engine.fuel) ?: return null
 
         // intermediaries
         val structureMass = (hull.mass + tank.mass + engine.mass + miners.mass + cargoBay.mass).toDouble() // B22
         val propellantMassFull = (tank.capacity.toDouble() * fuel.density.toDouble()).toLong() // B23
-        val minerFuelVolumeReq = (orePerMission.toDouble() * miners.miningFuel.toDouble()).toLong() // B24
-        val minerFuelMass = minerFuelVolumeReq.toDouble() * fuel.density.toDouble() // B25
         val oreMass = orePerMission.toDouble() * blockDensity // B26
-        val liftoffMass = structureMass + propellantMassFull + minerFuelMass // B27
+        val liftoffMass = structureMass + propellantMassFull // B27
         val dvOneWay = distance.toDouble() * dvPerKm // B28
 
         // Outbound Burn 1
@@ -50,8 +54,7 @@ object MinerCalc {
             liftoffMass * (1 - exp(-dvOneWay / (effectiveSpecificImpulse.toDouble() * gravity))) // B31
         val outboundFuelVolume = outboundFuelMass / fuel.density.toDouble() // B32
         val massAtTargetBeforeMining = liftoffMass - outboundFuelMass // B33
-        val minerFuelConsumed = minerFuelMass // B34
-        val massAtTargetAfterMining = massAtTargetBeforeMining - minerFuelConsumed + oreMass // B35
+        val massAtTargetAfterMining = massAtTargetBeforeMining + oreMass // B35
 
         // Outbound Burn 2
         val returnTakeoffMass = massAtTargetAfterMining // B36
@@ -64,21 +67,20 @@ object MinerCalc {
         // B42 and B43 are unused
         val requiredFuel = totalRequiredPropellantVolume // B44
         val avgAccel = engine.thrust.toDouble() / ((liftoffMass + returnFuelMass) / 2) // B45
-        val flightTimeOneWayMinutes = dvOneWay / avgAccel / 60 // B46
-        val miningTimeMinutes = (orePerMission.toDouble() / miners.miningSpeed.toDouble()) + 10 // B47
+        val flightTimeOneWayMinutes = dvOneWay / avgAccel / 60 + 0.5 // B46, +0.5 for launch animation (which should have finished in 30 seconds)
+        val miningTimeMinutes = (orePerMission.toDouble() / miners.miningSpeed.toDouble()) // B47
         val totalMissionTimeMinutes = flightTimeOneWayMinutes * 2 + miningTimeMinutes // B48
 
         return Result(
             literToMb(requiredFuel.toInt()),
-            flightTimeOneWayMinutes.toLong(),
-            miningTimeMinutes.toInt(),
-            literToMb(minerFuelVolumeReq.toInt()),
-            totalMissionTimeMinutes.toLong()
+            flightTimeOneWayMinutes,
+            miningTimeMinutes,
+            totalMissionTimeMinutes
         )
     }
 
-    /** requiredFuel: mB, flightTimeOneWay: minutes, miningTime: minutes, miningFuel: mB, totalTime: minutes */
+    /** requiredFuel: mB, flightTimeOneWay: minutes, miningTime: minutes, totalTime: minutes */
     data class Result(
-        val requiredFuel: Int, val flightTimeOneWay: Long, val miningTime: Int, val miningFuel: Int, val totalTime: Long
+        val requiredFuel: Int, val flightTimeOneWay: Double, val miningTime: Double, val totalTime: Double
     )
 }

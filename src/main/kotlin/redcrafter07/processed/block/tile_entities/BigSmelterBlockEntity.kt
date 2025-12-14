@@ -1,6 +1,5 @@
 package redcrafter07.processed.block.tile_entities
 
-import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
@@ -45,7 +44,7 @@ class BigSmelterBlockEntity(pos: BlockPos, blockState: BlockState) :
     override fun createMenu(p0: Int, p1: Inventory, p2: Player): AbstractContainerMenu? = null
     override fun getDisplayName(): Component = Translations.bigSmelterName()
 
-    override fun state(): Component = Component.literal("Spitting out Cats").withStyle(ChatFormatting.LIGHT_PURPLE)
+    override fun state(): Component = Component.literal("Spitting out Cats")
 
     override val tier: ProcessedTier = ProcessedTier.Advanced
 

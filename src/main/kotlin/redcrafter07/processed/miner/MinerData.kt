@@ -5,10 +5,12 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import io.netty.buffer.ByteBuf
 import net.minecraft.core.Registry
+import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
+import net.neoforged.neoforge.fluids.FluidStack
 import redcrafter07.processed.rl
 
 object MinerData {
@@ -17,7 +19,8 @@ object MinerData {
         val tank: ResourceLocation,
         val engine: ResourceLocation,
         val miners: ResourceLocation,
-        val cargoBay: ResourceLocation
+        val cargoBay: ResourceLocation,
+        val storedFuel: FluidStack,
     ) {
         companion object {
             val CODEC = c {
@@ -27,9 +30,10 @@ object MinerData {
                     ResourceLocation.CODEC.fieldOf("engine").forGetter(Assembled::engine),
                     ResourceLocation.CODEC.fieldOf("miners").forGetter(Assembled::miners),
                     ResourceLocation.CODEC.fieldOf("cargoBay").forGetter(Assembled::cargoBay),
+                    FluidStack.OPTIONAL_CODEC.fieldOf("storedFuel").forGetter(Assembled::storedFuel),
                 ).apply(it, ::Assembled)
             }
-            val STREAM_CODEC: StreamCodec<ByteBuf, Assembled> = StreamCodec.composite(
+            val STREAM_CODEC: StreamCodec<RegistryFriendlyByteBuf, Assembled> = StreamCodec.composite(
                 ResourceLocation.STREAM_CODEC,
                 Assembled::hull,
                 ResourceLocation.STREAM_CODEC,
@@ -40,6 +44,8 @@ object MinerData {
                 Assembled::miners,
                 ResourceLocation.STREAM_CODEC,
                 Assembled::cargoBay,
+                FluidStack.OPTIONAL_STREAM_CODEC,
+                Assembled::storedFuel,
                 ::Assembled
             )
         }
@@ -109,7 +115,9 @@ object MinerData {
         /** N */
         val thrust: Int,
         /** Percent (%) */
-        val efficiency: Int
+        val efficiency: Int,
+        /** Fuel */
+        val fuel: ResourceLocation,
     ) {
         companion object {
             val CODEC = c {
@@ -117,6 +125,7 @@ object MinerData {
                     Codec.INT.fieldOf("mass").forGetter(Engine::mass),
                     Codec.INT.fieldOf("thrust").forGetter(Engine::thrust),
                     Codec.INT.fieldOf("efficiency").forGetter(Engine::efficiency),
+                    ResourceLocation.CODEC.fieldOf("fuel").forGetter(Engine::fuel),
                 ).apply(it, ::Engine)
             }
             val STREAM_CODEC = sc(
@@ -126,6 +135,8 @@ object MinerData {
                 Engine::thrust,
                 ByteBufCodecs.INT,
                 Engine::efficiency,
+                ResourceLocation.STREAM_CODEC,
+                Engine::fuel,
                 ::Engine
             )
         }
@@ -137,15 +148,12 @@ object MinerData {
         val mass: Int,
         /** blocks/min */
         val miningSpeed: Int,
-        /** L/block */
-        val miningFuel: Float
     ) {
         companion object {
             val CODEC = c {
                 it.group(
                     Codec.INT.fieldOf("mass").forGetter(Miners::mass),
                     Codec.INT.fieldOf("miningSpeed").forGetter(Miners::miningSpeed),
-                    Codec.FLOAT.fieldOf("miningFuel").forGetter(Miners::miningFuel),
                 ).apply(it, ::Miners)
             }
             val STREAM_CODEC = sc(
@@ -153,8 +161,6 @@ object MinerData {
                 Miners::mass,
                 ByteBufCodecs.INT,
                 Miners::miningSpeed,
-                ByteBufCodecs.FLOAT,
-                Miners::miningFuel,
                 ::Miners
             )
         }
@@ -164,7 +170,7 @@ object MinerData {
     data class CargoBay(
         /** kg */
         val mass: Int,
-        /** L or Items */
+        /** Items */
         val capacity: Int
     ) {
         companion object {
@@ -185,13 +191,15 @@ object MinerData {
         c1: StreamCodec<ByteBuf, T1>, g1: (C) -> T1, c2: StreamCodec<ByteBuf, T2>, g2: (C) -> T2, f: (T1, T2) -> C
     ): StreamCodec<ByteBuf, C> = StreamCodec.composite(c1, g1, c2, g2, f)
 
-    fun <C, T1, T2, T3> sc(
+    fun <C, T1, T2, T3, T4> sc(
         c1: StreamCodec<ByteBuf, T1>,
         g1: (C) -> T1,
         c2: StreamCodec<ByteBuf, T2>,
         g2: (C) -> T2,
         c3: StreamCodec<ByteBuf, T3>,
         g3: (C) -> T3,
-        f: (T1, T2, T3) -> C
-    ): StreamCodec<ByteBuf, C> = StreamCodec.composite(c1, g1, c2, g2, c3, g3, f)
+        c4: StreamCodec<ByteBuf, T4>,
+        g4: (C) -> T4,
+        f: (T1, T2, T3, T4) -> C
+    ): StreamCodec<ByteBuf, C> = StreamCodec.composite(c1, g1, c2, g2, c3, g3, c4, g4, f)
 }

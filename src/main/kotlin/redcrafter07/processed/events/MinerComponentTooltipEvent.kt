@@ -7,6 +7,7 @@ import net.minecraft.world.item.BucketItem
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent
+import net.neoforged.neoforge.fluids.FluidStack
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.Translations
 import redcrafter07.processed.items.ModDataComponents
@@ -53,12 +54,13 @@ object MinerComponentTooltipEvent {
             add(Translations.efficiency(engine.efficiency))
             add(Translations.thrust(engine.thrust))
             add(Translations.mass(engine.mass))
+            val fluid = FluidStack(BuiltInRegistries.FLUID.get(engine.fuel), 1).hoverName
+            add(Translations.fuel(fluid))
             return
         }
 
         val miners = e.itemStack.get(ModDataComponents.MINER_DATA)
         if (miners != null) {
-            add(Translations.miningFuel(MinerCalc.literToMb(miners.miningFuel)))
             add(Translations.miningSpeed(miners.miningSpeed))
             add(Translations.mass(miners.mass))
             return
@@ -66,7 +68,7 @@ object MinerComponentTooltipEvent {
 
         val cargoBay = e.itemStack.get(ModDataComponents.CARGO_BAY_DATA)
         if (cargoBay != null) {
-            add(Translations.cargoCapacity(MinerCalc.literToMb(cargoBay.capacity), cargoBay.capacity))
+            add(Translations.cargoCapacity(cargoBay.capacity))
             add(Translations.mass(cargoBay.mass))
         }
     }

@@ -1,6 +1,5 @@
 package redcrafter07.processed.datagen
 
-import redcrafter07.processed.ProcessedTags
 import net.minecraft.core.HolderLookup
 import net.minecraft.data.PackOutput
 import net.minecraft.tags.BlockTags
@@ -8,6 +7,7 @@ import net.neoforged.neoforge.common.Tags
 import net.neoforged.neoforge.common.data.BlockTagsProvider
 import net.neoforged.neoforge.common.data.ExistingFileHelper
 import redcrafter07.processed.ProcessedMod
+import redcrafter07.processed.ProcessedTags
 import redcrafter07.processed.block.ModBlocks
 import redcrafter07.processed.materials.MaterialBlock
 import java.util.concurrent.CompletableFuture

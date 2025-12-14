@@ -11,6 +11,7 @@ import redcrafter07.processed.materials.MaterialItem
 import redcrafter07.processed.materials.MaterialItem.*
 import redcrafter07.processed.materials.Materials
 import redcrafter07.processed.miner.MinerData
+import redcrafter07.processed.rl
 import java.util.function.Function
 import java.util.function.Supplier
 
@@ -34,9 +35,13 @@ object ModItems {
     init {
         registerWithComponent("space_hull", ModDataComponents.HULL_DATA, MinerData.Hull(1, 5000000))
         registerWithComponent("space_tank", ModDataComponents.TANK_DATA, MinerData.Tank(1, 10000))
-        registerWithComponent("space_engine", ModDataComponents.ENGINE_DATA, MinerData.Engine(1, 15000000, 200))
-        registerWithComponent("space_miner", ModDataComponents.MINER_DATA, MinerData.Miners(1, 1000000, 0f))
-        registerWithComponent("space_cargo_bay", ModDataComponents.CARGO_BAY_DATA, MinerData.CargoBay(1, 10000))
+        registerWithComponent(
+            "space_engine", ModDataComponents.ENGINE_DATA, MinerData.Engine(
+                1, 15000000, 200, rl("fuel")
+            )
+        )
+        registerWithComponent("space_miner", ModDataComponents.MINER_DATA, MinerData.Miners(1, 32))
+        registerWithComponent("space_cargo_bay", ModDataComponents.CARGO_BAY_DATA, MinerData.CargoBay(1, 128))
     }
 
     fun <T> registerWithComponent(name: String, type: Supplier<DataComponentType<T>>, value: T): DeferredItem<Item> =

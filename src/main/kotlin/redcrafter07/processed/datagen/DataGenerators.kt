@@ -29,6 +29,6 @@ object DataGenerators {
             ev.includeServer(),
             ModItemTagGenerator(packOutput, lookupProvider, blockTagGenerator.contentsGetter(), existingFileHelper)
         )
-
+        generator.addProvider(ev.includeServer(), ModFluidTagGenerator(packOutput, lookupProvider, existingFileHelper))
     }
 }

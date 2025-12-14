@@ -15,6 +15,7 @@ import net.minecraft.world.item.crafting.CraftingInput
 import net.minecraft.world.item.crafting.CustomRecipe
 import net.minecraft.world.item.crafting.RecipeSerializer
 import net.minecraft.world.level.Level
+import net.neoforged.neoforge.fluids.FluidStack
 import redcrafter07.processed.items.ModDataComponents
 import redcrafter07.processed.items.ModItems
 import redcrafter07.processed.miner.MinerData
@@ -92,7 +93,10 @@ object MinerFormRecipe : CustomRecipe(CraftingBookCategory.MISC) {
         }
 
         if (hull == null || tank == null || engine == null || miners == null || cargoBay == null) return ItemStack.EMPTY
-        comps.set(ModDataComponents.ASSEMBLED_MINER.get(), MinerData.Assembled(hull, tank, engine, miners, cargoBay))
+        comps.set(
+            ModDataComponents.ASSEMBLED_MINER.get(),
+            MinerData.Assembled(hull, tank, engine, miners, cargoBay, FluidStack.EMPTY)
+        )
         val stack = ModItems.ASSEMBLED_MINER.get().defaultInstance
         stack.applyComponents(comps.build())
         return stack

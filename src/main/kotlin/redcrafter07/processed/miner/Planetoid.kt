@@ -22,6 +22,12 @@ class Planetoid(
     val gravity: Optional<Float>,
     val resource: Optional<ResourceLocation>,
 ) {
+    fun isCalcSame(other: Planetoid?): Boolean {
+        if(other == null) return false
+        if(!isTargetable || !other.isTargetable) return false
+        return distance.get() == other.distance.get() && gravity.get() == other.gravity.get() && resource.get() == other.resource.get()
+    }
+
     val isTargetable: Boolean get() = distance.isPresent && gravity.isPresent && resource.isPresent
 
     companion object {

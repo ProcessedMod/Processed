@@ -28,6 +28,7 @@
     "block.processed.fluid_input_hatch": "Fluid Input Hatch",
     "block.processed.fluid_output_hatch": "Fluid Output Hatch",
     "block.processed.energy_hatch": "%s Energy Hatch",
+    "block.processed.fuel": "Fuel",
 
     "block.processed.fluid_pipe.tooltip": "§7A pipe to transfer fluids.",
     "block.processed.fluid_tank.tooltip": "§7Can store fluids, up to 80 Buckets",
@@ -44,10 +45,10 @@
 
     "block.processed.energy_hatch.tooltip": "§7Stores %s",
 
-    "block.processed.launch_controller.state.idle": "§dIdle",
-    "block.processed.launch_controller.state.travelling": "§dTravelling",
-    "block.processed.launch_controller.state.mining": "§dMining",
-    "block.processed.launch_controller.state.travelling_back": "§dTravelling Back",
+    "block.processed.launch_controller.state.idle": "Idle",
+    "block.processed.launch_controller.state.travelling": "Travelling (%s left)",
+    "block.processed.launch_controller.state.mining": "Mining (%s left)",
+    "block.processed.launch_controller.state.travelling_back": "Travelling Back (%s left)",
 
     "item.processed.wrench.mode": "§7Mode: %d",
     "item.processed.wrench.mode.config": "§9Config",
@@ -72,11 +73,11 @@
     "processed.miner_attribute.thrust": "§7Thrust: %d kN",
     "processed.miner_attribute.efficiency": "§7Efficiency: %d%%",
     "processed.miner_attribute.mining_speed": "§7Mining Speed: %d blocks/minute",
-    "processed.miner_attribute.mining_fuel": "§7Required Fuel: %d mB/block",
-    "processed.miner_attribute.cargo_capacity": "§7Space: %d mB (%s)",
+    "processed.miner_attribute.cargo_capacity": "§7Space: %s",
     "processed.miner_attribute.item_yield": "§7Item yield: %s",
-    "processed.miner_attribute.required_miner_fuel": "§7Required miner fuel: %s",
     "processed.miner_attribute.mining_time": "§7Time spent mining: %s",
+    "processed.miner_attribute.fuel": "§7Fuel: %s",
+    "processed.miner_attribute.stored_fuel": "§7Stored Fuel: %s: %s",
 
     "processed.pipe_like_state.connected": "§aConnected",
     "processed.pipe_like_state.disallowed": "§bSplit",
@@ -106,6 +107,7 @@
     "processed.side.front": "Front",
     "processed.side.back": "Back",
 
+    "processed.gui.widget.fluid": "%s: %d",
     "processed.gui.widget.energy_bar": "Energy: %s / %s",
     "processed.gui.widget.energy_bar.normal": "%s FE",
     "processed.gui.widget.energy_bar.thousand": "%s kFE",
