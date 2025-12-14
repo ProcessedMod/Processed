@@ -120,7 +120,7 @@ object Translations {
     inline fun thrust(thrustInNewton: Int) = t("processed.miner_attribute.thrust", thrustInNewton / 1000.toDouble())
     inline fun efficiency(efficiency: Int) = t("processed.miner_attribute.efficiency", efficiency)
     inline fun miningSpeed(blocksPerMin: Int) = t("processed.miner_attribute.mining_speed", blocksPerMin)
-    inline fun storedFuel(fluid: C, amount: Int) = t("processed.miner_attribute.stored_fuel", fluid, mb(amount))
+    inline fun storedFuel(amount: Int) = t("processed.miner_attribute.stored_fuel", mb(amount))
 
     inline fun fuel(fuel: C) = t("processed.miner_attribute.fuel", fuel)
     inline fun cargoCapacity(capacity: Int) = t("processed.miner_attribute.cargo_capacity", items(capacity))

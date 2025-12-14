@@ -77,7 +77,7 @@
     "processed.miner_attribute.item_yield": "§7Item yield: %s",
     "processed.miner_attribute.mining_time": "§7Time spent mining: %s",
     "processed.miner_attribute.fuel": "§7Fuel: %s",
-    "processed.miner_attribute.stored_fuel": "§7Stored Fuel: %s: %s",
+    "processed.miner_attribute.stored_fuel": "§7Stored Fuel: %s",
 
     "processed.pipe_like_state.connected": "§aConnected",
     "processed.pipe_like_state.disallowed": "§bSplit",

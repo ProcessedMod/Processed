@@ -65,7 +65,7 @@ class AssembledMinerItem : Item(Properties().stacksTo(1)) {
             add(Translations.miningTime(miningTime))
         }
         if (!assembled.storedFuel.isEmpty) {
-            add(Translations.storedFuel(assembled.storedFuel.hoverName, assembled.storedFuel.amount))
+            add(Translations.storedFuel(assembled.storedFuel.amount))
         }
     }
 
