@@ -146,7 +146,7 @@ object Translations {
         t("processed.gui.launch_controller_screen.travelling_back", duration(secondsRemaining))
 
     inline fun launchControllerScreenWaiting() = t("processed.gui.launch_controller_screen.waiting")
-    inline fun launchControllerScreenStored(amount: Int) = t("processed.gui.launch_controller_screen.stored", items(amount))
+    inline fun launchControllerScreenStored() = t("processed.gui.launch_controller_screen.stored")
     inline fun launchControllerScreenStoredInfinity() = t("processed.gui.launch_controller_screen.stored.infinity")
     inline fun launchControllerScreenFuel(amount: Int, max: Int) = t("processed.gui.launch_controller_screen.fuel", mb(amount), mb(max))
     inline fun launchControllerScreenDestination(name: C) = t("processed.gui.launch_controller_screen.destination", name)

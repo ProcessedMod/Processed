@@ -56,13 +56,13 @@ class LaunchControllerMenuScreen(
             s2(Translations.launchControllerScreenResultAmount(dat.itemAmount), 4)
         } else if (res == null || dest == null) {
             RenderUtils.drawWrapping(
-                graphics, font, Translations.launchControllerScreenWaiting(), x, y + font.lineHeight, textWidth
+                graphics, font, Translations.launchControllerScreenWaiting(), x, y + font.lineHeight * 2, textWidth
             )
 
             val storedItems = menu.data.get(3)
-            val c = if (storedItems < 0) Translations.launchControllerScreenStoredInfinity()
-            else Translations.launchControllerScreenStored(storedItems)
-            s2(c)
+            s2(Translations.launchControllerScreenStored())
+            if (storedItems < 0) s2(Translations.launchControllerScreenStoredInfinity(), 1)
+            else s2(Translations.items(storedItems), 1)
         } else {
             val stored = menu.data.get(0)
             val required = menu.data.get(1)
