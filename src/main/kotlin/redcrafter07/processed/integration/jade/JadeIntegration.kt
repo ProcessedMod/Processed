@@ -3,6 +3,7 @@ package redcrafter07.processed.integration.jade
 import net.minecraft.ChatFormatting
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.ComponentSerialization
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.resources.ResourceLocation
@@ -20,6 +21,7 @@ import snownee.jade.api.config.IPluginConfig
 class JadeIntegration : IWailaPlugin {
     override fun register(registration: IWailaCommonRegistration) {
         registration.registerBlockDataProvider(ProcessedEnergyServerProvider, Block::class.java)
+        registration.registerBlockDataProvider(MultiblockAssembledStateServerProvider, MultiblockBlock::class.java)
     }
 
     override fun registerClient(registration: IWailaClientRegistration) {
@@ -31,14 +33,8 @@ class JadeIntegration : IWailaPlugin {
         override fun appendTooltip(
             tooltip: ITooltip, accessor: BlockAccessor, cfg: IPluginConfig
         ) {
-            val be = accessor.blockEntity
-            if (be !is MultiblockBlockEntity) return
-            if (!be.isAssembled) tooltip.add(Translations.multiblockBroken().withStyle(ChatFormatting.RED))
-            else {
-                val assembled = Translations.multiblockAssembled().withStyle(ChatFormatting.GREEN)
-                val state = be.state() ?: return tooltip.add(assembled)
-                tooltip.add(Component.empty().append(assembled).append(" (").append(state).append(")"))
-            }
+            val state = MultiblockAssembledStateServerProvider.decodeFromData(accessor)
+            if(state.isPresent) tooltip.add(state.get().copy().withStyle(ChatFormatting.LIGHT_PURPLE))
         }
 
         override fun getUid(): ResourceLocation = rl("multiblock_state")
@@ -77,7 +73,25 @@ class JadeIntegration : IWailaPlugin {
         override fun streamCodec(): StreamCodec<RegistryFriendlyByteBuf, EnergyData> = STREAM_CODEC
 
         override fun getUid(): ResourceLocation = rl("energy")
+    }
 
+    object MultiblockAssembledStateServerProvider : StreamServerDataProvider<BlockAccessor, Component> {
+        val STREAM_CODEC: StreamCodec<RegistryFriendlyByteBuf, Component> = ComponentSerialization.STREAM_CODEC
+
+        override fun streamData(accessor: BlockAccessor): Component? {
+            val be = accessor.level.getBlockEntity(accessor.position)
+            if (be !is MultiblockBlockEntity) return null
+            if (!be.isAssembled) return Translations.multiblockBroken().withStyle(ChatFormatting.RED)
+            else {
+                val assembled = Translations.multiblockAssembled().withStyle(ChatFormatting.GREEN)
+                val state = be.state() ?: return assembled
+                return Component.empty().append(assembled).append(" (").append(state).append(")")
+            }
+        }
+
+        override fun streamCodec(): StreamCodec<RegistryFriendlyByteBuf, Component> = STREAM_CODEC
+
+        override fun getUid(): ResourceLocation = rl("multiblock_state")
     }
 
     data class EnergyData(val energy: Int, val maxEnergy: Int)

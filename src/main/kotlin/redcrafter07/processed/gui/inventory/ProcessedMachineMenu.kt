@@ -9,7 +9,7 @@ import redcrafter07.processed.gui.widgets.ProgressBarWidget
 import java.awt.Rectangle
 
 abstract class ProcessedMachineMenu<T : ProcessedMachine>(
-    menuType: MenuType<*>?,
+    menuType: MenuType<*>,
     containerId: Int,
     playerInventory: Inventory,
     val blockEntity: T,

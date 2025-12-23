@@ -2,10 +2,16 @@
 
 package redcrafter07.processed
 
+import net.minecraft.ChatFormatting
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.resources.ResourceLocation
 import net.neoforged.neoforge.common.TranslatableEnum
+import org.apache.commons.lang3.time.DurationFormatUtils
 import redcrafter07.processed.block.machine_abstractions.IoState
 import redcrafter07.processed.items.WrenchMode
 import redcrafter07.processed.materials.Material
+import java.util.concurrent.TimeUnit
+import kotlin.math.truncate
 import net.minecraft.network.chat.Component as C
 import net.minecraft.network.chat.MutableComponent as MC
 
@@ -20,7 +26,7 @@ object Translations {
     inline fun materialCable(material: Material) = t("processed.material_cable", material)
     inline fun materialItemPipe(material: Material) = t("processed.material_item_pipe", material)
     inline fun materialName(identifier: String) = t("processed.material.$identifier")
-    inline fun blockItemTooltip(id: String) = t("block.processed.$id.tooltip")
+    inline fun blockItemTooltip(id: String): MC = t("block.processed.$id.tooltip").withStyle(ChatFormatting.GRAY)
     inline fun itemTooltip(id: String) = t("item.processed.$id.tooltip")
     inline fun wrenchMode(modeName: String) = t("item.processed.wrench.mode.$modeName")
     inline fun wrenchModeTooltip(mode: WrenchMode) = t("item.processed.wrench.mode", mode)
@@ -45,27 +51,182 @@ object Translations {
     inline fun configuringItemsLabel() = t("processed.screen.block_config.items")
     inline fun configuringFluidsLabel() = t("processed.screen.block_config.fluids")
 
-    inline fun energyBarUnitMillion(amount: Int) = t("processed.gui.widget.energy_bar.million", amount)
-    inline fun energyBarUnitThousand(amount: Int) = t("processed.gui.widget.energy_bar.thousand", amount)
-    inline fun energyBarUnitOnes(amount: Int) = t("processed.gui.widget.energy_bar.normal", amount)
     inline fun energyBarTooltip(amount: C, max: C) = t("processed.gui.widget.energy_bar", amount, max)
+    inline fun energyBarUnitMillion(amount: Number) = t("processed.gui.widget.energy_bar.million", amount)
+    inline fun energyBarUnitThousand(amount: Number) = t("processed.gui.widget.energy_bar.thousand", amount)
+    inline fun energyBarUnitOnes(amount: Number) = t("processed.gui.widget.energy_bar.normal", amount)
+    val energy = IntUnit(1, ::energyBarUnitOnes, 1_000, ::energyBarUnitThousand, 1_000_000, ::energyBarUnitMillion)
 
     inline fun cableTierTooltip(tier: C) = t("block.processed.cable.tooltip", tier)
     inline fun itemPipeTooltip(transferSpeed: Int) = t("block.processed.item_pipe.tooltip", transferSpeed)
 
-    inline fun tieredMachineInfo(maxPower: C, nameColored: C) = t("processed.tiered_machine_info", maxPower, nameColored)
+    inline fun tieredMachineInfo(maxPower: C, nameColored: C) =
+        t("processed.tiered_machine_info", maxPower, nameColored)
+
     inline fun poweredFurnaceName(tier: ProcessedTier) = t("block.processed.powered_furnace", tier)
+    inline fun energyHatchName(tier: ProcessedTier) = t("block.processed.energy_hatch", tier)
+    inline fun energyHatchTooltip(amount: Int) =
+        t("block.processed.energy_hatch.tooltip", energy.translate(amount).withStyle(ChatFormatting.GREEN))
+
     inline fun bigSmelterName() = t("block.processed.big_smelter")
+    inline fun launchControllerName() = t("block.processed.launch_controller")
+
+    inline fun launchControllerStateIdle() = t("block.processed.launch_controller.state.idle")
+    inline fun launchControllerStateMining(secondsRemaining: Long) =
+        t("block.processed.launch_controller.state.mining", duration(secondsRemaining))
+
+    inline fun launchControllerStateTravelling(secondsRemaining: Long) =
+        t("block.processed.launch_controller.state.travelling", duration(secondsRemaining))
+
+    inline fun launchControllerStateTravellingBack(secondsRemaining: Long) =
+        t("block.processed.launch_controller.state.travelling_back", duration(secondsRemaining))
 
     inline fun multiblockAssembled() = t("processed.multiblocks.state.assembled")
     inline fun multiblockBroken() = t("processed.multiblocks.state.broken")
+    inline fun planetoidWidgetTooltip(planetoidName: String) =
+        t("processed.gui.planetoid_widget.tooltip", t(planetoidName))
+
+    inline fun planetoidDistance(distance: C) = t("processed.gui.planetoid.distance", distance)
+    inline fun planetoidGravity(gravity: Float) = t("processed.gui.planetoid.gravity", gravity)
+    inline fun planetoidResource(resource: ResourceLocation) = t("processed.gui.planetoid.resource", itemName(resource))
+    inline fun planetoidSelectionScreenGoUp() = t("processed.gui.planetoid_selection_screen.go_up")
+    inline fun itemName(rl: ResourceLocation): C = BuiltInRegistries.ITEM.get(rl).description
+
+    inline fun locationSelectorChangeTooltip() = t("item.processed.location_selector.change_tooltip")
+    inline fun locationSelectorUnbound() = t("item.processed.location_selector.unbound")
+    inline fun locationSelectorBound(name: String) = t("item.processed.location_selector.bound", t(name))
+    inline fun locationSelectorUnboundMessage() = t("item.processed.location_selector.unbound_message")
+    inline fun locationSelectorUnbindHint() = t("item.processed.location_selector.unbind_hint")
+
+    inline fun unitKilometers(amount: Number) = t("processed.unit.kilometers", amount)
+    inline fun unitKilometersLong(amount: Number) = t("processed.unit.kilometers.long", amount)
+    val km = LongUnit(1, ::unitKilometers)
+    val kilometer = LongUnit(1, ::unitKilometersLong)
+
+    inline fun unitMillibucket(amount: Number) = t("processed.unit.millibuckets", amount)
+    inline fun unitBucket(amount: Number) = t("processed.unit.buckets", amount)
+    val mb = IntUnit(1, ::unitMillibucket, 1_000, ::unitBucket)
+
+    inline fun unitItems(items: Int) = t("processed.unit.items", items)
+    inline fun unitStacks(stacks: Int) = t("processed.unit.stacks", stacks)
+    inline fun unitStacksItems(stacks: Int, items: Int) = t("processed.unit.stacks_items", stacks, items)
+    val items = ItemUnit()
+
+    inline fun mass(mass: Int) = t("processed.miner_attribute.mass", mass)
+    inline fun maxDistance(distance: Int) = t("processed.miner_attribute.max_distance", distance)
+    inline fun tankCapacity(capacity: Int) = t("processed.miner_attribute.tankCapacity", capacity)
+    inline fun density(density: Float) = t("processed.miner_attribute.density", density)
+    inline fun specificImpulse(specificImpulse: Int) = t("processed.miner_attribute.specific_impulse", specificImpulse)
+    inline fun thrust(thrustInNewton: Int) = t("processed.miner_attribute.thrust", thrustInNewton / 1000.toDouble())
+    inline fun efficiency(efficiency: Int) = t("processed.miner_attribute.efficiency", efficiency)
+    inline fun miningSpeed(blocksPerMin: Int) = t("processed.miner_attribute.mining_speed", blocksPerMin)
+    inline fun storedFuel(amount: Int) = t("processed.miner_attribute.stored_fuel", mb(amount))
+
+    inline fun fuel(fuel: C) = t("processed.miner_attribute.fuel", fuel)
+    inline fun cargoCapacity(capacity: Int) = t("processed.miner_attribute.cargo_capacity", items(capacity))
+
+    inline fun itemYield(amount: Int) = t("processed.miner_attribute.item_yield", items(amount))
+    inline fun miningTime(secs: Long) = t("processed.miner_attribute.mining_time", duration(secs))
+
+    inline fun assembledMinerItemComponents() = t("item.processed.assembled_mining_rocket.components")
+    inline fun assembledMinerItemStats() = t("item.processed.assembled_mining_rocket.stats")
+    inline fun fluidWidgetTooltip(fluid: C, amount: Int) = t("processed.gui.widget.fluid", fluid, mb(amount))
+
+    inline fun launchControllerScreenResult(item: C) = t("processed.gui.launch_controller_screen.result", item)
+    inline fun launchControllerScreenResultAmount(amount: Int) =
+        t("processed.gui.launch_controller_screen.result_amount", items(amount))
+
+    inline fun launchControllerScreenMining(secondsRemaining: Long) =
+        t("processed.gui.launch_controller_screen.mining", duration(secondsRemaining))
+
+    inline fun launchControllerScreenTravelling(secondsRemaining: Long) =
+        t("processed.gui.launch_controller_screen.travelling", duration(secondsRemaining))
+
+    inline fun launchControllerScreenTravellingBack(secondsRemaining: Long) =
+        t("processed.gui.launch_controller_screen.travelling_back", duration(secondsRemaining))
+
+    inline fun launchControllerScreenWaiting() = t("processed.gui.launch_controller_screen.waiting")
+    inline fun launchControllerScreenStored() = t("processed.gui.launch_controller_screen.stored")
+    inline fun launchControllerScreenStoredInfinity() = t("processed.gui.launch_controller_screen.stored.infinity")
+    inline fun launchControllerScreenFuel(amount: Int, max: Int) = t("processed.gui.launch_controller_screen.fuel", mb(amount), mb(max))
+    inline fun launchControllerScreenDestination(name: C) = t("processed.gui.launch_controller_screen.destination", name)
+    inline fun launchControllerScreenDuration(seconds: Long) = t("processed.gui.launch_controller_screen.duration", duration(seconds))
+
+
+    inline fun duration(secs: Long): MC {
+        // TODO: Make this configurable
+        return C.literal(DurationFormatUtils.formatDuration(TimeUnit.SECONDS.toMillis(secs), "HH:mm:ss", true))
+    }
+}
+
+class IntUnit(variants: List<Pair<Int, (Number) -> MC>>) : (Int) -> MC {
+    val variants = variants.sortedWith { (i0, _), (i1, _) -> i0.compareTo(i1) }
+
+    constructor(vararg variants: Pair<Int, (Number) -> MC>) : this(variants.toList())
+    constructor(amount1: Int, f1: (Number) -> MC) : this(listOf(Pair(amount1, f1)))
+    constructor(amount1: Int, f1: (Number) -> MC, amount2: Int, f2: (Number) -> MC) : this(
+        listOf(
+            Pair(amount1, f1), Pair(amount2, f2)
+        )
+    )
+
+    constructor(
+        amount1: Int, f1: (Number) -> MC, amount2: Int, f2: (Number) -> MC, amount3: Int, f3: (Number) -> MC
+    ) : this(
+        listOf(Pair(amount1, f1), Pair(amount2, f2), Pair(amount3, f3))
+    )
+
+    fun translate(amount: Int): MC {
+        var last = variants.first()
+        for (elem in variants) if (elem.first > last.first && elem.first < amount) last = elem
+        val amount = truncate((amount.toFloat() / last.first.toFloat()) * 100f) / 100f
+        return if (amount - amount.toInt().toFloat() < 0.01) last.second(amount.toInt())
+        else last.second(amount)
+    }
+
+    override fun invoke(amount: Int) = translate(amount)
+}
+
+class LongUnit(variants: List<Pair<Long, (Number) -> MC>>) : (Long) -> MC {
+    val variants = variants.sortedWith { (i0, _), (i1, _) -> i0.compareTo(i1) }
+
+    constructor(vararg variants: Pair<Long, (Number) -> MC>) : this(variants.toList())
+    constructor(amount1: Long, f1: (Number) -> MC) : this(listOf(Pair(amount1, f1)))
+    constructor(amount1: Long, f1: (Number) -> MC, amount2: Long, f2: (Number) -> MC) : this(
+        listOf(
+            Pair(amount1, f1), Pair(amount2, f2)
+        )
+    )
+
+    constructor(
+        amount1: Long, f1: (Number) -> MC, amount2: Long, f2: (Number) -> MC, amount3: Long, f3: (Number) -> MC
+    ) : this(
+        listOf(Pair(amount1, f1), Pair(amount2, f2), Pair(amount3, f3))
+    )
+
+    fun translate(amount: Long): MC {
+        var last = variants.first()
+        for (elem in variants) if (elem.first > last.first && elem.first < amount) last = elem
+
+        val amount = truncate((amount.toDouble() / last.first.toDouble()) * 100.0) / 100.0
+        return if (amount - amount.toLong().toDouble() < 0.01) last.second(amount.toLong())
+        else last.second(amount)
+    }
+
+    override fun invoke(amount: Long) = translate(amount)
+}
+
+class ItemUnit : (Int) -> MC {
+    override fun invoke(amount: Int): MC = if (amount <= 64) Translations.unitItems(amount)
+    else if (amount % 64 == 0) Translations.unitStacks(amount / 64)
+    else Translations.unitStacksItems(amount / 64, amount % 64)
 }
 
 inline fun t(key: String): MC = C.translatable(key)
 inline fun t(key: String, vararg args: Any): MC {
     val args = arrayOf(*args)
     for (i in 0..<args.size) {
-        args[i] = when(val v = args[i]) {
+        args[i] = when (val v = args[i]) {
             is C, String, Boolean, is Number -> v
             is TranslatableEnum -> v.translatedName
             is Material -> v.component

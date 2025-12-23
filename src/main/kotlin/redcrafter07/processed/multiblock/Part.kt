@@ -8,18 +8,26 @@ import net.minecraft.tags.TagKey
 import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockState
+import kotlin.collections.contains
 import net.minecraft.world.level.block.Block as McBlock
 
 fun interface Part {
     fun blockType(state: BlockState, level: LevelAccessor, pos: BlockPos): MultiblockBlockEntity.SpecialBlockType?
-    fun or(vararg other: Part) = Union(this, *other)
+    fun or(vararg other: Part) = if (this == Empty || other.contains(Empty)) Empty else Union(this, *other)
     fun itemInput() = SpecialBlock(this, MultiblockBlockEntity.SpecialBlockType.ItemInput)
+    fun itemOutput() = SpecialBlock(this, MultiblockBlockEntity.SpecialBlockType.ItemOutput)
+    fun fluidInput() = SpecialBlock(this, MultiblockBlockEntity.SpecialBlockType.FluidInput)
+    fun fluidOutput() = SpecialBlock(this, MultiblockBlockEntity.SpecialBlockType.FluidOutput)
+    fun energyInput() = SpecialBlock(this, MultiblockBlockEntity.SpecialBlockType.EnergyInput)
+
+    infix fun or(other: Part): Part = if (this == Empty || other == Empty) Empty else Union(this, other)
 
     companion object {
         fun block(rl: ResourceLocation) = Block(rl)
         fun block(key: ResourceKey<McBlock>) = Block(key)
         fun block(holder: Holder<McBlock>) = Block(holder)
         fun block(block: McBlock) = Block(block)
+        fun blocks(holders: List<Holder<McBlock>>) = Union(holders.map(::Block).toMutableList())
         fun tag(tag: TagKey<McBlock>) = Tag(tag)
         fun air() = block(Blocks.AIR)
         fun ignored() = Empty
@@ -35,7 +43,10 @@ fun interface Part {
 
     object Empty : Part {
         override fun blockType(state: BlockState, level: LevelAccessor, pos: BlockPos) =
-            MultiblockBlockEntity.SpecialBlockType.None
+            MultiblockBlockEntity.SpecialBlockType.Ignored
+
+        override fun or(vararg other: Part) = this
+        override infix fun or(other: Part) = this
         override fun toString() = "any"
     }
 
@@ -45,19 +56,26 @@ fun interface Part {
         ) = throw IllegalStateException("Part.Controller's blockType called")
 
         override fun or(vararg other: Part) = throw IllegalStateException("Part.Controller's or called")
+        override infix fun or(other: Part) = throw IllegalStateException("Part.Controller's or called")
         override fun toString() = "controller"
     }
 
-    class Union(val parts: MutableList<Part>) : Part {
+    class Union(var parts: MutableList<Part>?) : Part {
         constructor(vararg parts: Part) : this(parts.toMutableList())
 
         init {
-            for (part in parts) if (part == Controller) throw IllegalStateException("Union contains a controller")
+            val parts = parts
+            if (parts != null) {
+                for (part in parts) if (part == Controller) throw IllegalStateException("Union contains a controller")
+                if (parts.contains(Empty)) this.parts = null
+            }
         }
 
         override fun blockType(
             state: BlockState, level: LevelAccessor, pos: BlockPos
         ): MultiblockBlockEntity.SpecialBlockType? {
+            val parts = parts
+            if (parts.isNullOrEmpty()) return MultiblockBlockEntity.SpecialBlockType.Ignored
             for (part in parts) {
                 val ty = part.blockType(state, level, pos)
                 if (ty != null) return ty
@@ -65,12 +83,28 @@ fun interface Part {
             return null
         }
 
-        override fun or(vararg other: Part): Union {
-            this.parts.addAll(other)
+        override fun or(vararg other: Part): Part {
+            val parts = parts ?: return Empty
+            if (other.contains(Empty)) {
+                this.parts = null
+                return Empty
+            }
+            parts.addAll(other)
+            return this
+        }
+
+        override infix fun or(other: Part): Part {
+            val parts = parts ?: return Empty
+            if (other == Empty) {
+                this.parts = null
+                return Empty
+            }
+            parts.add(other)
             return this
         }
 
         override fun toString(): String {
+            val parts = parts ?: return "any"
             if (parts.isEmpty()) return "any"
             else if (parts.size == 1) return parts[0].toString()
             val builder = StringBuilder(parts[0].toString())

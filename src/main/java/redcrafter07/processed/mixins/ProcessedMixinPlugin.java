@@ -28,7 +28,7 @@ class ProcessedMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public List<String> getMixins() {
-        return List.of("PlayerSkinMixin");
+        return List.of("PlayerSkinMixin", "ModelManagerMixin", "ServerPlayerMixin");
     }
 
     @Override

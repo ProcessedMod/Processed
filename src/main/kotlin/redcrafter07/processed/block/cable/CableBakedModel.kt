@@ -20,6 +20,7 @@ import net.neoforged.neoforge.client.model.IDynamicBakedModel
 import net.neoforged.neoforge.client.model.data.ModelData
 import net.neoforged.neoforge.client.model.pipeline.QuadBakingVertexConsumer
 import org.joml.Vector3f
+import redcrafter07.processed.block.cable.CableBlockEntity.Companion.Connected
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.minus
 
 class CableBakedModel(center: ResourceLocation, side: ResourceLocation, val s: Double) : IDynamicBakedModel {
@@ -99,7 +100,7 @@ class CableBakedModel(center: ResourceLocation, side: ResourceLocation, val s: D
     override fun getOverrides(): ItemOverrides = ItemOverrides.EMPTY
 
     companion object {
-        val itemConnected = CableBlockEntity.Connected()
+        val itemConnected = Connected()
 
         val itemTransforms: ItemTransforms
 

@@ -9,9 +9,12 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import kotlin.math.min
 
-open class ProcessedItemStackHandler(protected var items: NonNullList<ItemStack>): ProcessedItemHandler<CompoundTag>() {
+open class ProcessedItemStackHandler(items: NonNullList<ItemStack>): ProcessedItemHandler<CompoundTag>() {
     constructor(size: Int) : this(NonNullList.withSize(size, ItemStack.EMPTY))
     constructor() : this(1)
+
+    var items: NonNullList<ItemStack> = items
+        private set
 
     override fun getSlots(): Int {
         return items.size

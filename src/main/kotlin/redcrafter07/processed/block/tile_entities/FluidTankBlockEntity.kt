@@ -10,7 +10,6 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
-import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.ItemInteractionResult
 import net.minecraft.world.entity.player.Player
@@ -31,25 +30,12 @@ class FluidTankBlockEntity(pos: BlockPos, state: BlockState) :
     BlockEntity(ModTileEntities.FLUID_TANK.get(), pos, state), FluidCapableBlockEntity {
     private val fluidHandler: SimpleFluidStore = SimpleFluidStore(1, 80000)
 
-    init {
-        fluidHandler.setOnChange(this::sync)
-    }
-
     override fun getUpdatePacket(): Packet<ClientGamePacketListener?>? {
         return ClientboundBlockEntityDataPacket.create(this)
     }
 
     override fun getUpdateTag(registries: HolderLookup.Provider): CompoundTag {
         return saveWithoutMetadata(registries)
-    }
-
-    fun sync() {
-        val level = level
-        if (level is ServerLevel) {
-            val state = blockState
-            level.sendBlockUpdated(this.worldPosition, state, state, 3)
-            setChanged()
-        }
     }
 
     fun useItemOn(stack: ItemStack, player: Player, hand: InteractionHand): ItemInteractionResult? {

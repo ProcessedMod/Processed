@@ -1,5 +1,6 @@
 package redcrafter07.processed.dynpack
 
+import com.google.gson.JsonObject
 import net.minecraft.core.Direction
 import net.minecraft.data.models.blockstates.MultiVariantGenerator
 import net.minecraft.data.models.blockstates.PropertyDispatch
@@ -12,6 +13,7 @@ import net.minecraft.world.level.block.Block
 import redcrafter07.processed.block.ModBlocks
 import redcrafter07.processed.block.machine_abstractions.ProcessedBlock
 import redcrafter07.processed.block.machine_abstractions.RotationType
+import redcrafter07.processed.fluid.ModFluids
 import redcrafter07.processed.items.ModItems
 import redcrafter07.processed.rl
 
@@ -31,6 +33,9 @@ object DynPackBuilder {
         val poweredFurnaceModel = DelegatedModel(poweredFurnaceRL).get()
         val creativePowerSourceRL = ResourceLocation.withDefaultNamespace("block/redstone_block")
         val createPowerSourceModel = DelegatedModel(creativePowerSourceRL).get()
+        val fluidRL = rl("block/fluid")
+        val energyHatchModelRL = rl("block/basic_energy_hatch")
+        val energyHatchModel = DelegatedModel(energyHatchModelRL).get()
 
         for (block in ModBlocks.CABLES) {
             DynPackResources.addBlockState(block.id, createSimpleBlock(block.get(), cableRL).get())
@@ -72,6 +77,32 @@ object DynPackBuilder {
         DynPackResources.addBlockState(
             ModBlocks.ITEM_INPUT_HATCH.id, createSided(ModBlocks.ITEM_INPUT_HATCH.get(), itemInputHatchModel).get()
         )
+        val itemOutputHatchModel = rl("block/basic_item_output_hatch")
+        DynPackResources.addItemModel(ModBlocks.ITEM_OUTPUT_HATCH.id, DelegatedModel(itemOutputHatchModel).get())
+        DynPackResources.addBlockState(
+            ModBlocks.ITEM_OUTPUT_HATCH.id, createSided(ModBlocks.ITEM_OUTPUT_HATCH.get(), itemOutputHatchModel).get()
+        )
+
+        val fluidInputHatchModel = rl("block/basic_fluid_input_hatch")
+        DynPackResources.addItemModel(ModBlocks.FLUID_INPUT_HATCH.id, DelegatedModel(fluidInputHatchModel).get())
+        DynPackResources.addBlockState(
+            ModBlocks.FLUID_INPUT_HATCH.id, createSided(ModBlocks.FLUID_INPUT_HATCH.get(), fluidInputHatchModel).get()
+        )
+        val fluidOutputHatchModel = rl("block/basic_fluid_output_hatch")
+        DynPackResources.addItemModel(ModBlocks.FLUID_OUTPUT_HATCH.id, DelegatedModel(fluidOutputHatchModel).get())
+        DynPackResources.addBlockState(
+            ModBlocks.FLUID_OUTPUT_HATCH.id,
+            createSided(ModBlocks.FLUID_OUTPUT_HATCH.get(), fluidOutputHatchModel).get()
+        )
+
+        for (block in ModBlocks.ENERGY_HATCHES) {
+            DynPackResources.addItemModel(block.id, energyHatchModel)
+            DynPackResources.addBlockState(block.id, createSided(block.get(), energyHatchModelRL).get())
+        }
+
+        for (fluid in ModFluids.REGISTERED_FLUIDS) DynPackResources.addBlockState(
+            fluid.block.id, createSimpleBlock(fluid.block.get(), fluidRL).get()
+        )
     }
 
     fun addMaterialItems() {
@@ -91,6 +122,15 @@ object DynPackBuilder {
             item.id, nuggetModels[item.get().material.info.nuggetVariant.index]
         )
         for (item in ModItems.RAW_ITEMS) DynPackResources.addItemModel(item.id, rawModel)
+        for (fluid in ModFluids.REGISTERED_FLUIDS) {
+            // Make all fluids be an item using `neoforge:fluid_container`, with the parent being `neoforge:item/bucket` and the fluid being this bucket's fluid.
+            // This will cause them to render in a bucket! Yay!
+            val obj = JsonObject()
+            obj.addProperty("parent", "neoforge:item/bucket")
+            obj.addProperty("fluid", fluid.type.id.toString())
+            obj.addProperty("loader", "neoforge:fluid_container")
+            DynPackResources.addItemModel(fluid.bucket.id, obj)
+        }
     }
 
     fun createProcessedBlock(block: ProcessedBlock, modelLocation: ResourceLocation): MultiVariantGenerator =

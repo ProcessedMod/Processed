@@ -1,0 +1,11 @@
+{
+  "name": "processed.planetoid.deimos",
+  "x": -60,
+  "y": 0,
+  "size": 12,
+  "texture": "processed:textures/planetoid/deimos.png",
+  "parent": "processed:mars",
+  "color": "#a29d9c",
+  "distance": 9500,
+  "gravity": 0.003
+}

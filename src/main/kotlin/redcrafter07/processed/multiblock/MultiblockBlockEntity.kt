@@ -29,9 +29,12 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
     var isAssembled: Boolean = false
         private set
     private var blocks: Set<BlockPos>? = null
-    protected var specialBlocks: Map<SpecialBlockType, BlockPos> = mapOf()
+    protected var specialBlocks: Map<SpecialBlockType, List<BlockPos>> = mapOf()
 
-    open fun state(): Component? = Component.empty()
+    protected fun specialBlock(type: SpecialBlockType) =
+        specialBlocks[type].run { if (this.isNullOrEmpty()) null else this[0] }
+
+    open fun state(): Component? = null
 
     override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
         super.loadAdditional(tag, registries)
@@ -47,16 +50,23 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
             longs.map(BlockPos::of).map { pos -> BlockPos(pos.x + x, pos.y + y, pos.z + z) }.forEach(blocks::add)
             this.blocks = blocks
 
-            if (tag.contains("specialBlocks", Tag.TAG_INT_ARRAY.toInt())) {
-                val specialBlocksList = tag.getIntArray("specialBlocks")
-                val specialBlocks = hashMapOf<SpecialBlockType, BlockPos>()
+            if (tag.contains("specialBlocks", Tag.TAG_COMPOUND.toInt())) {
+                val special = tag.getCompound("specialBlocks")
+                val specialBlocks = hashMapOf<SpecialBlockType, List<BlockPos>>()
                 for (specialBlock in SpecialBlockType.values) {
-                    if (specialBlocksList[specialBlock.id] != -1) {
-                        val pos = BlockPos.of(longs[specialBlocksList[specialBlock.id]])
-                        specialBlocks[specialBlock] = BlockPos(x + pos.x, y + pos.y, z + pos.z)
+                    if (special.contains(specialBlock.key, Tag.TAG_INT.toInt())) {
+                        val index = special.getInt(specialBlock.key)
+                        val unpacked = BlockPos.of(longs[index])
+                        specialBlocks[specialBlock] = listOf(BlockPos(unpacked.x + x, unpacked.y + y, unpacked.z + z))
+                    } else if (special.contains(specialBlock.key, Tag.TAG_INT_ARRAY.toInt())) {
+                        specialBlocks[specialBlock] = listOf(*special.getIntArray(specialBlock.key).map {
+                            val unpacked = BlockPos.of(longs[it])
+                            BlockPos(unpacked.x + x, unpacked.y + y, unpacked.z + z)
+                        }.toTypedArray())
                     }
                 }
-                this.specialBlocks = specialBlocks
+                this.specialBlocks =
+                    mapOf(*specialBlocks.entries.map { (key, value) -> Pair(key, value) }.toTypedArray())
             } else specialBlocks = mapOf()
         } else blocks = null
     }
@@ -71,12 +81,25 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
         val packedBlocks = blocks.stream().map { pos -> BlockPos.asLong(pos.x - x, pos.y - y, pos.z - z) }.toList()
         tag.putLongArray("blocks", packedBlocks)
         if (specialBlocks.isNotEmpty()) {
-            val array = IntArray(SpecialBlockType.values.size) { -1 }
+            val special = CompoundTag()
             for (entry in specialBlocks.entries) {
-                val long = BlockPos.asLong(entry.value.x - x, entry.value.y - y, entry.value.z - z)
-                array[entry.key.id] = packedBlocks.indexOf(long)
+                if (entry.value.isEmpty()) continue
+                else if (entry.value.size == 1) {
+                    val pos = entry.value[0]
+                    val long = BlockPos.asLong(pos.x - x, pos.y - y, pos.z - z)
+                    val index = packedBlocks.indexOf(long)
+                    special.putInt(entry.key.key, index)
+                } else {
+                    val array = mutableListOf<Int>()
+                    for (pos in entry.value) {
+                        val long = BlockPos.asLong(pos.x - x, pos.y - y, pos.z - z)
+                        val index = packedBlocks.indexOf(long)
+                        array.add(index)
+                    }
+                    special.putIntArray(entry.key.key, array)
+                }
             }
-            tag.putIntArray("specialBlocks", array)
+            tag.put("specialBlocks", special)
         }
     }
 
@@ -215,7 +238,8 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
         }
         invalidateCapabilities()
         blocks = affectedBlocks
-        specialBlocks = result.importantBlocks
+        specialBlocks = mapOf(*result.importantBlocks.map { (key, value) -> Pair(key, listOf(*value.toTypedArray())) }
+            .toTypedArray())
 
         if (!old.isEmpty()) {
             val x = blockPos.x
@@ -300,11 +324,13 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
         level.sendParticles(ParticleTypes.END_ROD, x + .5, y + .5, z + .5, 1, 0.0, 0.0, 0.0, 0.0)
     }
 
-    enum class SpecialBlockType(val id: Int) {
-        None(-1), ItemInput(0);
+    enum class SpecialBlockType(val key: String) {
+        None(""), Ignored(""), EnergyInput("energyIn"), ItemInput("itemIn"), ItemOutput("itemOut"), FluidInput("fluidIn"), FluidOutput(
+            "fluidOut"
+        );
 
         companion object {
-            val values = entries.filter { it != None }.toList()
+            val values = entries.filter { it.key.isNotEmpty() }.toList()
         }
     }
 }

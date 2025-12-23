@@ -1,0 +1,7 @@
+{
+    "parent": "processed:block/hatch",
+    "textures": {
+        "all": "processed:block/basic_casing",
+        "overlay": "processed:block/energy_hatch_overlay"
+    }
+}

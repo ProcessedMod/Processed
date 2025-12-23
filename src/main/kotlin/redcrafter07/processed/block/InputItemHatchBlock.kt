@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.phys.BlockHitResult
 import redcrafter07.processed.block.tile_entities.InputItemHatchBlockEntity
+import redcrafter07.processed.block.tile_entities.ItemHatch
 
 class InputItemHatchBlock : Block(Properties.of()), EntityBlock {
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
@@ -33,4 +34,18 @@ class InputItemHatchBlock : Block(Properties.of()), EntityBlock {
     }
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState) = InputItemHatchBlockEntity(pos, state)
+
+    override fun onRemove(
+        state: BlockState,
+        level: Level,
+        pos: BlockPos,
+        newState: BlockState,
+        movedByPiston: Boolean
+    ) {
+        if(!newState.`is`(state.block)) {
+            val be = level.getBlockEntity(pos)
+            if(be is ItemHatch) be.dropContents(level, pos)
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston)
+    }
 }

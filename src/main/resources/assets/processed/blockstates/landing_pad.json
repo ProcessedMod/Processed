@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "state=none": {"model": "processed:block/landing_pad"},
+    "state=center": {"model": "processed:block/landing_pad_center"},
+    "state=northeast": {"model": "processed:block/landing_pad_corner", "y": 90},
+    "state=northwest": {"model": "processed:block/landing_pad_corner", "y":  180},
+    "state=southeast": {"model": "processed:block/landing_pad_corner"},
+    "state=southwest": {"model": "processed:block/landing_pad_corner", "y": -90}
+  }
+}

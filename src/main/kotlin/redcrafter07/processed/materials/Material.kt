@@ -33,5 +33,5 @@ class Material(
 
     fun <T> getExtraData(clazz: Class<T>): T? = info.getExtraData(clazz)
 
-    override fun toString(): String = "Material(${info.chemicalDescription}, $identifier)"
+    override fun toString(): String = "Material[$identifier]"
 }

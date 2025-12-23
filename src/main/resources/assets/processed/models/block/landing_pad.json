@@ -1,0 +1,21 @@
+{
+    "parent": "block/thin_block",
+    "textures": {
+        "0": "processed:block/landing_pad",
+        "particle": "#0"
+    },
+    "elements": [
+        {
+            "from": [0, 0, 0],
+            "to": [16, 1, 16],
+            "faces": {
+                "north": {"uv": [0, 7.5, 8, 8], "texture": "#0"},
+                "east": {"uv": [0, 7.5, 8, 8], "texture": "#0"},
+                "south": {"uv": [0, 7.5, 8, 8], "texture": "#0"},
+                "west": {"uv": [0, 7.5, 8, 8], "texture": "#0"},
+                "up": {"uv": [0, 0, 8, 8], "texture": "#0"},
+                "down": {"uv": [0, 0, 8, 8], "texture": "#0"}
+            }
+        }
+    ]
+}

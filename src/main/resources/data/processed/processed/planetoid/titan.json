@@ -1,0 +1,11 @@
+{
+  "name": "processed.planetoid.titan",
+  "x": 180,
+  "y": 0,
+  "size": 30,
+  "texture": "processed:textures/planetoid/titan.png",
+  "parent": "processed:saturn",
+  "color": "#d0a55a",
+  "distance": 140000,
+  "gravity": 1.35
+}

@@ -1,0 +1,11 @@
+{
+    "name": "processed.planetoid.earth",
+    "x": 300,
+    "y": 0,
+    "size": 50,
+    "texture": "processed:textures/planetoid/terra.png",
+    "parent": "processed:sun",
+    "distance": 0,
+    "gravity": 1.62,
+    "resource": "minecraft:cobblestone"
+}

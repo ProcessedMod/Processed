@@ -28,6 +28,7 @@ import redcrafter07.processed.block.machine_abstractions.EnergyCapableBlockEntit
 import redcrafter07.processed.block.tile_entities.ModTileEntities
 import redcrafter07.processed.block.tile_entities.capabilities.ProcessedPowerStore
 import redcrafter07.processed.materials.MaterialContainer
+import redcrafter07.processed.materials.data.CableData
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.minus
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.toVec3
 import java.util.function.BiFunction
@@ -46,19 +47,20 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
     val connected = Connected()
     val disallowedConnections = Connected()
 
-    val energyHandler = object : IEnergyStorage {
+    class EnergyHandler(val cable: CableBlockEntity, val block: BlockPos) : IEnergyStorage {
         override fun receiveEnergy(amount: Int, sim: Boolean): Int {
-            val lvl = level ?: return 0
+            val lvl = cable.level ?: return 0
             var energyLeft = amount
 
-            for (entry in outputs.entries) {
+            for (entry in cable.outputs.entries) {
+                if (entry.key == block) continue
                 if (energyLeft <= 0) return amount
                 val cap: IEnergyStorage
                 val cap1 = lvl.getCapability(Capabilities.EnergyStorage.BLOCK, entry.key, entry.value.second)
                 if (cap1 != null) cap = cap1
                 else {
                     val cap2 = lvl.getCapability(ProcessedPower.BLOCK, entry.key, entry.value.second) ?: continue
-                    if (!cableTier.value.canInsertEnergy(cap2.minTier())) continue
+                    if (!cable.cableTier.value.canInsertEnergy(cap2.minTier())) continue
                     cap = cap2.energy()
                 }
 
@@ -77,10 +79,14 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
         override fun canExtract(): Boolean = false
         override fun canReceive(): Boolean = true
     }
-    val energyCapability = ProcessedPowerStore(cableTier.value, energyHandler)
 
-    override fun energyCapabilityForSide(side: BlockSide?, state: BlockState) =
-        if (side == null) energyCapability else if (connected[side.asDirectionNotRotated]) energyCapability else null
+    override fun energyCapabilityForSide(side: BlockSide?, state: BlockState): ProcessedPower? {
+        val handler = if (side == null) EnergyHandler(this, blockPos)
+        else if (connected[side.asDirectionNotRotated]) EnergyHandler(this, blockPos)
+        else return null
+
+        return ProcessedPowerStore(cableTier.value, handler)
+    }
 
     private var outputCacheInner: Map<BlockPos, Pair<ProcessedTier, Direction>>? = null
     val outputs: Map<BlockPos, Pair<ProcessedTier, Direction>>
@@ -195,7 +201,7 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
     fun isConnected(level: Level, direction: Direction): Boolean {
         if (disallowedConnections[direction]) return false
         val pos = blockPos.relative(direction)
-        val be = level.getBlockEntity(pos) ?: return false
+        val be = level.getBlockEntity(pos)
         if (be is CableBlockEntity) return !be.disallowedConnections[direction.opposite]
         val cap1 = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, direction.opposite)
         if (cap1 != null) return true
@@ -220,7 +226,7 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
             if (connected[direction]) Translations.pipeLikeStateConnected()
             else Translations.pipeLikeStateDisconnected()
         }
-        player.sendSystemMessage(Translations.pipeLikeState(state))
+        player.displayClientMessage(Translations.pipeLikeState(state), true)
     }
 
     companion object {
@@ -246,24 +252,24 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
         }
 
         val TRANSMITTER_PROPERTY = ModelProperty<Connected>()
-    }
 
-    class Connected(var value: Int) {
-        constructor() : this(0)
+        class Connected(var value: Int) {
+            constructor() : this(0)
 
-        fun setSide(side: Direction) {
-            this.value = this.value or 1.shl(side.get3DDataValue())
+            fun setSide(side: Direction) {
+                this.value = this.value or 1.shl(side.get3DDataValue())
+            }
+
+            fun clearSide(side: Direction) {
+                this.value = this.value and 1.shl(side.get3DDataValue()).inv()
+            }
+
+            operator fun set(side: Direction, value: Boolean) {
+                if (value) setSide(side)
+                else clearSide(side)
+            }
+
+            operator fun get(side: Direction): Boolean = (this.value and 1.shl(side.get3DDataValue())) > 0
         }
-
-        fun clearSide(side: Direction) {
-            this.value = this.value and 1.shl(side.get3DDataValue()).inv()
-        }
-
-        operator fun set(side: Direction, value: Boolean) {
-            if (value) setSide(side)
-            else clearSide(side)
-        }
-
-        operator fun get(side: Direction): Boolean = (this.value and 1.shl(side.get3DDataValue())) > 0
     }
 }

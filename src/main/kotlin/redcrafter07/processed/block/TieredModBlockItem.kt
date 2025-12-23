@@ -4,16 +4,16 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
-import redcrafter07.processed.block.machine_abstractions.TieredProcessedBlock
+import net.minecraft.world.level.block.Block
 
-class TieredModBlockItem(val tieredProcessedBlock: TieredProcessedBlock, itemProperties: Properties) :
-    BlockItem(tieredProcessedBlock, itemProperties) {
+class TieredModBlockItem<T>(val tieredBlock: T, itemProperties: Properties) :
+    BlockItem(tieredBlock, itemProperties) where T : Block, T : TieredBlock {
     override fun appendHoverText(
         stack: ItemStack, context: TooltipContext, tooltip: MutableList<Component>, flag: TooltipFlag
     ) {
-        tieredProcessedBlock.getDescription(tooltip, flag)
+        tieredBlock.getDescription(tooltip, flag)
 
-        val block = block
+        val block = tieredBlock
         if (block is AdditionalBlockInfo) {
             val additionalTooltip: Component? = block.getAdditionalTooltip(stack, context, flag)
             if (additionalTooltip != null) tooltip.add(additionalTooltip)
@@ -24,6 +24,6 @@ class TieredModBlockItem(val tieredProcessedBlock: TieredProcessedBlock, itemPro
     }
 
     override fun getName(itemStack: ItemStack): Component {
-        return tieredProcessedBlock.getName()
+        return tieredBlock.name
     }
 }

@@ -11,7 +11,7 @@ import redcrafter07.processed.materials.Materials;
 
 import java.util.List;
 
-public record ProcessedTier(int tier, int speedMultiplier, int energyMultiplier, Material material) {
+public record ProcessedTier(int tier, int speedMultiplier, int energyMultiplier, @NotNull Material material) {
     @NotNull
     public static ProcessedTier fromTierNumber(int tier) {
         return TIERS.get(tier);

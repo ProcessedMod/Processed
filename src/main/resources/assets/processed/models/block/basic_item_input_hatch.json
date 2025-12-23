@@ -1,28 +1,7 @@
 {
-  "parent": "block/block",
-  "elements": [
-    {
-      "from": [0, 0, 0],
-      "to": [16, 16, 16],
-      "faces": {
-        "north": {"texture": "#all", "cullface": "north"},
-        "east": {"texture": "#all", "cullface": "east"},
-        "south": {"texture": "#all", "cullface": "south"},
-        "west": {"texture": "#all", "cullface": "west"},
-        "up": {"texture": "#all", "cullface": "up"},
-        "down": {"texture": "#all", "cullface": "down"}
-      }
-    },
-    {
-      "from": [4, 16.001, 4],
-      "to": [12, 16.001, 12],
-      "faces": {
-        "up": {"uv": [0, 0, 16, 16], "texture": "#overlay", "cullface": "up"}
-      }
+    "parent": "processed:block/hatch",
+    "textures": {
+        "all": "processed:block/basic_casing",
+        "overlay": "processed:block/item_input_hatch_overlay"
     }
-  ],
-  "textures": {
-    "all": "processed:block/basic_casing",
-    "overlay": "processed:block/item_hatch_overlay"
-  }
 }

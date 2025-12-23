@@ -1,43 +1,35 @@
 package redcrafter07.processed.materials
 
-import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.tags.TagKey
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.TooltipFlag
 import redcrafter07.processed.Translations
 
 
 abstract class MaterialItem(override val material: Material) : Item(DEFAULT_PROPERTIES), MaterialContainer {
     companion object { val DEFAULT_PROPERTIES: Properties = Properties().stacksTo(64); }
 
-    override fun appendHoverText(
-        stack: ItemStack, context: TooltipContext, tooltip: MutableList<Component?>, tooltipFlag: TooltipFlag
-    ) {
-        tooltip.add(Component.literal(material.info.chemicalDescription).withStyle(ChatFormatting.YELLOW))
-        super.appendHoverText(stack, context, tooltip, tooltipFlag)
-    }
-
     abstract val tag: TagKey<Item>
+    override fun getName(stack: ItemStack): Component = description
 
     class Dust(material: Material) : MaterialItem(material) {
         override val tag: TagKey<Item> = material.dustTag
-        override fun getName(stack: ItemStack): Component = Translations.materialDust(material)
+        override fun getDescription(): Component = Translations.materialDust(material)
     }
 
     class Nugget(material: Material) : MaterialItem(material) {
         override val tag: TagKey<Item> = material.nuggetTag
-        override fun getName(stack: ItemStack): Component = Translations.materialNugget(material)
+        override fun getDescription(): Component = Translations.materialNugget(material)
     }
 
     class Ingot(material: Material) : MaterialItem(material) {
         override val tag: TagKey<Item> = material.ingotTag
-        override fun getName(stack: ItemStack): Component = Translations.materialIngot(material)
+        override fun getDescription(): Component = Translations.materialIngot(material)
     }
 
     class Raw(material: Material) : MaterialItem(material) {
         override val tag: TagKey<Item> = material.rawTag
-        override fun getName(stack: ItemStack): Component = Translations.materialRaw(material)
+        override fun getDescription(): Component = Translations.materialRaw(material)
     }
 }
