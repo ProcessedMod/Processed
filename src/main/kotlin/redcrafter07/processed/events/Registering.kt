@@ -46,8 +46,10 @@ import redcrafter07.processed.miner.Planetoid
 import redcrafter07.processed.network.FluidHandlerClickPacket
 import redcrafter07.processed.network.IOChangePacket
 import redcrafter07.processed.network.LaunchControllerUpdatePacket
+import redcrafter07.processed.network.MenuRPCPacket
 import redcrafter07.processed.network.MultiblockDestroyPacket
 import redcrafter07.processed.network.PlanetoidSelectPacket
+import redcrafter07.processed.network.RPCPacket
 import redcrafter07.processed.network.SetFluidMenuContentsPacket
 import redcrafter07.processed.network.StartLaunchControllerAnimation
 import redcrafter07.processed.network.UpdateFluidMenuContentPacket
@@ -183,6 +185,8 @@ object Registering {
             StartLaunchControllerAnimation.CODEC,
             StartLaunchControllerAnimation::handleClient
         )
+        registrar.playBidirectional(MenuRPCPacket.TYPE, MenuRPCPacket.CODEC, MenuRPCPacket::handle)
+        registrar.playBidirectional(RPCPacket.TYPE, RPCPacket.CODEC, RPCPacket::handle)
     }
 
     @SubscribeEvent

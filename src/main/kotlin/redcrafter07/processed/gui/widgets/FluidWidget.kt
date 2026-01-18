@@ -1,6 +1,5 @@
 package redcrafter07.processed.gui.widgets
 
-import io.netty.buffer.ByteBuf
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
@@ -9,9 +8,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
-import net.minecraft.network.codec.ByteBufCodecs
-import net.minecraft.network.codec.StreamCodec
-import net.minecraft.util.ByIdMap
 import net.minecraft.util.FastColor
 import net.minecraft.world.item.BucketItem
 import net.minecraft.world.item.ItemStack
@@ -25,7 +21,7 @@ import redcrafter07.processed.gui.RenderUtils
 import redcrafter07.processed.gui.RenderUtils.getFluidColor
 import redcrafter07.processed.gui.RenderUtils.getFluidTexture
 import redcrafter07.processed.network.FluidHandlerClickPacket
-import java.util.function.IntFunction
+import redcrafter07.processed.rpc.CodecRegistry
 import java.util.function.Supplier
 
 class FluidWidget(
@@ -123,11 +119,7 @@ class FluidWidget(
         InsertOnly, ExtractOnly, Both;
 
         companion object {
-            val BY_ID: IntFunction<InsertionKind> = ByIdMap.continuous(
-                InsertionKind::ordinal, InsertionKind.entries.toTypedArray(), ByIdMap.OutOfBoundsStrategy.WRAP
-            )
-            val STREAM_CODEC: StreamCodec<ByteBuf, InsertionKind> =
-                ByteBufCodecs.idMapper(BY_ID, InsertionKind::ordinal)
+            val STREAM_CODEC = CodecRegistry.registerEnum(InsertionKind::class.java, InsertionKind.entries)
         }
     }
 }

@@ -124,5 +124,4 @@ class ConfigScreen(val machine: ProcessedMachine, val pos: BlockPos) : Screen(ma
 
         return map
     }
-
 }
