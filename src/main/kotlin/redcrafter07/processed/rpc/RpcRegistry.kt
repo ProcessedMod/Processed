@@ -1,5 +1,6 @@
 package redcrafter07.processed.rpc
 
+import io.netty.buffer.ByteBufUtil
 import io.netty.buffer.Unpooled
 import net.minecraft.client.Minecraft
 import net.minecraft.core.RegistryAccess
@@ -22,7 +23,7 @@ object RpcRegistry {
     fun register(f: Function<*>, rl: String, args: Array<Class<*>>) {
         val fn = f.javaClass.methods.find { it.name == "invoke" }
         if (fn == null) throw IllegalStateException("tf???")
-        functions[rl] = Pair(f, MethodMeta.of(fn, arrayOf(RPCSender::class.java,  *args)))
+        functions[rl] = Pair(f, MethodMeta.of(fn, arrayOf(RPCSender::class.java, *args)))
     }
 
     fun handle(name: String, data: ByteArray, context: IPayloadContext) {
@@ -178,14 +179,17 @@ object RpcRegistry {
     private fun invoke(
         connection: Connection, registryAccess: RegistryAccess, rl: String, clientside: Boolean, vararg args: Any
     ) {
-        val buf = RegistryFriendlyByteBuf(Unpooled.buffer(), registryAccess, ConnectionType.OTHER)
-        for (arg in args) CodecRegistry.get(arg.javaClass)?.encode(buf, arg)
-            ?: throw RuntimeException("Cannot encode ${arg.javaClass} for rpc")
-
-        val customPacket = RPCPacket(rl, MenuRPCSender.toBytes(buf))
+        val customPacket = RPCPacket(rl, encode(registryAccess, args))
         val packet = if (clientside) ServerboundCustomPayloadPacket(customPacket) else ClientboundCustomPayloadPacket(
             customPacket
         )
         connection.send(packet)
+    }
+
+    fun encode(registryAccess: RegistryAccess, args: Array<out Any>): ByteArray {
+        val buf = RegistryFriendlyByteBuf(Unpooled.buffer(), registryAccess, ConnectionType.OTHER)
+        for (arg in args) CodecRegistry.get(arg.javaClass)?.encode(buf, arg)
+            ?: throw RuntimeException("Cannot encode ${arg.javaClass} for rpc")
+        return ByteBufUtil.getBytes(buf)
     }
 }

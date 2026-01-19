@@ -126,18 +126,18 @@ object Registering {
     fun registerNetworkHandlers(event: RegisterPayloadHandlersEvent) {
         val registrar = event.registrar(ProcessedMod.ID)
 
-        registrar.playToServer(
-            FluidHandlerClickPacket.TYPE, FluidHandlerClickPacket.CODEC, FluidHandlerClickPacket::handleServer
-        )
-
-        registrar.playToClient(
-            SetFluidMenuContentsPacket.TYPE, SetFluidMenuContentsPacket.CODEC, SetFluidMenuContentsPacket::handleClient
-        )
-        registrar.playToClient(
-            UpdateFluidMenuContentPacket.TYPE,
-            UpdateFluidMenuContentPacket.CODEC,
-            UpdateFluidMenuContentPacket::handleClient
-        )
+//        registrar.playToServer(
+//            FluidHandlerClickPacket.TYPE, FluidHandlerClickPacket.CODEC, FluidHandlerClickPacket::handleServer
+//        )
+//
+//        registrar.playToClient(
+//            SetFluidMenuContentsPacket.TYPE, SetFluidMenuContentsPacket.CODEC, SetFluidMenuContentsPacket::handleClient
+//        )
+//        registrar.playToClient(
+//            UpdateFluidMenuContentPacket.TYPE,
+//            UpdateFluidMenuContentPacket.CODEC,
+//            UpdateFluidMenuContentPacket::handleClient
+//        )
         registrar.playBidirectional(MenuRPCPacket.TYPE, MenuRPCPacket.CODEC, MenuRPCPacket::handle)
         registrar.playBidirectional(RPCPacket.TYPE, RPCPacket.CODEC, RPCPacket::handle)
     }

@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack
 import redcrafter07.processed.gui.AbstractFluidContainerMenu
 
 abstract class ProcessedContainerMenu(menuType: MenuType<*>, containerId: Int, playerInventory: Inventory) :
-    AbstractFluidContainerMenu(menuType, containerId) {
+    AbstractFluidContainerMenu(menuType, containerId, playerInventory.player) {
 
     init {
         addPlayerInventory(playerInventory)

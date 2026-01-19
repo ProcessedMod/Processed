@@ -27,7 +27,7 @@ class MenuRPCPacket(val methodName: String, val containerId: Int, val data: Byte
         private val cache: MutableMap<Class<*>, Map<String, MethodMeta>> = HashMap()
 
         fun cacheFor(clazz: Class<*>): Map<String, MethodMeta> = cache.computeIfAbsent(clazz) {
-            val methods = clazz.methods
+            val methods = clazz.declaredMethods
             val map = HashMap<String, MethodMeta>()
             for (method in methods) {
                 val annotation = method.getAnnotation(RPCMethod::class.java) ?: continue
@@ -43,21 +43,39 @@ class MenuRPCPacket(val methodName: String, val containerId: Int, val data: Byte
         val openMenu = context.player().containerMenu ?: return
         if (openMenu.containerId != containerId) return
 
-        var obj: Any = openMenu
-        var methods = cacheFor(openMenu.javaClass)
-        var method = methods[methodName]
-        // check the current screens methods if on client.
-        if (method == null && context.player() !is ServerPlayer && context.player().level().isClientSide) {
-            val screen = Minecraft.getInstance().screen
-            if (screen != null) {
-                obj = screen
-                methods = cacheFor(screen.javaClass)
-                method = methods[methodName]
-            }
+        val res = getMethod(openMenu, context.player() !is ServerPlayer && context.player().level().isClientSide) ?: return
+        res.second.invoke(res.first, data, context)
+    }
+
+    fun getMethod(openMenu: Any, clientside: Boolean): Pair<Any, MethodMeta>? {
+        for(clazz in ClassIter(openMenu.javaClass)) {
+            val method = cacheFor(clazz)[methodName]
+            if(method != null) return Pair(openMenu, method)
         }
-        if (method == null) return
-        method.invoke(obj, data, context)
+        if(!clientside) return null
+
+        val screen = Minecraft.getInstance().screen ?: return null
+        for(clazz in ClassIter(screen.javaClass)) {
+            val method = cacheFor(clazz)[methodName]
+            if(method != null) return Pair(screen, method)
+        }
+
+        return null
     }
 
     override fun type() = TYPE
+
+    class ClassIter(var clazz: Class<*>?) : Iterator<Class<*>> {
+        override fun hasNext(): Boolean = clazz != null
+
+        override fun next(): Class<*> {
+            val clazz = clazz
+            if(clazz != null) {
+                this.clazz = clazz.superclass
+                return clazz
+            }
+            throw IllegalStateException("both menuClass and screenClass are null")
+        }
+
+    }
 }

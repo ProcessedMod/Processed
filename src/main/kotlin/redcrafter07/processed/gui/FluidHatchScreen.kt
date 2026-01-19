@@ -27,10 +27,8 @@ class FluidHatchScreen(menu: FluidHatchMenu, playerInventory: Inventory, title: 
                 topPos + 6,
                 60,
                 true,
-                menu.hatch.inventoryHandler(),
-                menu.hatch.pos(),
                 0,
-                this.menu::getCarried
+                menu,
             )
         )
     }

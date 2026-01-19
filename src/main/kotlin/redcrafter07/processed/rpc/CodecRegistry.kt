@@ -9,12 +9,14 @@ import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.InteractionHand
+import net.neoforged.neoforge.fluids.FluidStack
 import redcrafter07.processed.block.machine_abstractions.BlockSide
 import redcrafter07.processed.block.machine_abstractions.IoState
 import redcrafter07.processed.gui.widgets.FluidWidget
 import redcrafter07.processed.items.WrenchMode
 import redcrafter07.processed.miner.LevelMinerData
 import redcrafter07.processed.miner.MinerCalc
+import redcrafter07.processed.rpc.wrappers.FluidStackList
 
 object CodecRegistry {
     private val codecs: MutableMap<Class<*>, StreamCodec<RegistryFriendlyByteBuf, *>> = HashMap()
@@ -78,6 +80,8 @@ object CodecRegistry {
                 MutableList<Long>::toLongArray, LongArray::toList
             )
         )
+        registerRegistryFriendly(FluidStack::class.java, FluidStack.STREAM_CODEC)
+        registerRegistryFriendly(FluidStackList::class.java, FluidStackList.STREAM_CODEC)
     }
 
     private fun <T> register(clazz: Class<T>, codec: StreamCodec<ByteBuf, T>) {

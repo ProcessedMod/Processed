@@ -1,45 +1,39 @@
 package redcrafter07.processed.gui.widgets
 
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.gui.screens.Screen
-import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
 import net.minecraft.world.item.BucketItem
-import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.material.Fluids
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.fluids.FluidStack
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction
 import redcrafter07.processed.StreamCodecUtil
 import redcrafter07.processed.Translations
-import redcrafter07.processed.block.tile_entities.capabilities.FluidHandlerModifiable
+import redcrafter07.processed.gui.AbstractFluidContainerMenu
 import redcrafter07.processed.gui.RenderUtils
 import redcrafter07.processed.gui.RenderUtils.getFluidColor
 import redcrafter07.processed.gui.RenderUtils.getFluidTexture
-import redcrafter07.processed.network.FluidHandlerClickPacket
-import java.util.function.Supplier
 
 class FluidWidget(
     x: Int,
     y: Int,
     width: Int,
     val big: Boolean,
-    val fluidHandler: FluidHandlerModifiable,
-    val pos: BlockPos,
-    val tank: Int = 0,
-    val carriedItem: Supplier<ItemStack>
+    val slot: Int,
+    val menu: AbstractFluidContainerMenu,
 ) : AbstractWidget(x, y, width, if (big) 60 else 30, Component.empty()) {
     override fun renderWidget(
         guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float
     ) {
         RenderUtils.renderSlot(guiGraphics, x, y, width, height)
 
-        val fluid = fluidHandler.getFluidInTank(tank)
+        val fluidHandler = menu.getFluid(slot) ?: return
+        val fluid = fluidHandler.getFluidInTank(0)
         tooltip = Tooltip.create(Translations.fluidWidgetTooltip(fluid.hoverName, fluid.amount))
         if (!fluid.isEmpty) {
             val sprite = getFluidTexture(fluid, false)
@@ -50,7 +44,7 @@ class FluidWidget(
             var a = FastColor.ARGB32.alpha(color) / 255f
             if (a == 0f) a = 1f
 
-            val filled = fluidHandler.getFluidInTank(tank).amount / fluidHandler.getTankCapacity(tank).toDouble()
+            val filled = fluidHandler.getFluidInTank(0).amount / fluidHandler.getTankCapacity(0).toDouble()
             val filledHeight = filled * (height - 2)
             guiGraphics.blit(x + 1, y + 1, 0, width - 2, filledHeight.toInt(), sprite, r, g, b, a)
         }
@@ -62,27 +56,29 @@ class FluidWidget(
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) = Unit
 
     override fun onClick(mouseX: Double, mouseY: Double, button: Int) {
-        val ty =
+        val fluidHandler = menu.getFluid(slot) ?: return
+
+        val insertionKind =
             if (Screen.hasControlDown()) InsertionKind.InsertOnly else if (Screen.hasAltDown()) InsertionKind.ExtractOnly else InsertionKind.Both
-        val carriedItem = this.carriedItem.get()
+        val carriedItem = this.menu.carried
         if (carriedItem.isEmpty) return
         val itemItem = carriedItem.item
         val cap = carriedItem.getCapability(Capabilities.FluidHandler.ITEM)
         if (cap != null) {
-            when (ty) {
+            when (insertionKind) {
                 InsertionKind.InsertOnly -> {
-                    if (fluidHandler.getFluidInTank(tank).amount >= fluidHandler.getTankCapacity(tank)) return
+                    if (fluidHandler.getFluidInTank(0).amount >= fluidHandler.getTankCapacity(0)) return
                     if (cap.drain(Int.MAX_VALUE, FluidAction.SIMULATE).isEmpty) return
-                    if (!fluidHandler.getFluidInTank(tank).isEmpty && cap.drain(
-                            fluidHandler.getFluidInTank(tank).copyWithAmount(Int.MAX_VALUE), FluidAction.SIMULATE
+                    if (!fluidHandler.getFluidInTank(0).isEmpty && cap.drain(
+                            fluidHandler.getFluidInTank(0).copyWithAmount(Int.MAX_VALUE), FluidAction.SIMULATE
                         ).isEmpty
                     ) return
                 }
 
                 InsertionKind.ExtractOnly -> {
-                    if (fluidHandler.getFluidInTank(tank).isEmpty) return
+                    if (fluidHandler.getFluidInTank(0).isEmpty) return
                     if (cap.fill(
-                            fluidHandler.getFluidInTank(tank).copy(), FluidAction.SIMULATE
+                            fluidHandler.getFluidInTank(0).copy(), FluidAction.SIMULATE
                         ) == 0
                     ) return
                 }
@@ -90,12 +86,12 @@ class FluidWidget(
                 InsertionKind.Both -> Unit
             }
 
-            Minecraft.getInstance().connection?.send(FluidHandlerClickPacket(pos, ty))
+            menu.sendFluidHandlerClickToServer(slot, insertionKind)
         } else if (itemItem is BucketItem) {
-            val ty = if (ty == InsertionKind.Both) {
+            val ty = if (insertionKind == InsertionKind.Both) {
                 if (itemItem.content.isSame(Fluids.EMPTY)) InsertionKind.ExtractOnly
                 else InsertionKind.InsertOnly
-            } else ty
+            } else insertionKind
 
             when (ty) {
                 InsertionKind.InsertOnly -> {
@@ -111,7 +107,7 @@ class FluidWidget(
                 else -> throw IllegalStateException()
             }
 
-            Minecraft.getInstance().connection?.send(FluidHandlerClickPacket(pos, ty))
+            menu.sendFluidHandlerClickToServer(slot, insertionKind)
         }
     }
 
