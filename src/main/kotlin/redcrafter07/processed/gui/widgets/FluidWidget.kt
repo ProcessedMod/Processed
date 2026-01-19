@@ -15,13 +15,13 @@ import net.minecraft.world.level.material.Fluids
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.fluids.FluidStack
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction
+import redcrafter07.processed.StreamCodecUtil
 import redcrafter07.processed.Translations
 import redcrafter07.processed.block.tile_entities.capabilities.FluidHandlerModifiable
 import redcrafter07.processed.gui.RenderUtils
 import redcrafter07.processed.gui.RenderUtils.getFluidColor
 import redcrafter07.processed.gui.RenderUtils.getFluidTexture
 import redcrafter07.processed.network.FluidHandlerClickPacket
-import redcrafter07.processed.rpc.CodecRegistry
 import java.util.function.Supplier
 
 class FluidWidget(
@@ -119,7 +119,7 @@ class FluidWidget(
         InsertOnly, ExtractOnly, Both;
 
         companion object {
-            val STREAM_CODEC = CodecRegistry.registerEnum(InsertionKind::class.java, InsertionKind.entries)
+            val STREAM_CODEC = StreamCodecUtil.makeEnum(InsertionKind.entries)
         }
     }
 }

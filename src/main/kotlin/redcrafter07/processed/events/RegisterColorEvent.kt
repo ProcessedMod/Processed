@@ -12,6 +12,7 @@ import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.block.ModBlocks
+import redcrafter07.processed.fluid.ModFluids
 import redcrafter07.processed.items.ModItems
 import redcrafter07.processed.materials.MaterialContainer
 
@@ -26,7 +27,7 @@ object RegisterColorEvent {
         event.register(
             ItemColorProvider,
             *ModItems.ITEMS.entries.map { it.get() }
-                .filter { it is MaterialContainer || it is ItemColor || (it is BlockItem && it.block is MaterialContainer) }
+                .filter { it is MaterialContainer || it is ItemColor || it is ModFluids.TintedBucketItem || (it is BlockItem && it.block is MaterialContainer) }
                 .toList().toTypedArray())
     }
 
@@ -40,6 +41,7 @@ object RegisterColorEvent {
                     if(block is MaterialContainer) block.getColor(tintIndex) ?: 0xFFFFFF
                     else 0xFFFFFF
                 }
+                is ModFluids.TintedBucketItem -> item.getColor(stack, tintIndex)
                 else -> 0xFFFFFF
             }
         }

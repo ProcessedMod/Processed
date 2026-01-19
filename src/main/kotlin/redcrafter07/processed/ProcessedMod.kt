@@ -14,6 +14,7 @@ import redcrafter07.processed.gui.ModMenuTypes
 import redcrafter07.processed.items.ModDataComponents
 import redcrafter07.processed.items.ModItemGroup
 import redcrafter07.processed.items.ModItems
+import redcrafter07.processed.network.RPCFunctions
 import redcrafter07.processed.particles.ModParticles
 import redcrafter07.processed.recipe.ModRecipes
 
@@ -39,6 +40,7 @@ class ProcessedMod(bus: IEventBus, modContainer: ModContainer) {
         ModRecipes.RECIPE_SERIALIZERS.register(bus)
         ModFluids.FLUID_TYPES.register(bus)
         ModFluids.FLUIDS.register(bus)
+        RPCFunctions.register(bus)
 
         LOG.info("Loaded processed :3")
     }

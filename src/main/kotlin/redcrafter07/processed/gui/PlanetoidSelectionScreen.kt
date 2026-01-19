@@ -12,7 +12,8 @@ import org.joml.Vector2i
 import redcrafter07.processed.Translations
 import redcrafter07.processed.gui.widgets.PlanetoidWidget
 import redcrafter07.processed.miner.Planetoid
-import redcrafter07.processed.network.PlanetoidSelectPacket
+import redcrafter07.processed.network.RPCFunctions
+//import redcrafter07.processed.network.PlanetoidSelectPacket
 import redcrafter07.processed.rl
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.min
@@ -68,8 +69,7 @@ class PlanetoidSelectionScreen(
     fun selectPlanetoid(key: ResourceKey<Planetoid>) {
         val planetoid = registry.get(key) ?: return
         if (!planetoid.isTargetable) return
-        val conn = Minecraft.getInstance().connection ?: return
-        conn.send(PlanetoidSelectPacket(key.location(), planetoid.name, hand))
+        RPCFunctions.selectPlanetoid.sendToServer(key.location(), planetoid.name, hand)
         Minecraft.getInstance().setScreen(null)
     }
 

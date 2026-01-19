@@ -2,7 +2,6 @@ package redcrafter07.processed.events
 
 import net.minecraft.client.Minecraft
 import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.client.event.InputEvent.MouseScrollingEvent
@@ -11,9 +10,8 @@ import redcrafter07.processed.Translations
 import redcrafter07.processed.items.WrenchItem
 import redcrafter07.processed.network.WrenchModeChangePacket
 
-@EventBusSubscriber(modid = ProcessedMod.ID)
+@EventBusSubscriber(modid = ProcessedMod.ID, value = [Dist.CLIENT])
 object ItemEvents {
-    @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     fun onMouseScroll(event: MouseScrollingEvent) {
         val connection = Minecraft.getInstance().connection ?: return

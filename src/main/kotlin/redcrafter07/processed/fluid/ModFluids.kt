@@ -1,7 +1,6 @@
 package redcrafter07.processed.fluid
 
 import net.minecraft.Util
-import net.minecraft.client.color.item.ItemColor
 import net.minecraft.core.registries.Registries
 import net.minecraft.world.item.BucketItem
 import net.minecraft.world.item.ItemStack
@@ -63,10 +62,10 @@ object ModFluids {
 
     class TintedBucketItem(
         content: Fluid, val color: Int, properties: Properties = Properties().stacksTo(1).craftRemainder(Items.BUCKET)
-    ) : BucketItem(content, properties), ItemColor {
+    ) : BucketItem(content, properties) {
         // we only want to tint the fluid in the bucket, not the bucket itself. The fluid's element has tint index 1, so only tint that.
         // Return -1 otherwise, which is in 2's complement 32-bit signed integer all bits set, meaning 0xFFFFFFFF, equivalent to #ffffffff, which is white.
-        override fun getColor(stack: ItemStack, tintIndex: Int): Int = if (tintIndex == 1) color else -1
+        fun getColor(stack: ItemStack, tintIndex: Int): Int = if (tintIndex == 1) color else -1
     }
 
     data class RegisteredFluid<Type : FluidType, Still : Fluid, Flowing : Fluid, Block : LiquidBlock, Bucket : BucketItem>(

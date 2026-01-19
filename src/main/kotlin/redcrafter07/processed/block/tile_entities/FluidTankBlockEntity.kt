@@ -1,9 +1,5 @@
 package redcrafter07.processed.block.tile_entities
 
-import com.mojang.blaze3d.vertex.PoseStack
-import net.minecraft.client.renderer.MultiBufferSource
-import net.minecraft.client.renderer.RenderType
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
 import net.minecraft.nbt.CompoundTag
@@ -22,13 +18,10 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import redcrafter07.processed.block.machine_abstractions.BlockSide
 import redcrafter07.processed.block.machine_abstractions.FluidCapableBlockEntity
 import redcrafter07.processed.block.tile_entities.capabilities.SimpleFluidStore
-import redcrafter07.processed.gui.RenderUtils
-import redcrafter07.processed.gui.RenderUtils.getFluidColor
-import redcrafter07.processed.gui.RenderUtils.getFluidTexture
 
 class FluidTankBlockEntity(pos: BlockPos, state: BlockState) :
     BlockEntity(ModTileEntities.FLUID_TANK.get(), pos, state), FluidCapableBlockEntity {
-    private val fluidHandler: SimpleFluidStore = SimpleFluidStore(1, 80000)
+    val fluidHandler: SimpleFluidStore = SimpleFluidStore(1, 80000)
 
     override fun getUpdatePacket(): Packet<ClientGamePacketListener?>? {
         return ClientboundBlockEntityDataPacket.create(this)
@@ -105,64 +98,7 @@ class FluidTankBlockEntity(pos: BlockPos, state: BlockState) :
         return fluidHandler
     }
 
-    private fun getSize(): Float {
-        return (fluidHandler.getFluidInTank(0).amount.toFloat()) / (fluidHandler.getTankCapacity(0).toFloat())
-    }
-
-    object FluidTankEntityRenderer : BlockEntityRenderer<FluidTankBlockEntity> {
-        override fun render(
-            blockEntity: FluidTankBlockEntity,
-            partialTick: Float,
-            poseStack: PoseStack,
-            bufferSource: MultiBufferSource,
-            packedLight: Int,
-            packedOverlay: Int
-        ) {
-            val fluid = blockEntity.fluidHandler.getFluidInTank(0)
-            if (fluid.isEmpty) return
-            val sprite = getFluidTexture(fluid, false)
-            val color = getFluidColor(fluid)
-            val alpha = 1f
-            val red = (color shr 16 and 0xff) / 255.0f
-            val green = (color shr 8 and 0xff) / 255.0f
-            val blue = (color and 0xff) / 255.0f
-            val height = 0.75f * blockEntity.getSize() + 0.125f
-            val buffer = bufferSource.getBuffer(RenderType.translucent())
-
-            poseStack.pushPose()
-            poseStack.translate(0.0, 0.0, 0.0)
-
-            val xzMin = 3f / 16f
-            val xzMax = 13f / 16f
-            val yMin = 2f / 16f
-
-            val uMin = sprite.getU(xzMin)
-            val uMax = sprite.getU(xzMax)
-            val vMin = sprite.getV(xzMin)
-            val vMax = sprite.getV(xzMax)
-
-            RenderUtils.renderCube(
-                buffer,
-                poseStack,
-                xzMax,
-                xzMin,
-                yMin,
-                height,
-                xzMin,
-                xzMax,
-                uMin,
-                uMax,
-                vMin,
-                vMax,
-                red,
-                green,
-                blue,
-                alpha,
-                packedLight,
-                packedOverlay
-            )
-
-            poseStack.popPose()
-        }
-    }
+    val size: Float
+        get() = (fluidHandler.getFluidInTank(0).amount.toFloat()) / (fluidHandler.getTankCapacity(0).toFloat())
 }
+

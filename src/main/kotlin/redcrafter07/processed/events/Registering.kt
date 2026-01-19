@@ -1,7 +1,6 @@
 package redcrafter07.processed.events
 
 import net.minecraft.core.BlockPos
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.EntityBlock
 import net.neoforged.bus.api.SubscribeEvent
@@ -10,53 +9,27 @@ import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent
-import net.neoforged.neoforge.client.event.EntityRenderersEvent
-import net.neoforged.neoforge.client.event.ModelEvent
-import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
 import net.neoforged.neoforge.event.AddPackFindersEvent
 import net.neoforged.neoforge.fluids.capability.wrappers.FluidBucketWrapper
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
 import net.neoforged.neoforge.registries.DataPackRegistryEvent
-import redcrafter07.processed.particles.ModParticles
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.ProcessedPower
-import redcrafter07.processed.block.cable.CableModelLoader
 import redcrafter07.processed.block.machine_abstractions.BlockSide
 import redcrafter07.processed.block.machine_abstractions.EnergyCapableBlockEntity
 import redcrafter07.processed.block.machine_abstractions.FluidCapableBlockEntity
 import redcrafter07.processed.block.machine_abstractions.ItemCapableBlockEntity
-import redcrafter07.processed.block.tile_entities.FluidTankBlockEntity
 import redcrafter07.processed.block.tile_entities.ModTileEntities
 import redcrafter07.processed.dynpack.DynPackSource
-import redcrafter07.processed.entity.ModEntities
-import redcrafter07.processed.entity.RocketEntityModel
-import redcrafter07.processed.entity.RocketEntityRenderer
 import redcrafter07.processed.fluid.ModFluids
-import redcrafter07.processed.gui.DynamicContainerScreen
-import redcrafter07.processed.gui.FluidHatchScreen
-import redcrafter07.processed.gui.GenericMachineMenuScreen
-import redcrafter07.processed.gui.LaunchControllerMenuScreen
-import redcrafter07.processed.gui.ModMenuTypes
 import redcrafter07.processed.integration.theoneprobe.TheOneProbeIntegration
 import redcrafter07.processed.miner.MinerData
 import redcrafter07.processed.miner.Planetoid
-import redcrafter07.processed.network.FluidHandlerClickPacket
-import redcrafter07.processed.network.IOChangePacket
-import redcrafter07.processed.network.LaunchControllerUpdatePacket
-import redcrafter07.processed.network.MenuRPCPacket
-import redcrafter07.processed.network.MultiblockDestroyPacket
-import redcrafter07.processed.network.PlanetoidSelectPacket
-import redcrafter07.processed.network.RPCPacket
-import redcrafter07.processed.network.SetFluidMenuContentsPacket
-import redcrafter07.processed.network.StartLaunchControllerAnimation
-import redcrafter07.processed.network.UpdateFluidMenuContentPacket
-import redcrafter07.processed.network.WrenchModeChangePacket
+import redcrafter07.processed.network.*
 import redcrafter07.processed.particles.FireParticle.FireParticleProvider
+import redcrafter07.processed.particles.ModParticles
 import redcrafter07.processed.particles.SmokeParticle.SmokeParticleProvider
-import redcrafter07.processed.rl
 import java.util.*
 
 @EventBusSubscriber(modid = ProcessedMod.ID, bus = EventBusSubscriber.Bus.MOD)
@@ -160,9 +133,6 @@ object Registering {
         registrar.playToServer(
             FluidHandlerClickPacket.TYPE, FluidHandlerClickPacket.CODEC, FluidHandlerClickPacket::handleServer
         )
-        registrar.playToServer(
-            PlanetoidSelectPacket.TYPE, PlanetoidSelectPacket.CODEC, PlanetoidSelectPacket::handleServer
-        )
 
         registrar.playToClient(
             MultiblockDestroyPacket.TYPE, MultiblockDestroyPacket.CODEC, MultiblockDestroyPacket::handleClient
@@ -189,30 +159,9 @@ object Registering {
         registrar.playBidirectional(RPCPacket.TYPE, RPCPacket.CODEC, RPCPacket::handle)
     }
 
-    @SubscribeEvent
-    fun registerMenuScreens(event: RegisterMenuScreensEvent) {
-        event.register(ModMenuTypes.POWERED_FURNACE_MENU.get(), ::GenericMachineMenuScreen)
-        event.register(ModMenuTypes.LAUNCH_CONTROLLER_MENU.get(), ::LaunchControllerMenuScreen)
-        event.register(ModMenuTypes.ITEM_HATCH_MENU.get(), ::DynamicContainerScreen)
-        event.register(ModMenuTypes.FLUID_HATCH_MENU.get(), ::FluidHatchScreen)
-    }
-
-    @SubscribeEvent
-    fun registerRenderers(event: EntityRenderersEvent.RegisterRenderers) {
-        event.registerBlockEntityRenderer(ModTileEntities.FLUID_TANK.get()) { FluidTankBlockEntity.FluidTankEntityRenderer }
-        event.registerEntityRenderer(ModEntities.ROCKET.get(), ::RocketEntityRenderer)
-    }
-
-    @SubscribeEvent
-    fun registerLayerDefinitions(e: EntityRenderersEvent.RegisterLayerDefinitions) {
-        e.registerLayerDefinition(RocketEntityModel.LAYER_LOCATION, RocketEntityModel::createBodyLayer)
-    }
 
     @SubscribeEvent
     fun registerPackSources(event: AddPackFindersEvent) = event.addRepositorySource(DynPackSource)
-
-    @SubscribeEvent
-    fun registerModelLoaders(e: ModelEvent.RegisterGeometryLoaders) = e.register(rl("cable"), CableModelLoader)
 
     @SubscribeEvent
     fun loadComplete(e: FMLLoadCompleteEvent) {
@@ -231,20 +180,6 @@ object Registering {
             MinerData.Fuel.CODEC,
             MinerData.Fuel.CODEC,
         )
-    }
-
-    @SubscribeEvent
-    fun registerClientExtensions(e: RegisterClientExtensionsEvent) {
-        // Registers client extensions for fluids. This gives it the flowing texture, still texture, tint color, and overlay texture.
-        // This is required for rendering the fluids.
-        class FluidExtension(val tint: Int) : IClientFluidTypeExtensions {
-            override fun getTintColor() = tint
-            override fun getFlowingTexture() = ResourceLocation.withDefaultNamespace("block/water_flow")
-            override fun getStillTexture() = ResourceLocation.withDefaultNamespace("block/water_still")
-            override fun getOverlayTexture() = ResourceLocation.withDefaultNamespace("block/water_overlay")
-        }
-
-        for (fluid in ModFluids.REGISTERED_FLUIDS) e.registerFluidType(FluidExtension(fluid.color), fluid.type.get())
     }
 
     @SubscribeEvent
