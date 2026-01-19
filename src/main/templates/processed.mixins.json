@@ -6,8 +6,5 @@
     "client": [
         "PlayerSkinMixin",
         "ModelManagerMixin"
-    ],
-    "mixins": [
-        "ServerPlayerMixin"
     ]
 }

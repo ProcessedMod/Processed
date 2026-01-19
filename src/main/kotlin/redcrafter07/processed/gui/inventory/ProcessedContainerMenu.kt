@@ -5,10 +5,9 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.MenuType
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
-import redcrafter07.processed.gui.AbstractFluidContainerMenu
 
 abstract class ProcessedContainerMenu(menuType: MenuType<*>, containerId: Int, playerInventory: Inventory) :
-    AbstractFluidContainerMenu(menuType, containerId, playerInventory.player) {
+    AbstractProcessedContainerMenu(menuType, containerId, playerInventory.player) {
 
     init {
         addPlayerInventory(playerInventory)

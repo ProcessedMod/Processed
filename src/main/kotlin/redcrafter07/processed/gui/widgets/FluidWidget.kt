@@ -14,7 +14,7 @@ import net.neoforged.neoforge.fluids.FluidStack
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction
 import redcrafter07.processed.StreamCodecUtil
 import redcrafter07.processed.Translations
-import redcrafter07.processed.gui.AbstractFluidContainerMenu
+import redcrafter07.processed.gui.inventory.AbstractProcessedContainerMenu
 import redcrafter07.processed.gui.RenderUtils
 import redcrafter07.processed.gui.RenderUtils.getFluidColor
 import redcrafter07.processed.gui.RenderUtils.getFluidTexture
@@ -25,7 +25,7 @@ class FluidWidget(
     width: Int,
     val big: Boolean,
     val slot: Int,
-    val menu: AbstractFluidContainerMenu,
+    val menu: AbstractProcessedContainerMenu,
 ) : AbstractWidget(x, y, width, if (big) 60 else 30, Component.empty()) {
     override fun renderWidget(
         guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float
