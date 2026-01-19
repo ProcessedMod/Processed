@@ -41,7 +41,7 @@ class MethodMeta(
 
             val codecs = (start..<method.parameterCount).map {
                 CodecRegistry.get(params[it])
-                    ?: throw RuntimeException("Could not determine a codec for parameter ${method.parameters[it].name} of type ${method.parameters[it].parameterizedType}")
+                    ?: throw RuntimeException("Could not determine a codec for parameter ${method.parameters[it].name} of type ${params[it]}")
             }.toTypedArray()
 
             return MethodMeta(codecs, firstArgSender, method)

@@ -16,7 +16,7 @@ import net.neoforged.neoforge.items.IItemHandler
 import redcrafter07.processed.block.machine_abstractions.BlockSide
 import redcrafter07.processed.block.machine_abstractions.ProcessedMachine
 import redcrafter07.processed.getFacingDirection
-import redcrafter07.processed.network.MultiblockDestroyPacket
+import redcrafter07.processed.network.RPCFunctions
 
 abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, blockState: BlockState) :
     ProcessedMachine(type, pos, blockState) {
@@ -109,10 +109,11 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
             val x = blockPos.x
             val y = blockPos.y
             val z = blockPos.z
-            val relPos = blocks.stream().map { pos -> BlockPos.asLong(pos.x - x, pos.y - y, pos.z - z) }.toList()
+            val relPos = blocks.map { pos -> BlockPos.asLong(pos.x - x, pos.y - y, pos.z - z) }.toLongArray()
 
-            val packet = MultiblockDestroyPacket(relPos, blockPos)
-            for (player in level.players()) player.connection.send(packet)
+            for (player in level.players()) RPCFunctions.notifyMultiblockDestroyed(
+                player, relPos, blockPos
+            )
         }
         for (pos in blocks) {
             MultiBlockBlockCache.removeBlock(level, pos)
@@ -218,8 +219,10 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
                     )
                 )
 
-                val packet = MultiblockDestroyPacket(blocks, blockPos)
-                for (player in serverLevel.players()) player.connection.send(packet)
+                val blocksArray = blocks.toLongArray()
+                for (player in serverLevel.players()) RPCFunctions.notifyMultiblockDestroyed(
+                    player, blocksArray, blockPos
+                )
             }
             return
         }
@@ -254,8 +257,10 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
             }
 
             if (blocks.isNotEmpty()) {
-                val packet = MultiblockDestroyPacket(blocks, blockPos)
-                for (player in serverLevel.players()) player.connection.send(packet)
+                val blocksArray = blocks.toLongArray()
+                for (player in serverLevel.players()) RPCFunctions.notifyMultiblockDestroyed(
+                    player, blocksArray, blockPos
+                )
             }
         }
         sync()

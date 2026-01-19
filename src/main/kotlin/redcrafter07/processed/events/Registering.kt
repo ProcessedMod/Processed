@@ -127,33 +127,16 @@ object Registering {
         val registrar = event.registrar(ProcessedMod.ID)
 
         registrar.playToServer(
-            WrenchModeChangePacket.TYPE, WrenchModeChangePacket.CODEC, WrenchModeChangePacket::handleServer
-        )
-        registrar.playToServer(IOChangePacket.TYPE, IOChangePacket.CODEC, IOChangePacket::handleServer)
-        registrar.playToServer(
             FluidHandlerClickPacket.TYPE, FluidHandlerClickPacket.CODEC, FluidHandlerClickPacket::handleServer
         )
 
         registrar.playToClient(
-            MultiblockDestroyPacket.TYPE, MultiblockDestroyPacket.CODEC, MultiblockDestroyPacket::handleClient
-        )
-        registrar.playToClient(
             SetFluidMenuContentsPacket.TYPE, SetFluidMenuContentsPacket.CODEC, SetFluidMenuContentsPacket::handleClient
-        )
-        registrar.playToClient(
-            LaunchControllerUpdatePacket.TYPE,
-            LaunchControllerUpdatePacket.CODEC,
-            LaunchControllerUpdatePacket::handleClient
         )
         registrar.playToClient(
             UpdateFluidMenuContentPacket.TYPE,
             UpdateFluidMenuContentPacket.CODEC,
             UpdateFluidMenuContentPacket::handleClient
-        )
-        registrar.playToClient(
-            StartLaunchControllerAnimation.TYPE,
-            StartLaunchControllerAnimation.CODEC,
-            StartLaunchControllerAnimation::handleClient
         )
         registrar.playBidirectional(MenuRPCPacket.TYPE, MenuRPCPacket.CODEC, MenuRPCPacket::handle)
         registrar.playBidirectional(RPCPacket.TYPE, RPCPacket.CODEC, RPCPacket::handle)

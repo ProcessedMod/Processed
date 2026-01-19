@@ -7,7 +7,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.block.tile_entities.LaunchControllerBlockEntity
 import redcrafter07.processed.miner.LevelMinerData
-import redcrafter07.processed.network.StartLaunchControllerAnimation
+import redcrafter07.processed.network.RPCFunctions
 import java.time.Instant
 
 @EventBusSubscriber(modid = ProcessedMod.ID, bus = EventBusSubscriber.Bus.GAME)
@@ -57,8 +57,10 @@ object MinerEvents {
         for (player in level.players()) {
             val x = player.position().x - x
             val y = player.position().y - y
-            if (x * x + y * y <= 25600) player.connection.send(
-                StartLaunchControllerAnimation(data.controllerPos, false)
+            if (x * x + y * y <= 25600) RPCFunctions.runLaunchControllerAnimation.sendToClient(
+                player,
+                data.controllerPos,
+                false
             )
         }
         controller.updateClient()

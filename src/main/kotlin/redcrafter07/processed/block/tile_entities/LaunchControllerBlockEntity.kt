@@ -42,8 +42,7 @@ import redcrafter07.processed.miner.Planetoid
 import redcrafter07.processed.multiblock.MultiblockBlockEntity
 import redcrafter07.processed.multiblock.Part
 import redcrafter07.processed.multiblock.SquareMultiblockValidator
-import redcrafter07.processed.network.LaunchControllerUpdatePacket
-import redcrafter07.processed.network.StartLaunchControllerAnimation
+import redcrafter07.processed.network.RPCFunctions
 import redcrafter07.processed.particles.ModParticles
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.deepCopy
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.toVector3d
@@ -131,8 +130,7 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
         val planetoid =
             if (dst == null) null else lvl.registryAccess().registry(Planetoid.REGISTRY_KEY).get().getKey(dst)
         val data = if (minerData == null) null else LevelMinerData.get(lvl, minerData!!)
-        val packet = LaunchControllerUpdatePacket(blockPos, planetoid, lastResult, data)
-        for (player in lvl.players()) player.connection.send(packet)
+        for (player in lvl.players()) RPCFunctions.launchControllerUpdate(player, blockPos, planetoid, lastResult, data)
     }
 
     override fun validator() = validator
@@ -203,9 +201,7 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
         for (player in lvl.players()) {
             val x = player.position().x - x
             val y = player.position().y - y
-            if (x * x + y * y <= 25600) player.connection.send(
-                StartLaunchControllerAnimation(blockPos, true)
-            )
+            if (x * x + y * y <= 25600) RPCFunctions.runLaunchControllerAnimation.sendToClient(player, blockPos, true)
         }
     }
 

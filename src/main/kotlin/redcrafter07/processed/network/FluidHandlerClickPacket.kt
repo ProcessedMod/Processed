@@ -19,6 +19,7 @@ import redcrafter07.processed.block.tile_entities.FluidHatch
 import redcrafter07.processed.gui.widgets.FluidWidget.InsertionKind
 import redcrafter07.processed.rl
 
+// TODO: Turn this and SetFluidMenuContentsPacket into RPC Methods on the AbstractFluidContainerMenu and add the ability for super classes to also have @RPCMethods.
 class FluidHandlerClickPacket(val pos: BlockPos, val insertionKind: InsertionKind) : CustomPacketPayload {
     companion object {
         val TYPE: CustomPacketPayload.Type<FluidHandlerClickPacket> =

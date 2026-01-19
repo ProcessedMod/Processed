@@ -8,13 +8,12 @@ import net.neoforged.neoforge.client.event.InputEvent.MouseScrollingEvent
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.Translations
 import redcrafter07.processed.items.WrenchItem
-import redcrafter07.processed.network.WrenchModeChangePacket
+import redcrafter07.processed.network.RPCFunctions
 
 @EventBusSubscriber(modid = ProcessedMod.ID, value = [Dist.CLIENT])
 object ItemEvents {
     @SubscribeEvent
     fun onMouseScroll(event: MouseScrollingEvent) {
-        val connection = Minecraft.getInstance().connection ?: return
         val player = Minecraft.getInstance().player
 
         if (player != null && player.isShiftKeyDown) {
@@ -29,7 +28,7 @@ object ItemEvents {
                 player.getInventory().setChanged()
                 event.setCanceled(true)
 
-                connection.send(WrenchModeChangePacket(newMode))
+                RPCFunctions.updateWrenchMode.sendToServer(newMode)
                 player.displayClientMessage(Translations.wrenchModeTooltip(newMode), true)
             }
         }

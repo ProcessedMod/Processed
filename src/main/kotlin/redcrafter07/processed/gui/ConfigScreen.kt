@@ -15,7 +15,7 @@ import redcrafter07.processed.Translations
 import redcrafter07.processed.block.machine_abstractions.BlockSide
 import redcrafter07.processed.block.machine_abstractions.ProcessedMachine
 import redcrafter07.processed.gui.widgets.IoToggleButton
-import redcrafter07.processed.network.IOChangePacket
+import redcrafter07.processed.network.RPCFunctions
 import java.util.*
 
 class ConfigScreen(val machine: ProcessedMachine, val pos: BlockPos) : Screen(machine.displayName) {
@@ -46,7 +46,7 @@ class ConfigScreen(val machine: ProcessedMachine, val pos: BlockPos) : Screen(ma
                 ) { _, newState ->
                     machine.setSide(isItem, side, newState)
                     machine.invalidateCapabilities()
-                    Minecraft.getInstance().connection?.send(IOChangePacket(this.pos, newState, side, isItem))
+                    RPCFunctions.changeProcessedBlockIO.sendToServer(this.pos, newState, side, isItem)
                 })
         }
 

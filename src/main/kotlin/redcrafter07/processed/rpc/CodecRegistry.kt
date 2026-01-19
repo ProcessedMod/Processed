@@ -1,6 +1,7 @@
 package redcrafter07.processed.rpc
 
 import io.netty.buffer.ByteBuf
+import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import net.minecraft.network.RegistryFriendlyByteBuf
@@ -8,7 +9,12 @@ import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.InteractionHand
+import redcrafter07.processed.block.machine_abstractions.BlockSide
+import redcrafter07.processed.block.machine_abstractions.IoState
 import redcrafter07.processed.gui.widgets.FluidWidget
+import redcrafter07.processed.items.WrenchMode
+import redcrafter07.processed.miner.LevelMinerData
+import redcrafter07.processed.miner.MinerCalc
 
 object CodecRegistry {
     private val codecs: MutableMap<Class<*>, StreamCodec<RegistryFriendlyByteBuf, *>> = HashMap()
@@ -61,6 +67,17 @@ object CodecRegistry {
                 { it == InteractionHand.MAIN_HAND })
         )
         register(FluidWidget.InsertionKind::class.java, FluidWidget.InsertionKind.STREAM_CODEC)
+        register(BlockPos::class.java, BlockPos.STREAM_CODEC)
+        register(IoState::class.java, IoState.STREAM_CODEC)
+        register(BlockSide::class.java, BlockSide.STREAM_CODEC)
+        register(MinerCalc.Result::class.java, MinerCalc.Result.STREAM_CODEC)
+        register(LevelMinerData.LaunchedMinerData::class.java, LevelMinerData.LaunchedMinerData.STREAM_CODEC)
+        register(WrenchMode::class.java, WrenchMode.STREAM_CODEC)
+        register(
+            LongArray::class.java, ByteBufCodecs.VAR_LONG.apply(ByteBufCodecs.list()).map<LongArray>(
+                MutableList<Long>::toLongArray, LongArray::toList
+            )
+        )
     }
 
     private fun <T> register(clazz: Class<T>, codec: StreamCodec<ByteBuf, T>) {
@@ -73,11 +90,21 @@ object CodecRegistry {
         codecs[clazz] = codec
     }
 
+    private fun find(clazz: Class<*>?): StreamCodec<RegistryFriendlyByteBuf, *>? {
+        var clazz = clazz
+        while (clazz != null) {
+            val c = codecs[clazz]
+            if (c != null) return c
+            clazz = clazz.superclass
+        }
+        return null
+    }
+
     @Suppress("UNCHECKED_CAST")
     fun <T> get(clazz: Class<T>): StreamCodec<RegistryFriendlyByteBuf, T>? =
-        codecs[clazz] as StreamCodec<RegistryFriendlyByteBuf, T>?
+        find(clazz) as StreamCodec<RegistryFriendlyByteBuf, T>?
 
     @Suppress("UNCHECKED_CAST")
     fun getAny(clazz: Class<*>): StreamCodec<RegistryFriendlyByteBuf, Any>? =
-        codecs[clazz] as StreamCodec<RegistryFriendlyByteBuf, Any>?
+        find(clazz) as StreamCodec<RegistryFriendlyByteBuf, Any>?
 }

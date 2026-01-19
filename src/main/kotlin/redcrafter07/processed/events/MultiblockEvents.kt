@@ -8,7 +8,7 @@ import net.neoforged.neoforge.event.level.BlockEvent
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.multiblock.MultiBlockBlockCache
 import redcrafter07.processed.multiblock.MultiblockBlockEntity
-import redcrafter07.processed.network.MultiblockDestroyPacket
+import redcrafter07.processed.network.RPCFunctions
 
 @EventBusSubscriber(modid = ProcessedMod.ID)
 object MultiblockEvents {
@@ -29,8 +29,10 @@ object MultiblockEvents {
             if (!MultiBlockBlockCache.removeBlock(level, pos)) return
 
             if (level is ServerLevel && !level.isClientSide()) {
-                val packet = MultiblockDestroyPacket(listOf(pos.subtract(machineBlock).asLong()), machineBlock)
-                for (player in level.players()) player.connection.send(packet)
+                val positions = longArrayOf(pos.subtract(machineBlock).asLong())
+                for (player in level.players()) RPCFunctions.notifyMultiblockDestroyed(
+                    player, positions, machineBlock
+                )
             }
 
         }
