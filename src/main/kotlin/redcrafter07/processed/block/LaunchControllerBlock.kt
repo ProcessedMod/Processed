@@ -20,7 +20,6 @@ class LaunchControllerBlock : MultiblockBlock(Properties.of().pushReaction(PushR
         if (level.isClientSide) return InteractionResult.SUCCESS
         val be = level.getBlockEntity(pos)
         if (be is LaunchControllerBlockEntity) {
-            be.updateClient()
             player.openMenu(be) { data -> data.writeBlockPos(pos) }
             return InteractionResult.CONSUME
         }

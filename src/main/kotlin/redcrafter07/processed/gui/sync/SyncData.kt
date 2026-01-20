@@ -11,6 +11,10 @@ import java.util.HashSet
 import java.util.stream.Stream
 
 class SyncData(val menu: Any) {
+    companion object {
+        val fieldMapCache: MutableMap<Class<*>, Map<String, SyncFieldMeta<Any, Any>>> = HashMap()
+    }
+
     private val dirty: MutableSet<String> = HashSet()
     private val previousValues: MutableMap<String, Any> = HashMap()
     private val fields: Map<String, SyncFieldMeta<Any, Any>>
@@ -18,16 +22,18 @@ class SyncData(val menu: Any) {
 
     init {
         val clazz = menu.javaClass
-        val potentialFields = KotlinUtils.getKtLikeFields(clazz)
-        val fields = HashMap<String, SyncFieldMeta<Any, Any>>()
-        for (fieldName in potentialFields) {
-            val field = KotlinUtils.getKtFieldAny(clazz, fieldName) ?: continue
-            if (field !is KotlinUtils.WritableKtField) continue
-            val synchronizedAnnotation = field.annotations.find { it is MenuSynced } ?: continue
-            if (synchronizedAnnotation !is MenuSynced) continue
-            fields[fieldName] = SyncFieldMeta.of(synchronizedAnnotation, field, fieldName, field.type, clazz, menu)
+        fields = fieldMapCache.computeIfAbsent(clazz) {
+            val potentialFields = KotlinUtils.getKtLikeFields(clazz)
+            val fields = HashMap<String, SyncFieldMeta<Any, Any>>()
+            for (fieldName in potentialFields) {
+                val field = KotlinUtils.getKtFieldAny(clazz, fieldName) ?: continue
+                if (field !is KotlinUtils.WritableKtField) continue
+                val synchronizedAnnotation = field.annotations.find { it is MenuSynced } ?: continue
+                if (synchronizedAnnotation !is MenuSynced) continue
+                fields[fieldName] = SyncFieldMeta.of(synchronizedAnnotation, field, fieldName, field.type, clazz, menu)
+            }
+            fields
         }
-        this.fields = fields
     }
 
     fun markDirty(vararg name: String) {

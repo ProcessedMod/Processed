@@ -63,7 +63,6 @@ object MinerEvents {
                 false
             )
         }
-        controller.updateClient()
 
         return true
     }

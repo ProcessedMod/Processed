@@ -83,7 +83,7 @@ object CodecRegistry {
                 MutableList<Long>::toLongArray, LongArray::toList
             )
         )
-        registerRegistryFriendly(FluidStack::class.java, FluidStack.STREAM_CODEC)
+        registerRegistryFriendly(FluidStack::class.java, FluidStack.OPTIONAL_STREAM_CODEC)
         registerRegistryFriendly(FluidStackList::class.java, FluidStackList.STREAM_CODEC)
         register(SyncFieldList::class.java, SyncFieldList.STREAM_CODEC)
         registerRegistryFriendly(Component::class.java, ComponentSerialization.STREAM_CODEC)

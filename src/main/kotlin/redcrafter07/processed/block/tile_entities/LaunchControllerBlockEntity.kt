@@ -95,10 +95,6 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
     var lastDestination: Pair<Planetoid, Int>? = null
     var lastResult: MinerCalc.Result? = null
 
-    var clientLastDest: Planetoid? = null
-    var clientLastResult: MinerCalc.Result? = null
-    var clientLastLaunchedMinerData: LevelMinerData.LaunchedMinerData? = null
-
     val data = object : ContainerData {
         override fun get(index: Int): Int = when (index) {
             0 -> lastLoadedMiner?.first?.get(ModDataComponents.ASSEMBLED_MINER)?.storedFuel?.amount ?: -1
@@ -121,16 +117,6 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
 
         override fun set(index: Int, value: Int) = Unit
         override fun getCount(): Int = 4
-    }
-
-    fun updateClient() {
-        val lvl = level ?: return
-        if (lvl !is ServerLevel || lvl.isClientSide) return
-        val dst = lastDestination?.first
-        val planetoid =
-            if (dst == null) null else lvl.registryAccess().registry(Planetoid.REGISTRY_KEY).get().getKey(dst)
-        val data = if (minerData == null) null else LevelMinerData.get(lvl, minerData!!)
-        for (player in lvl.players()) RPCFunctions.launchControllerUpdate(player, blockPos, planetoid, lastResult, data)
     }
 
     override fun validator() = validator
@@ -193,7 +179,6 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
         )
         this.minerData = LevelMinerData.put(lvl, minerData)
         setChanged()
-        updateClient()
 
         val x = blockPos.x
         val y = blockPos.y
@@ -249,12 +234,10 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
         val lvl = level
         val dst = destination()
         val miner = getRocket()
-        val upd = lastLoadedMiner != null || lastDestination != null || lastResult != null
         if (miner == null || lvl == null || dst == null) {
             lastLoadedMiner = null
             lastDestination = null
             lastResult = null
-            if (upd) updateClient()
             return
         }
         val planetoidRegistry = lvl.registryAccess().registry(Planetoid.REGISTRY_KEY).getOrNull() ?: return
@@ -263,7 +246,6 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
             lastLoadedMiner = null
             lastDestination = null
             lastResult = null
-            if (upd) updateClient()
             return
         }
         if (lastDestination == null || lastResult == null || lastLoadedMiner == null || lastLoadedMiner?.second != miner.second || !ItemStack.isSameItemSameComponents(
@@ -274,7 +256,6 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
             lastLoadedMiner = if (lastResult != null) miner else null
         }
         if (lastLoadedMiner != null && lastResult != null) lastDestination = Pair(planetoid, dst.second)
-        updateClient()
     }
 
     fun getRocket(): Pair<ItemStack, Int>? {

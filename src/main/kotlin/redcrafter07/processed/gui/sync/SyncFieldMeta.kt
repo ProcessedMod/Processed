@@ -20,6 +20,31 @@ class SyncFieldMeta<T, Parent>(
     private val condition: Method?,
 ) {
     companion object {
+        fun getMethod(clazz: Class<*>, name: String, vararg compatibleTypes: Class<*>): Method {
+            for (method in clazz.declaredMethods) {
+                if (method.name != name) continue
+                if (method.parameterCount != compatibleTypes.size) continue
+                var err = false
+                for (i in 0..<method.parameterCount) {
+                    if (!method.parameters[i].type.isAssignableFrom(compatibleTypes[i])) {
+                        err = true; break
+                    }
+                }
+                if (!err) return method
+            }
+            throw NoSuchMethodException("${clazz.name}.${name}(${compatibleTypes.joinToString(separator = ", ")})")
+        }
+
+        /** Runs a protected or private method */
+        fun invokePrivate(method: Method, obj: Any, vararg args: Any): Any {
+            method.isAccessible = true
+            try {
+                return method.invoke(obj, *args)
+            } finally {
+                method.isAccessible = false
+            }
+        }
+
         fun <Parent, T> of(
             synchronized: MenuSynced,
             field: KotlinUtils.WritableKtField<Parent, T>,
@@ -29,20 +54,21 @@ class SyncFieldMeta<T, Parent>(
             parentVal: Parent,
         ): SyncFieldMeta<T, Parent> {
             val syncType = synchronized.type
-            val onSynced = notEmpty(synchronized.onSynchronised) { parent.getMethod(it, clazz) }
-            val dirtyChecker = notEmpty(synchronized.dirtyChecker) { assertBoolReturn(parent.getMethod(it, clazz)) }
+            val onSynced = notEmpty(synchronized.onSynchronised) { getMethod(parent, it, clazz) }
+            val dirtyChecker = notEmpty(synchronized.dirtyChecker) { getMethod(parent, it, clazz) }
 
             @Suppress("UNCHECKED_CAST") val codec: StreamCodec<RegistryFriendlyByteBuf, T> =
-                (if (synchronized.codecGetter.isNotEmpty()) {
-                    val codec = parent.getMethod(synchronized.codecGetter).invoke(parent)
-                    codec
-                } else CodecRegistry.get(clazz) ?: getCodec(
+                (if (synchronized.codecGetter.isNotEmpty()) invokePrivate(
+                    parent.getDeclaredMethod(synchronized.codecGetter), parent
+                )
+                else CodecRegistry.get(clazz) ?: getCodec(
                     fieldName, parent, parentVal
-                )) as StreamCodec<RegistryFriendlyByteBuf, T>
+                )
+                ?: throw Exception("Could not get a codec for field ${parent.name}.${fieldName} of type $clazz")) as StreamCodec<RegistryFriendlyByteBuf, T>
 
             val copyMethod = notEmpty(synchronized.copyMethod) { parent.getMethod(it, clazz) }
             if (copyMethod != null) assert(copyMethod.returnType == clazz)
-            val condition = notEmpty(synchronized.condition) { assertBoolReturn(parent.getMethod(it, clazz)) }
+            val condition = notEmpty(synchronized.condition) { getMethod(parent, it, clazz) }
 
             return SyncFieldMeta(field, syncType, codec, onSynced, dirtyChecker, copyMethod, condition)
         }
@@ -63,17 +89,13 @@ class SyncFieldMeta<T, Parent>(
             )
             for (fn in fns) {
                 try {
-                    val method = parent.getMethod(fn)
-                    @Suppress("UNCHECKED_CAST") return method.invoke(parentVal) as StreamCodec<RegistryFriendlyByteBuf, Any>
+                    val method = parent.getDeclaredMethod(fn)
+                    val v = invokePrivate(method, parentVal as Any)
+                    @Suppress("UNCHECKED_CAST") return v as StreamCodec<RegistryFriendlyByteBuf, Any>
                 } catch (_: NoSuchMethodException) {
                 }
             }
             return null
-        }
-
-        private fun assertBoolReturn(method: Method): Method {
-            assert(method.returnType == Boolean::class.java || method.returnType == java.lang.Boolean::class.java)
-            return method
         }
 
         private fun <R> notEmpty(v: String, f: (String) -> R) = if (v.isEmpty()) null else f(v)
@@ -81,7 +103,7 @@ class SyncFieldMeta<T, Parent>(
 
 
     fun copy(v: T, registryAccess: RegistryAccess, obj: Parent): T {
-        @Suppress("UNCHECKED_CAST") if (copyMethod != null) return copyMethod.invoke(obj, v) as T
+        @Suppress("UNCHECKED_CAST") if (copyMethod != null) return invokePrivate(copyMethod, obj as Any, v as Any) as T
 
         val buf = RegistryFriendlyByteBuf(Unpooled.buffer(), registryAccess, ConnectionType.OTHER)
         if (v == null) return v
@@ -91,7 +113,7 @@ class SyncFieldMeta<T, Parent>(
 
     val needsSavedData = dirtyChecker == null
     private fun isDirtyInner(v: T, obj: Parent, saved: T?): Boolean {
-        if (dirtyChecker != null) return dirtyChecker.invoke(obj, v) as Boolean
+        if (dirtyChecker != null) return invokePrivate(dirtyChecker, obj as Any, v as Any) as Boolean
 
         if (saved == null) return v != null
         else if (v == null) return true
@@ -99,12 +121,11 @@ class SyncFieldMeta<T, Parent>(
     }
 
     fun isDirty(v: T, obj: Parent, saved: T?): Boolean {
-        if (!isDirtyInner(v, obj, saved)) return false
-        if (condition == null) return true
-        return condition.invoke(obj, v) as Boolean
+        if (condition != null && !(invokePrivate(condition, obj as Any, v as Any) as Boolean)) return false
+        return isDirtyInner(v, obj, saved)
     }
 
     fun notifySync(old: T, obj: Parent) {
-        onSynced?.invoke(obj, old)
+        onSynced?.let { invokePrivate(it, obj as Any, old as Any) }
     }
 }

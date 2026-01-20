@@ -8,7 +8,9 @@ import net.minecraft.network.chat.Component.literal as l
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.level.Level
 import redcrafter07.processed.Translations
+import redcrafter07.processed.miner.Planetoid
 import java.time.Instant
+import kotlin.jvm.optionals.getOrNull
 
 class LaunchControllerMenuScreen(
     menu: LaunchControllerMenu, playerInventory: Inventory, title: Component
@@ -27,9 +29,10 @@ class LaunchControllerMenuScreen(
         fun s2(c: Component, line: Int = 0) =
             graphics.drawString(font, c, x, y + line * font.lineHeight, RenderUtils.CRT_FG_MUTED)
 
-        val dat = menu.be.clientLastLaunchedMinerData
-        val res = menu.be.clientLastResult
-        val dest = menu.be.clientLastDest
+        val dat = menu.lastLaunched.getOrNull()
+        val res = menu.lastResult.getOrNull()
+        val destKey = menu.lastDest.getOrNull()
+        val dest = menu.level.registryAccess().registry(Planetoid.REGISTRY_KEY).getOrNull()?.get(destKey)
         val now = Instant.now().epochSecond
         if (dat != null && now <= dat.arrivalEpoch) {
             if (now <= dat.planetArrivalEpoch) s(

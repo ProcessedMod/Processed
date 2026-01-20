@@ -8,6 +8,6 @@ import net.neoforged.neoforge.fluids.FluidStack
 class FluidStackList(val inner: List<FluidStack>) {
     companion object {
         val STREAM_CODEC: StreamCodec<RegistryFriendlyByteBuf, FluidStackList> =
-            FluidStack.STREAM_CODEC.apply(ByteBufCodecs.list()).map(::FluidStackList, FluidStackList::inner)
+            FluidStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list()).map(::FluidStackList, FluidStackList::inner)
     }
 }
