@@ -130,8 +130,8 @@ abstract class ProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, blockSt
     fun handleTick(level: Level, pos: BlockPos, state: BlockState) {
         tickNoProcessing(level, pos, state)
         if (!isRunning) return
-        if (level is ClientLevel && level.isClientSide) clientTick(level, pos, state)
-        else if (level is ServerLevel && !level.isClientSide) serverTick(level, pos, state)
+        if (level.isClientSide && level is ClientLevel) clientTick(level, pos, state)
+        else if (!level.isClientSide && level is ServerLevel) serverTick(level, pos, state)
         commonTick(level, pos, state)
     }
 

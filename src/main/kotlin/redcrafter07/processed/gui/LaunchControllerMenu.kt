@@ -20,7 +20,7 @@ import redcrafter07.processed.gui.sync.MenuSynced
 import redcrafter07.processed.miner.LevelMinerData
 import redcrafter07.processed.miner.MinerCalc
 import redcrafter07.processed.miner.Planetoid
-import java.util.Optional
+import java.util.*
 
 class LaunchControllerMenu(
     containerId: Int, playerInventory: Inventory, blockEntity: BlockEntity?, val data: ContainerData
@@ -69,13 +69,10 @@ class LaunchControllerMenu(
         }
     }
 
-    init {
-        checkContainerSize(playerInventory, 2)
-    }
-
     val level: Level = playerInventory.player.level()
 
     init {
+        checkContainerSize(playerInventory, 2)
         addDataSlots(data)
     }
 
