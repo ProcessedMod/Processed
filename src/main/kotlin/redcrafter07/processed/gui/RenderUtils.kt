@@ -1,11 +1,17 @@
 package redcrafter07.processed.gui
 
+import com.mojang.blaze3d.systems.RenderSystem
+import com.mojang.blaze3d.vertex.BufferUploader
+import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.PoseStack
+import com.mojang.blaze3d.vertex.Tesselator
 import com.mojang.blaze3d.vertex.VertexConsumer
+import com.mojang.blaze3d.vertex.VertexFormat
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.network.chat.FormattedText
 import net.minecraft.util.FastColor
@@ -49,7 +55,93 @@ object RenderUtils {
             graphics.drawString(font, seq, x, y, 0x00ff66, true)
             y += 9
         }
+    }
 
+    fun drawSpriteDuplicated(
+        graphics: GuiGraphics, sprite: TextureAtlasSprite, x: Int, y: Int, width: Int, height: Int, color: Int = -1
+    ) {
+        val spriteWidth = sprite.contents().width()
+        val spriteHeight = sprite.contents().height()
+        val fullX = width / spriteWidth
+        val fullY = height / spriteHeight
+        if (fullX > 0 && fullY > 0) {
+            for (xOff in 0..<fullX) for (yOff in 0..<fullY) drawSprite(
+                graphics, sprite, x + xOff * spriteWidth, y + yOff * spriteHeight, spriteWidth, spriteHeight, color
+            )
+        }
+
+        val remWidth = width % spriteWidth
+        val remHeight = height % spriteHeight
+        if (remWidth == 0 && remHeight == 0) return
+        val partHoriz = remWidth.toFloat() / spriteWidth
+        val partVert = remHeight.toFloat() / spriteHeight
+        val endX = x + fullX * spriteWidth
+        val endY = y + fullY * spriteHeight
+        for (xOff in 0..<fullX) drawSpritePartially(
+            graphics, sprite, x + xOff * spriteWidth, endY, spriteWidth, remHeight, 1f, partVert, color
+        )
+        for (yOff in 0..<fullY) drawSpritePartially(
+            graphics, sprite, endX, y + yOff * spriteHeight, remWidth, spriteHeight, partHoriz, 1f, color
+        )
+        drawSpritePartially(graphics, sprite, endX, endY, remWidth, remHeight, partHoriz, partVert, color)
+    }
+
+    private fun drawSpritePartially(
+        graphics: GuiGraphics,
+        sprite: TextureAtlasSprite,
+        x: Int,
+        y: Int,
+        width: Int,
+        height: Int,
+        partHoriz: Float,
+        partVert: Float,
+        color: Int
+    ) {
+        RenderSystem.setShaderTexture(0, sprite.atlasLocation())
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader)
+        RenderSystem.enableBlend()
+        val pose = graphics.pose().last().pose()
+        val bufferBuilder =
+            Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR)
+        val x2 = x + width
+        val y2 = y + height
+
+        val u0 = sprite.u0
+        val v0 = sprite.v0
+        val u1 = sprite.getU(partHoriz)
+        val v1 = sprite.getV(partVert)
+
+        bufferBuilder.addVertex(pose, x.toFloat(), y.toFloat(), 0f).setUv(u0, v0).setColor(color)
+        bufferBuilder.addVertex(pose, x.toFloat(), y2.toFloat(), 0f).setUv(u0, v1).setColor(color)
+        bufferBuilder.addVertex(pose, x2.toFloat(), y2.toFloat(), 0f).setUv(u1, v1).setColor(color)
+        bufferBuilder.addVertex(pose, x2.toFloat(), y.toFloat(), 0f).setUv(u1, v0).setColor(color)
+        BufferUploader.drawWithShader(bufferBuilder.buildOrThrow())
+        RenderSystem.disableBlend()
+    }
+
+    fun drawSprite(
+        graphics: GuiGraphics, sprite: TextureAtlasSprite, x: Int, y: Int, width: Int, height: Int, color: Int
+    ) {
+        RenderSystem.setShaderTexture(0, sprite.atlasLocation())
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader)
+        RenderSystem.enableBlend()
+        val pose = graphics.pose().last().pose()
+        val bufferBuilder =
+            Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR)
+        val x2 = x + width
+        val y2 = y + height
+
+        val u0 = sprite.u0
+        val v0 = sprite.v0
+        val u1 = sprite.u1
+        val v1 = sprite.v1
+
+        bufferBuilder.addVertex(pose, x.toFloat(), y.toFloat(), 0f).setUv(u0, v0).setColor(color)
+        bufferBuilder.addVertex(pose, x.toFloat(), y2.toFloat(), 0f).setUv(u0, v1).setColor(color)
+        bufferBuilder.addVertex(pose, x2.toFloat(), y2.toFloat(), 0f).setUv(u1, v1).setColor(color)
+        bufferBuilder.addVertex(pose, x2.toFloat(), y.toFloat(), 0f).setUv(u1, v0).setColor(color)
+        BufferUploader.drawWithShader(bufferBuilder.buildOrThrow())
+        RenderSystem.disableBlend()
     }
 
     fun color(red: Int, green: Int, blue: Int, alpha: Int): Int {

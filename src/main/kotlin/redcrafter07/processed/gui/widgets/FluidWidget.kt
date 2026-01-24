@@ -6,7 +6,6 @@ import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
-import net.minecraft.util.FastColor
 import net.minecraft.world.item.BucketItem
 import net.minecraft.world.level.material.Fluids
 import net.neoforged.neoforge.capabilities.Capabilities
@@ -38,15 +37,19 @@ class FluidWidget(
         if (!fluid.isEmpty) {
             val sprite = getFluidTexture(fluid, false)
             val color = getFluidColor(fluid)
-            val r = FastColor.ARGB32.red(color) / 255f
-            val g = FastColor.ARGB32.green(color) / 255f
-            val b = FastColor.ARGB32.blue(color) / 255f
-            var a = FastColor.ARGB32.alpha(color) / 255f
-            if (a == 0f) a = 1f
 
             val filled = fluidHandler.getFluidInTank(0).amount / fluidHandler.getTankCapacity(0).toDouble()
-            val filledHeight = filled * (height - 2)
-            guiGraphics.blit(x + 1, y + 1, 0, width - 2, filledHeight.toInt(), sprite, r, g, b, a)
+            val filledHeight = (filled * (height - 2)).toInt()
+
+            RenderUtils.drawSpriteDuplicated(
+                guiGraphics,
+                sprite,
+                x + 1,
+                y + height - 1 - filledHeight,
+                width - 2,
+                filledHeight,
+                color
+            )
         }
 
         guiGraphics.blit(RenderUtils.WIDGETS_TEXTURE, x + 1, y + 1, 0, 40, 8, height - 2)
