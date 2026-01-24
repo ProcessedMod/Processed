@@ -29,8 +29,8 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler
 import org.joml.Vector3d
 import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.Translations
+import redcrafter07.processed.block.BlockProperties
 import redcrafter07.processed.block.ModBlocks
-import redcrafter07.processed.block.machine_abstractions.ProcessedBlock.Companion.STATE_HORIZ_FACING
 import redcrafter07.processed.entity.ModEntities
 import redcrafter07.processed.entity.RocketEntity
 import redcrafter07.processed.gui.LaunchControllerMenu
@@ -391,7 +391,7 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
         }
 
         fun startLaunchAnimation(level: ClientLevel, pos: BlockPos, state: BlockState) {
-            val dir = state.getValue(STATE_HORIZ_FACING)
+            val dir = state.getValue(BlockProperties.HORIZONTAL_FACING)
             val spawnPos = pos.relative(dir, -2).offset(0, 1, 0)
 
             spawnRocket(level, dir, spawnPos.x.toDouble() + .5, spawnPos.y.toDouble(), spawnPos.z.toDouble() + .5)
@@ -400,7 +400,7 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
         }
 
         fun startLandingAnimation(level: ClientLevel, pos: BlockPos, state: BlockState) {
-            val dir = state.getValue(STATE_HORIZ_FACING)
+            val dir = state.getValue(BlockProperties.HORIZONTAL_FACING)
             val spawnPos = pos.relative(dir, -2)
             spawnRocket(level, dir, spawnPos.x.toDouble() + .5, 500.0, spawnPos.z.toDouble() + .5)
             stage = Stage.LandLower
@@ -492,7 +492,7 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
         }
 
         fun launchPadCenter(pos: BlockPos, state: BlockState) =
-            pos.relative(state.getValue(STATE_HORIZ_FACING), -2).offset(0, 1, 0).toVector3d()
+            pos.relative(state.getValue(BlockProperties.HORIZONTAL_FACING), -2).offset(0, 1, 0).toVector3d()
 
         fun sprayWater(level: ClientLevel, launchPadCenter: Vector3d, amount: Int) {
             val water = ParticleTypes.SPLASH

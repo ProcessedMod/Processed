@@ -10,6 +10,7 @@ import net.minecraft.data.models.blockstates.VariantProperties.Rotation
 import net.minecraft.data.models.model.DelegatedModel
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.Block
+import redcrafter07.processed.block.BlockProperties
 import redcrafter07.processed.block.ModBlocks
 import redcrafter07.processed.block.machine_abstractions.ProcessedBlock
 import redcrafter07.processed.block.machine_abstractions.RotationType
@@ -145,7 +146,7 @@ object DynPackBuilder {
             Variant.variant().with(VariantProperties.X_ROT, x).with(VariantProperties.Y_ROT, y)
 
         // create a PropertyDispatch for the facing=... property, with different x and y rotations according to the direction.
-        val prop = PropertyDispatch.property(ProcessedBlock.STATE_FACING).select(Direction.UP, Variant.variant())
+        val prop = PropertyDispatch.property(BlockProperties.FACING).select(Direction.UP, Variant.variant())
             .select(Direction.DOWN, Variant.variant().with(VariantProperties.X_ROT, Rotation.R180))
             .select(Direction.NORTH, Variant.variant().with(VariantProperties.X_ROT, Rotation.R90))
             .select(Direction.SOUTH, xy(Rotation.R90, Rotation.R180))
@@ -160,7 +161,7 @@ object DynPackBuilder {
     fun createSidedHorizontal(block: Block, modelLocation: ResourceLocation): MultiVariantGenerator {
         // create a PropertyDispatch for the facing=... property, with different y rotations according to the direction.
         val prop =
-            PropertyDispatch.property(ProcessedBlock.STATE_HORIZ_FACING).select(Direction.NORTH, Variant.variant())
+            PropertyDispatch.property(BlockProperties.HORIZONTAL_FACING).select(Direction.NORTH, Variant.variant())
                 .select(Direction.SOUTH, Variant.variant().with(VariantProperties.Y_ROT, Rotation.R180))
                 .select(Direction.WEST, Variant.variant().with(VariantProperties.Y_ROT, Rotation.R270))
                 .select(Direction.EAST, Variant.variant().with(VariantProperties.Y_ROT, Rotation.R90))

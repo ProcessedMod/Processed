@@ -4,11 +4,11 @@ import net.minecraft.core.Direction
 import net.minecraft.world.level.block.DirectionalBlock
 import net.minecraft.world.level.block.HorizontalDirectionalBlock
 import net.minecraft.world.level.block.state.BlockState
-import net.minecraft.world.level.block.state.properties.BlockStateProperties
+import redcrafter07.processed.block.BlockProperties
 
 val FACING_PROPERTIES = listOf(
-    BlockStateProperties.FACING,
-    BlockStateProperties.HORIZONTAL_FACING,
+    BlockProperties.FACING,
+    BlockProperties.HORIZONTAL_FACING,
     DirectionalBlock.FACING,
     HorizontalDirectionalBlock.FACING,
 )

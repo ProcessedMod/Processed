@@ -31,6 +31,8 @@ class LaunchControllerMenu(
     var lastDest: Optional<ResourceLocation> = Optional.empty()
         get() {
             if (level.isClientSide) return field
+            // won't be synced anyways cuz noLaunched (this fields condition) returns false
+            else if (be.minerData != null) return Optional.empty()
             val v = be.lastDestination?.first?.let {
                 level.registryAccess().registry(Planetoid.REGISTRY_KEY).get().getKey(it)
             }

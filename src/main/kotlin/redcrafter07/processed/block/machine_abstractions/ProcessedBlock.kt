@@ -15,20 +15,14 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
-import net.minecraft.world.level.block.state.properties.BlockStateProperties
-import net.minecraft.world.level.block.state.properties.DirectionProperty
 import net.minecraft.world.level.material.PushReaction
 import net.minecraft.world.phys.BlockHitResult
+import redcrafter07.processed.block.BlockProperties
 import redcrafter07.processed.block.tile_entities.capabilities.SimpleDroppingContainer
 import redcrafter07.processed.items.ModItems
 
 abstract class ProcessedBlock(properties: Properties) : Block(properties.pushReaction(PushReaction.BLOCK)),
     EntityBlock {
-    companion object {
-        val STATE_FACING: DirectionProperty = BlockStateProperties.FACING
-        val STATE_HORIZ_FACING: DirectionProperty = BlockStateProperties.HORIZONTAL_FACING
-    }
-
     override fun useItemOn(
         stack: ItemStack,
         state: BlockState,
@@ -48,8 +42,8 @@ abstract class ProcessedBlock(properties: Properties) : Block(properties.pushRea
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
         when (rotationType()) {
-            RotationType.RotatableHorizontal -> builder.add(STATE_HORIZ_FACING)
-            RotationType.Rotatable -> builder.add(STATE_FACING)
+            RotationType.RotatableHorizontal -> builder.add(BlockProperties.HORIZONTAL_FACING)
+            RotationType.Rotatable -> builder.add(BlockProperties.FACING)
             RotationType.NonRotatable -> Unit
         }
         addBlockStateDefinition(builder)
@@ -61,8 +55,11 @@ abstract class ProcessedBlock(properties: Properties) : Block(properties.pushRea
         var state = getBlockState(context)
         if (state == null) state = defaultBlockState()
         return when (rotationType()) {
-            RotationType.RotatableHorizontal -> state.setValue(STATE_HORIZ_FACING, context.horizontalDirection.opposite)
-            RotationType.Rotatable -> state.setValue(STATE_FACING, context.clickedFace)
+            RotationType.RotatableHorizontal -> state.setValue(
+                BlockProperties.HORIZONTAL_FACING, context.horizontalDirection.opposite
+            )
+
+            RotationType.Rotatable -> state.setValue(BlockProperties.FACING, context.clickedFace)
             RotationType.NonRotatable -> state
         }
     }

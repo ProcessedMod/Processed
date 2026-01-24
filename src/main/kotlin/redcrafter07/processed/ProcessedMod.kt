@@ -28,6 +28,8 @@ class ProcessedMod(bus: IEventBus, modContainer: ModContainer) {
     }
 
     init {
+        assert(ID == modContainer.modId)
+
         ModEntities.ENTITIES.register(bus)
         ModParticles.PARTICLES.register(bus)
         ModBlocks.BLOCKS.register(bus)

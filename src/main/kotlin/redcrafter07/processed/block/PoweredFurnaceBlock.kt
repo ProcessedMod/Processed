@@ -8,7 +8,6 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.SoundType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
-import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.phys.BlockHitResult
 import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.block.machine_abstractions.TieredProcessedBlock
@@ -17,12 +16,8 @@ import redcrafter07.processed.block.tile_entities.PoweredFurnaceBlockEntity
 class PoweredFurnaceBlock(tier: ProcessedTier) : TieredProcessedBlock(
     Properties.of().sound(SoundType.STONE), "block.processed.powered_furnace", tier, ::PoweredFurnaceBlockEntity
 ) {
-    companion object {
-        val WORKING: BooleanProperty = BooleanProperty.create("working")
-    }
-
     override fun addBlockStateDefinition(stateDefinition: StateDefinition.Builder<Block, BlockState>) {
-        stateDefinition.add(WORKING)
+        stateDefinition.add(BlockProperties.WORKING)
     }
 
     override fun useWithoutItem(
