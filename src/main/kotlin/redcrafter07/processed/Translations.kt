@@ -64,6 +64,7 @@ object Translations {
         t("processed.tiered_machine_info", maxPower, nameColored)
 
     inline fun poweredFurnaceName(tier: ProcessedTier) = t("block.processed.powered_furnace", tier)
+    inline fun sifterName(tier: ProcessedTier) = t("block.processed.sifter", tier)
     inline fun energyHatchName(tier: ProcessedTier) = t("block.processed.energy_hatch", tier)
     inline fun energyHatchTooltip(amount: Int) =
         t("block.processed.energy_hatch.tooltip", energy.translate(amount).withStyle(ChatFormatting.GREEN))
@@ -236,4 +237,3 @@ inline fun t(key: String, vararg args: Any): MC {
     }
     return C.translatable(key, *args)
 }
-

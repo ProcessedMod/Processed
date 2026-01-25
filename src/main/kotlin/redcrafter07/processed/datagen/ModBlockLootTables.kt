@@ -32,6 +32,7 @@ class ModBlockLootTables(provider: HolderLookup.Provider) :
 
         dropSelf(ModBlocks.FLUID_TANK)
         dropSelf(ModBlocks.BLOCKS_POWERED_FURNACE)
+        dropSelf(ModBlocks.BLOCKS_SIFTER)
         dropSelf(ModBlocks.CREATIVE_POWER_SOURCE)
         dropSelf(ModBlocks.BASIC_CASING)
         dropSelf(ModBlocks.BIG_SMELTER)

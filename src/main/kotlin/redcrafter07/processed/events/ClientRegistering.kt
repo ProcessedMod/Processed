@@ -25,6 +25,7 @@ object ClientRegistering {
     @SubscribeEvent
     fun registerMenuScreens(event: RegisterMenuScreensEvent) {
         event.register(ModMenuTypes.POWERED_FURNACE_MENU.get(), ::GenericMachineMenuScreen)
+        event.register(ModMenuTypes.SIFTER_MENU.get(), ::GenericMachineMenuScreen)
         event.register(ModMenuTypes.LAUNCH_CONTROLLER_MENU.get(), ::LaunchControllerMenuScreen)
         event.register(ModMenuTypes.ITEM_HATCH_MENU.get(), ::DynamicContainerScreen)
         event.register(ModMenuTypes.FLUID_HATCH_MENU.get(), ::FluidHatchScreen)

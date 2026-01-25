@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack
 import net.neoforged.neoforge.items.IItemHandler
 import net.neoforged.neoforge.items.IItemHandlerModifiable
 
-class SlotOutputItemHandler(val itemHandler: IItemHandler, index: Int, x: Int, y: Int) : Slot(EMPTY_INVENTORY, index, x, y) {
+class SlotOutputItemHandler(val itemHandler: IItemHandler, slot: Int, x: Int, y: Int) : Slot(EMPTY_INVENTORY, slot, x, y) {
     companion object {
         val EMPTY_INVENTORY: Container = SimpleContainer(0)
     }

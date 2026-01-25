@@ -26,11 +26,11 @@ class ProgressBarWidget(
             }
             ProgressBarDirection.Left -> {
                 val width = (progressSupplier.get() * data.width).toInt()
-                blit(graphics, x, y, data.width, 0, width, data.height)
+                blit(graphics, x + data.width - width, y, data.width * 2 - width, 0, width, data.height)
             }
             ProgressBarDirection.Right -> {
                 val width = (progressSupplier.get() * data.width).toInt()
-                blit(graphics, x + data.width - width, y, data.width * 2 - width, 0, width, data.height)
+                blit(graphics, x, y, data.width, 0, width, data.height)
             }
         }
     }

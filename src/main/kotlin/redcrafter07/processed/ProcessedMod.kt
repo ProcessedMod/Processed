@@ -40,6 +40,7 @@ class ProcessedMod(bus: IEventBus, modContainer: ModContainer) {
         ModMenuTypes.MENUS.register(bus)
         Attachments.ATTACHMENT_TYPES.register(bus)
         ModRecipes.RECIPE_SERIALIZERS.register(bus)
+        ModRecipes.RECIPE_TYPES.register(bus)
         ModFluids.FLUID_TYPES.register(bus)
         ModFluids.FLUIDS.register(bus)
         RPCFunctions.register(bus)

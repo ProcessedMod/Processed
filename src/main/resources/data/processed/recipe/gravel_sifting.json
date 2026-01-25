@@ -1,0 +1,26 @@
+{
+    "type": "processed:sifting",
+    "ingredient": {
+        "item": "minecraft:gravel"
+    },
+    "extraOutputs": [
+        {
+            "item": {"id": "processed:aluminium_dust", "amount": 2},
+            "probability": 50
+        },
+        {
+            "item": {"id": "processed:nickel_dust", "amount": 4},
+            "probability": 70
+        },
+        {
+            "item": {"id": "processed:uranium_dust"},
+            "probability": 10
+        },
+        {
+            "item": {"id": "processed:titanium_dust"},
+            "probability": 5
+        }
+    ],
+    "processingTime": 200,
+    "energyUsage": 8
+}

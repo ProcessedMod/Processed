@@ -15,6 +15,7 @@ object ModMenuTypes {
     val MENUS: DeferredRegister<MenuType<*>> = DeferredRegister.create(Registries.MENU, ProcessedMod.ID)
 
     val POWERED_FURNACE_MENU = register("powered_furnace_menu", ::PoweredFurnaceMenu)
+    val SIFTER_MENU = register("sifter_menu", ::SifterMenu)
     val LAUNCH_CONTROLLER_MENU = register("launch_controller_menu", ::LaunchControllerMenu)
     val ITEM_HATCH_MENU = register("item_hatch_menu", ::ItemHatchMenu)
     val FLUID_HATCH_MENU = register("fluid_hatch_menu", ::FluidHatchMenu)

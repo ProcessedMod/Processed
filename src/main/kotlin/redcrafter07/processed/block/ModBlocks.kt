@@ -35,6 +35,7 @@ object ModBlocks {
     }
     val FLUID_TANK = registerBlock("fluid_tank", ::FluidTankBlock)
     val BLOCKS_POWERED_FURNACE = registerTieredBlock("powered_furnace", ProcessedTier.TIERS, ::PoweredFurnaceBlock)
+    val BLOCKS_SIFTER = registerTieredBlock("sifter", ProcessedTier.TIERS, ::SifterBlock)
     val CREATIVE_POWER_SOURCE =
         registerTieredBlock("creative_power_source", ProcessedTier.TIERS, ::CreativePowerSourceBlock)
     val BASIC_CASING = registerBlock("basic_casing") { Block(BlockBehaviour.Properties.of()) }
