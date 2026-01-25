@@ -170,6 +170,8 @@
 
     "config.jade.plugin_processed.energy": "Processed Energy",
     "config.jade.plugin_processed.multiblock_state": "Multiblock State",
+    "config.jade.plugin_processed.crafting_state": "Crafting State",
+    "config.jade.plugin_processed.crafting_state.output": "Output:",
 
     "processed.gui.planetoid_selection_screen.go_up": "Go Up",
     "processed.gui.planetoid_widget.tooltip": "Planetoid: %s",
@@ -183,6 +185,9 @@
     "processed.unit.items": "%d Items",
     "processed.unit.stacks": "%d Stacks",
     "processed.unit.stacks_items": "%d Stacks and %d Items",
+    "processed.unit.crafting_duration.ticks": "%d t",
+    "processed.unit.crafting_duration.secs": "%d s",
+    "processed.unit.crafting_duration.mins": "%d m",
 
     "processed.planetoid.callisto": "Callisto",
     "processed.planetoid.charon": "Charon",

@@ -153,7 +153,16 @@ object Translations {
     inline fun launchControllerScreenDestination(name: C) = t("processed.gui.launch_controller_screen.destination", name)
     inline fun launchControllerScreenDuration(seconds: Long) = t("processed.gui.launch_controller_screen.duration", duration(seconds))
 
+    inline fun jadeCraftingOutput() = t("config.jade.plugin_processed.crafting_state.output")
 
+    inline fun craftingDurationTicks(n: Number) = t("processed.unit.crafting_duration.ticks", n)
+    inline fun craftingDurationSecs(n: Number) = t("processed.unit.crafting_duration.secs", n)
+    inline fun craftingDurationMins(n: Number) = t("processed.unit.crafting_duration.mins", n)
+    val craftingDuration = IntUnit(
+        1, ::craftingDurationTicks,
+        20, ::craftingDurationSecs,
+        1200, ::craftingDurationMins
+    )
     inline fun duration(secs: Long): MC {
         // TODO: Make this configurable
         return C.literal(DurationFormatUtils.formatDuration(TimeUnit.SECONDS.toMillis(secs), "HH:mm:ss", true))
