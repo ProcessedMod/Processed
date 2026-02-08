@@ -38,7 +38,7 @@ class CreativePowerSourceBlockEntity(pos: BlockPos, blockState: BlockState) :
         })
     }
 
-    override fun serverTick(level: ServerLevel, pos: BlockPos, state: BlockState) {
+    override fun serverTick(level: ServerLevel, pos: BlockPos, state: BlockState): Boolean {
         var foundCap = false
         for (direction in Direction.entries) {
             val newPos = pos.relative(direction)
@@ -54,6 +54,6 @@ class CreativePowerSourceBlockEntity(pos: BlockPos, blockState: BlockState) :
             foundCap = true
             cap.receiveEnergy(Int.MAX_VALUE, false)
         }
-        if (!foundCap) stopMachine()
+        return foundCap
     }
 }

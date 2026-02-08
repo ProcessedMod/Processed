@@ -63,28 +63,33 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
             .or(Part.block(ModBlocks.FLUID_INPUT_HATCH).fluidInput())
             .or(Part.blocks(ModBlocks.ENERGY_HATCHES.toList()).energyInput())
 
-        val validator =
-            SquareMultiblockValidator.Builder(5, 5, 5).addMapping('c', Part.controller()).addMapping('o', wallBlocks)
-                .addMapping('i', Part.block(ModBlocks.BASIC_CASING)).addMapping('p', Part.block(ModBlocks.LANDING_PAD))
-                .addMapping('t', copper_grates).addMapping(' ', Part.ignored()).addMapping('x', Part.block(Blocks.AIR))
-                .addRestriction(Part.blocks(ModBlocks.ENERGY_HATCHES.toList()), 1, 1)
-                .addRestriction(Part.block(ModBlocks.ITEM_OUTPUT_HATCH), 1, 1)
-                .addRestriction(Part.block(ModBlocks.ITEM_INPUT_HATCH), 1, 1)
-                .addRestriction(Part.block(ModBlocks.FLUID_INPUT_HATCH), 1, 1).addLayer(
-                    "ooooo",
-                    "oiiio",
-                    "oiiio",
-                    "oiiio",
-                    "oocoo",
-                ).addLayer(
-                    "   t ",
-                    " ppp ",
-                    " ppp ",
-                    " ppp ",
-                    "     ",
-                ).addLayer("   t ", " xxx ", " xxx ", " xxx ", "     ")
-                .addLayer("   t ", " xxx ", " xxx ", " xxx ", "     ")
-                .addLayer("   t ", " xxx ", " xxx ", " xxx ", "     ").build()
+        val validator = SquareMultiblockValidator.Builder(5, 5, 5).maps {
+            put('c', Part.controller())
+            put('o', wallBlocks)
+            put('i', Part.block(ModBlocks.BASIC_CASING))
+            put('p', Part.block(ModBlocks.LANDING_PAD))
+            put('t', copper_grates)
+            put(' ', Part.ignored())
+            put('x', Part.block(Blocks.AIR))
+        }.restrictions {
+            add(Part.ENERGY_IN, 1)
+            add(Part.ITEM_OUT, 1)
+            add(Part.ITEM_IN, 1)
+            add(Part.FLUID_IN, 1)
+        }.addLayer(
+            "ooooo",
+            "oiiio",
+            "oiiio",
+            "oiiio",
+            "oocoo",
+        ).addLayer(
+            "   t ",
+            " ppp ",
+            " ppp ",
+            " ppp ",
+            "     ",
+        ).addLayer("   t ", " xxx ", " xxx ", " xxx ", "     ").addLayer("   t ", " xxx ", " xxx ", " xxx ", "     ")
+            .addLayer("   t ", " xxx ", " xxx ", " xxx ", "     ").build()
     }
 
     val storedResources = HashMap<ResourceLocation, Long>()
@@ -141,22 +146,22 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
         else Translations.launchControllerStateTravelling(minerDataProper.planetArrivalEpoch - now)
     }
 
-    fun tryLaunchMiner() {
-        val miner = lastLoadedMiner ?: return
-        val calc = lastResult ?: return
-        val storedFuel = miner.first.get(ModDataComponents.ASSEMBLED_MINER)?.storedFuel ?: return
-        if (storedFuel.amount < calc.requiredFuel) return
+    fun tryLaunchMiner(): Boolean {
+        val miner = lastLoadedMiner ?: return false
+        val calc = lastResult ?: return false
+        val storedFuel = miner.first.get(ModDataComponents.ASSEMBLED_MINER)?.storedFuel ?: return false
+        if (storedFuel.amount < calc.requiredFuel) return false
 
-        val dst = lastDestination ?: return
-        if (!dst.first.isTargetable) return
-        val input = itemInput() ?: return
+        val dst = lastDestination ?: return false
+        if (!dst.first.isTargetable) return false
+        val input = itemInput() ?: return false
 
         val lvl = level
-        if (lvl == null || lvl.isClientSide || lvl !is ServerLevel) return
+        if (lvl == null || lvl.isClientSide || lvl !is ServerLevel) return false
         val minerDataUUID = minerData
-        if (minerDataUUID != null && LevelMinerData.get(lvl, minerDataUUID) != null) return
+        if (minerDataUUID != null && LevelMinerData.get(lvl, minerDataUUID) != null) return false
         this.minerData = null
-        val amount = miner.first.get(ModDataComponents.CARGO_BAY_DATA)?.capacity ?: return
+        val amount = miner.first.get(ModDataComponents.CARGO_BAY_DATA)?.capacity ?: return false
         input.handler.items[dst.second].shrink(1)
         input.handler.items[miner.second].shrink(1)
         input.setChanged()
@@ -188,26 +193,24 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
             val y = player.position().y - y
             if (x * x + y * y <= 25600) RPCFunctions.runLaunchControllerAnimation.sendToClient(player, blockPos, true)
         }
+        return true
     }
 
     override fun getDisplayName() = Translations.launchControllerName()
     override fun createMenu(id: Int, inventory: Inventory, p2: Player): AbstractContainerMenu =
         LaunchControllerMenu(id, inventory, this, data)
 
-    override fun tileTickClient(level: ClientLevel, pos: BlockPos, state: BlockState) {
-        animator.tick(level, pos, state)
-        super.tileTickClient(level, pos, state)
-    }
+    override fun tileTickClient(level: ClientLevel, pos: BlockPos, state: BlockState) = animator.tick(level, pos, state)
 
-    override fun tileTickServer(level: ServerLevel, pos: BlockPos, state: BlockState) {
-        super.tileTickServer(level, pos, state)
-        refreshCalcs()
-        fuelRocket()
-        tryLaunchMiner()
+    override fun tileTickServer(level: ServerLevel, pos: BlockPos, state: BlockState): Boolean {
+        var didWork = super.tileTickServer(level, pos, state)
+        didWork = refreshCalcs() || didWork
+        didWork = fuelRocket() || didWork
+        didWork = tryLaunchMiner() || didWork
 
-        val output = specialBlock(SpecialBlockType.ItemOutput) ?: return
-        val be = level.getBlockEntity(output) ?: return
-        if (be !is OutputItemHatchBlockEntity) return
+        val output = specialBlock(SpecialBlockType.ItemOutput) ?: return didWork
+        val be = level.getBlockEntity(output) ?: return didWork
+        if (be !is OutputItemHatchBlockEntity) return didWork
 
         if (!storedResources.isEmpty()) {
             val forRemoval = mutableSetOf<ResourceLocation>()
@@ -226,11 +229,13 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
                 if (left == 0.toLong()) forRemoval.add(entry.key)
                 entry.setValue(left)
             }
+            if (forRemoval.isNotEmpty()) didWork = true
             for (key in forRemoval) storedResources.remove(key)
         }
+        return didWork
     }
 
-    fun refreshCalcs() {
+    fun refreshCalcs(): Boolean {
         val lvl = level
         val dst = destination()
         val miner = getRocket()
@@ -238,15 +243,15 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
             lastLoadedMiner = null
             lastDestination = null
             lastResult = null
-            return
+            return false
         }
-        val planetoidRegistry = lvl.registryAccess().registry(Planetoid.REGISTRY_KEY).getOrNull() ?: return
+        val planetoidRegistry = lvl.registryAccess().registry(Planetoid.REGISTRY_KEY).getOrNull() ?: return false
         val planetoid = planetoidRegistry.get(dst.first)
         if (planetoid == null || !planetoid.isTargetable) {
             lastLoadedMiner = null
             lastDestination = null
             lastResult = null
-            return
+            return false
         }
         if (lastDestination == null || lastResult == null || lastLoadedMiner == null || lastLoadedMiner?.second != miner.second || !ItemStack.isSameItemSameComponents(
                 lastLoadedMiner?.first ?: ItemStack.EMPTY, miner.first
@@ -256,6 +261,7 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
             lastLoadedMiner = if (lastResult != null) miner else null
         }
         if (lastLoadedMiner != null && lastResult != null) lastDestination = Pair(planetoid, dst.second)
+        return true
     }
 
     fun getRocket(): Pair<ItemStack, Int>? {
@@ -328,15 +334,15 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
         return lvl.getBlockEntity(input) as? InputFluidHatchBlockEntity
     }
 
-    fun fuelRocket() {
-        val itemInput = itemInput() ?: return
-        val rocket = lastLoadedMiner ?: return
-        val miner = rocket.first.get(ModDataComponents.ASSEMBLED_MINER) ?: return
-        val engine = rocket.first.get(ModDataComponents.ENGINE_DATA) ?: return
-        if (!BuiltInRegistries.FLUID.containsKey(engine.fuel)) return
-        val fluidInput = fluidInput() ?: return
+    fun fuelRocket(): Boolean {
+        val itemInput = itemInput() ?: return false
+        val rocket = lastLoadedMiner ?: return false
+        val miner = rocket.first.get(ModDataComponents.ASSEMBLED_MINER) ?: return false
+        val engine = rocket.first.get(ModDataComponents.ENGINE_DATA) ?: return false
+        if (!BuiltInRegistries.FLUID.containsKey(engine.fuel)) return false
+        val fluidInput = fluidInput() ?: return false
 
-        val remainingFuel = (lastResult ?: return).requiredFuel - miner.storedFuel.amount
+        val remainingFuel = (lastResult ?: return false).requiredFuel - miner.storedFuel.amount
         if (remainingFuel > 0) {
             val fluid = if (miner.storedFuel.isEmpty) FluidStack(
                 BuiltInRegistries.FLUID.get(engine.fuel), remainingFuel
@@ -354,7 +360,9 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
                 itemInput.handler.setStackInSlot(rocket.second, rocket.first)
                 itemInput.setChanged()
             }
+            return true
         }
+        return false
     }
 
     class Animator {
@@ -406,12 +414,13 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
             stage = Stage.LandLower
         }
 
-        fun tick(level: ClientLevel, pos: BlockPos, state: BlockState) {
-            val animRocket = rocket ?: return
+        // Returns if it did any work
+        fun tick(level: ClientLevel, pos: BlockPos, state: BlockState): Boolean {
+            val animRocket = rocket ?: return false
             if (stage == Stage.None) {
                 level.removeEntity(animRocket.id, Entity.RemovalReason.DISCARDED)
                 this.rocket = null
-                return
+                return false
             }
             animRocket.hasStands = when (stage) {
                 Stage.LaunchSpray, Stage.LandStationary -> true
@@ -489,6 +498,7 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
                     }
                 }
             }
+            return true
         }
 
         fun launchPadCenter(pos: BlockPos, state: BlockState) =

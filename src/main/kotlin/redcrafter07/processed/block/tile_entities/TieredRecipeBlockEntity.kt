@@ -37,22 +37,26 @@ abstract class TieredRecipeBlockEntity(type: BlockEntityType<*>, pos: BlockPos, 
 
     protected open val dataOverrides: ContainerData? = null
 
-    override fun serverTick(level: ServerLevel, pos: BlockPos, state: BlockState) {
+    override fun serverTick(level: ServerLevel, pos: BlockPos, state: BlockState): Boolean {
         if (recipeData == null) recipeData = getRecipe()
+
         val recipeData = recipeData ?: return setWorking(level, pos, state, false)
         if (recipeData.progress >= recipeData.maxProgress) {
             if (tryInsertRecipeOutputs(level, pos, state, recipeData)) this.recipeData = getRecipe()
-            return
+            else return false
+            return true
         }
 
         if (!useScaledPower(recipeData.baseEnergyUsage)) {
             recipeData.progress = max(0, recipeData.progress - 2 * tier.speedMultiplier)
             setChanged()
-            return setWorking(level, pos, state, false)
+            setWorking(level, pos, state, false)
+            return recipeData.progress > 0
         }
 
         setWorking(level, pos, state, true)
         recipeData.progress = min(recipeData.progress + tier.speedMultiplier, recipeData.maxProgress)
+        return true
     }
 
     protected open fun tryInsertRecipeOutputs(
@@ -151,9 +155,10 @@ abstract class TieredRecipeBlockEntity(type: BlockEntityType<*>, pos: BlockPos, 
         return true
     }
 
-    fun setWorking(level: Level, pos: BlockPos, state: BlockState, working: Boolean) {
-        if (state.getValue(BlockProperties.WORKING) == working) return
+    fun setWorking(level: Level, pos: BlockPos, state: BlockState, working: Boolean): Boolean {
+        if (state.getValue(BlockProperties.WORKING) == working) return working
         level.setBlockAndUpdate(pos, state.setValue(BlockProperties.WORKING, working))
+        return working
     }
 
     /** Gets a recipe and removes it's inputs */

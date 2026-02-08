@@ -39,6 +39,10 @@ abstract class ProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, blockSt
 
     abstract val tier: ProcessedTier
 
+    // Sleeping: The tile entity goes to sleep when it doesn't do any processing.
+    // It can be awoken by updates, e.g. a capability inventory changing, a multiblock's hatch changing, etc
+    private var sleepTimeLeft = 0
+
     val sides: MutableList<IoState> = listOf(
         IoState.None,
         IoState.None,
@@ -105,6 +109,15 @@ abstract class ProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, blockSt
         }
     }
 
+    override fun setChanged() {
+        wakeup()
+        super.setChanged()
+    }
+
+    fun wakeup() {
+        sleepTimeLeft = 0
+    }
+
     override fun getUpdatePacket(): Packet<ClientGamePacketListener>? = ClientboundBlockEntityDataPacket.create(this)
     override fun getUpdateTag(provider: HolderLookup.Provider): CompoundTag = saveWithoutMetadata(provider)
 
@@ -128,26 +141,47 @@ abstract class ProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, blockSt
         else capabilityHandlers.getFluidHandlerForState(getSide(false, side))
 
     fun handleTick(level: Level, pos: BlockPos, state: BlockState) {
-        tickNoProcessing(level, pos, state)
-        if (!isRunning) return
-        if (level.isClientSide && level is ClientLevel) clientTick(level, pos, state)
-        else if (!level.isClientSide && level is ServerLevel) serverTick(level, pos, state)
-        commonTick(level, pos, state)
-    }
+        if (sleepTimeLeft > 0) {
+            sleepTimeLeft--
+            return
+        }
+        sleepTimeLeft = 1
+        var didWork = tickNoProcessing(level, pos, state)
+        if (!isRunning) {
+            // Sleep for 2 seconds or 40 ticks if no work was done.
+            // sleepTimeLeft == 1 is so that if the machine was awoken in one of the tick functions, we don't sleep either.
+            sleepTimeLeft = if (!didWork && sleepTimeLeft == 1) 40 else 0
+            return
+        }
 
-    open fun clientTick(level: ClientLevel, pos: BlockPos, state: BlockState) {
-    }
-
-    open fun serverTick(level: ServerLevel, pos: BlockPos, state: BlockState) {
-    }
-
-    open fun commonTick(level: Level, pos: BlockPos, state: BlockState) {
+        if (level.isClientSide && level is ClientLevel) didWork = clientTick(level, pos, state) || didWork
+        else if (!level.isClientSide && level is ServerLevel) didWork = serverTick(level, pos, state) || didWork
+        didWork = commonTick(level, pos, state) || didWork
+        // Sleep for 2 seconds or 40 ticks if no work was done.
+        // sleepTimeLeft == 1 is so that if the machine was awoken in one of the tick functions, we don't sleep either.
+        sleepTimeLeft = if (!didWork && sleepTimeLeft == 1) 40 else 0
     }
 
     /**
-     * This function should NOT do any processing of items, as this gets called even when the machine is disabled.
+     * @return Returns if it did any work or not. If not, this tile entity will go to sleep.
      */
-    open fun tickNoProcessing(level: Level, pos: BlockPos, state: BlockState) {}
+    open fun clientTick(level: ClientLevel, pos: BlockPos, state: BlockState) = false
+
+    /**
+     * @return Returns if it did any work or not. If not, this tile entity will go to sleep.
+     */
+    open fun serverTick(level: ServerLevel, pos: BlockPos, state: BlockState) = false
+
+    /**
+     * @return Returns if it did any work or not. If not, this tile entity will go to sleep.
+     */
+    open fun commonTick(level: Level, pos: BlockPos, state: BlockState) = false
+
+    /**
+     * This function should NOT do any processing of items, as this gets called even when the machine is disabled.
+     * @return Returns if it did any work or not. If not, this tile entity will go to sleep.
+     */
+    open fun tickNoProcessing(level: Level, pos: BlockPos, state: BlockState) = false
 
     // ###########################################
     // #  E N E R G Y   C A P A B I L I T I E S  #

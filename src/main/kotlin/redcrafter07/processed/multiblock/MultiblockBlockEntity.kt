@@ -22,8 +22,6 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
     ProcessedMachine(type, pos, blockState) {
     protected abstract fun validator(): MultiblockValidator
 
-    private var timeUntilNextCheck = 40
-
     // The parts of this multiblock that were destroyed last tick.
     private val partsDestroyed: ArrayList<BlockPos> = ArrayList()
     var isAssembled: Boolean = false
@@ -126,45 +124,46 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
         }
     }
 
-    open fun tileTickCommon(level: Level, pos: BlockPos, state: BlockState) {
+    /**
+     * @return Returns if it did any work or not. If not, this tile entity will go to sleep.
+     */
+    open fun tileTickCommon(level: Level, pos: BlockPos, state: BlockState) = false
+
+    /**
+     * @return Returns if it did any work or not. If not, this tile entity will go to sleep.
+     */
+    open fun tileTickServer(level: ServerLevel, pos: BlockPos, state: BlockState) = false
+
+    /**
+     * @return Returns if it did any work or not. If not, this tile entity will go to sleep.
+     */
+    open fun tileTickClient(level: ClientLevel, pos: BlockPos, state: BlockState) = false
+
+    final override fun serverTick(level: ServerLevel, pos: BlockPos, state: BlockState) = false
+
+    final override fun clientTick(level: ClientLevel, pos: BlockPos, state: BlockState) = false
+
+    final override fun commonTick(level: Level, pos: BlockPos, state: BlockState): Boolean {
+        if (!isAssembled || !isRunning) return false
+        var didWork = tileTickCommon(level, pos, state)
+        if (level is ServerLevel && !level.isClientSide()) didWork = tileTickServer(level, pos, state) || didWork
+        else if (level is ClientLevel && level.isClientSide()) didWork = tileTickClient(level, pos, state) || didWork
+        return didWork
     }
 
-    open fun tileTickServer(level: ServerLevel, pos: BlockPos, state: BlockState) {
-    }
-
-    open fun tileTickClient(level: ClientLevel, pos: BlockPos, state: BlockState) {
-    }
-
-    final override fun serverTick(level: ServerLevel, pos: BlockPos, state: BlockState) {
-    }
-
-    final override fun clientTick(level: ClientLevel, pos: BlockPos, state: BlockState) {
-    }
-
-    final override fun commonTick(level: Level, pos: BlockPos, state: BlockState) {
-        if (!isAssembled || !isRunning) return
-        tileTickCommon(level, pos, state)
-        if (level is ServerLevel && !level.isClientSide()) tileTickServer(level, pos, state)
-        else if (level is ClientLevel && level.isClientSide()) tileTickClient(level, pos, state)
-    }
-
-    override fun tickNoProcessing(level: Level, pos: BlockPos, state: BlockState) {
+    override fun tickNoProcessing(level: Level, pos: BlockPos, state: BlockState): Boolean {
         if (level is ServerLevel && !level.isClientSide()) {
             if (partsDestroyed.isNotEmpty()) {
                 runRecheck()
                 partsDestroyed.clear()
-                timeUntilNextCheck = 40
-                return
+                return true
             }
-            if (isAssembled) return
-            if (timeUntilNextCheck > 0) {
-                timeUntilNextCheck -= 1
-                return
-            }
-            timeUntilNextCheck = 40
+            if (isAssembled) return false
 
             runRecheck()
+            return isAssembled
         }
+        return false
     }
 
     override fun itemCapabilityForSide(side: BlockSide?, state: BlockState): IItemHandler? {
