@@ -10,6 +10,7 @@ import net.minecraft.tags.TagKey
 import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockState
+import redcrafter07.processed.block.ModBlocks
 import kotlin.collections.contains
 import kotlin.jvm.optionals.getOrNull
 import net.minecraft.world.level.block.Block as McBlock
@@ -37,6 +38,12 @@ interface Part {
         fun air() = block(Blocks.AIR)
         fun ignored() = Empty
         fun controller() = Controller
+
+        val ITEM_IN = block(ModBlocks.ITEM_INPUT_HATCH).itemInput()
+        val ITEM_OUT = block(ModBlocks.ITEM_OUTPUT_HATCH).itemOutput()
+        val FLUID_IN = block(ModBlocks.FLUID_INPUT_HATCH).fluidInput()
+        val FLUID_OUT = block(ModBlocks.FLUID_OUTPUT_HATCH).fluidOutput()
+        val ENERGY_IN = blocks(ModBlocks.ENERGY_HATCHES.toList()).energyInput()
     }
 
     class SpecialBlock(val inner: Part, val type: MultiblockBlockEntity.SpecialBlockType) : Part {

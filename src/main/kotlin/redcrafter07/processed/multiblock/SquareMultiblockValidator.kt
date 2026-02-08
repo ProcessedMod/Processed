@@ -127,7 +127,9 @@ class SquareMultiblockValidator(val data: List<Part>, val size: Vector3i, val re
         val restrictions = ArrayList<Restriction>()
         val map = HashMap<Char, Part>()
 
-        fun addMapping(c: Char, part: Part) = apply { map[c] = part }
+        fun maps(f: MutableMap<Char, Part>.() ->Unit) = apply { f(map) }
+        fun restrictions(f: RestrictionsMap.() ->Unit) = apply { f(RestrictionsMap(this)) }
+
         fun addLayer(vararg layer: String) = addLayer(layer.toList())
         fun addLayer(layer: List<String>) = apply {
             for (v in layer) for (c in v) {
@@ -136,12 +138,15 @@ class SquareMultiblockValidator(val data: List<Part>, val size: Vector3i, val re
             }
         }
 
-        fun addRestriction(part: Char, min: Int, max: Int) =
-            addRestriction(map[part] ?: throw IllegalStateException("No mapping for character '$part'"), min, max)
-
-        fun addRestriction(part: Part, min: Int, max: Int) = addRestriction(Restriction(part, min, max))
-        fun addRestriction(restriction: Restriction) = apply { restrictions.add(restriction) }
-
         fun build() = SquareMultiblockValidator(layers, size, restrictions)
+    }
+
+    class RestrictionsMap(val b: Builder) {
+        fun add(part: Char, amount: Int) = add(part, amount, amount)
+        fun add(part: Part, amount: Int) = add(part, amount, amount)
+
+        fun add(part: Char, min: Int, max: Int) = add(b.map[part] ?: throw IllegalStateException("No mapping for character '$part'"), min, max)
+        fun add(part: Part, min: Int, max: Int) = add(Restriction(part, min, max))
+        fun add(restriction: Restriction) = b.restrictions.add(restriction)
     }
 }

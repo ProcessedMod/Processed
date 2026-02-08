@@ -4,8 +4,8 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.inventory.ContainerData
-import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntityType
@@ -37,7 +37,7 @@ abstract class TieredRecipeBlockEntity(type: BlockEntityType<*>, pos: BlockPos, 
 
     protected open val dataOverrides: ContainerData? = null
 
-    override fun commonTick(level: Level, pos: BlockPos, state: BlockState) {
+    override fun serverTick(level: ServerLevel, pos: BlockPos, state: BlockState) {
         if (recipeData == null) recipeData = getRecipe()
         val recipeData = recipeData ?: return setWorking(level, pos, state, false)
         if (recipeData.progress >= recipeData.maxProgress) {
@@ -159,16 +159,6 @@ abstract class TieredRecipeBlockEntity(type: BlockEntityType<*>, pos: BlockPos, 
     /** Gets a recipe and removes it's inputs */
     protected abstract fun getRecipe(): RecipeData?
 
-    private fun canInsertItemIntoOutputSlot(item: Item): Boolean {
-        val outputStack = outputItemHandler.getStackInSlot(0)
-        return outputStack.isEmpty || outputStack.`is`(item)
-    }
-
-    private fun canInsertAmountIntoOutputSlot(count: Int): Boolean {
-        val outputStack = outputItemHandler.getStackInSlot(0)
-        return outputStack.count + count <= outputItemHandler.getSlotLimit(0)
-    }
-
     override fun saveAdditional(tag: CompoundTag, provider: HolderLookup.Provider) {
         super.saveAdditional(tag, provider)
         val recipeData = recipeData ?: return
@@ -178,7 +168,7 @@ abstract class TieredRecipeBlockEntity(type: BlockEntityType<*>, pos: BlockPos, 
     override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
         super.loadAdditional(tag, registries)
         recipeData = if (tag.contains("recipe", CompoundTag.TAG_COMPOUND.toInt())) {
-            deserializeRecipeData(tag.getCompound("recipe"), registries)
+            RecipeData.deserialize(tag.getCompound("recipe"), registries)
         } else null
     }
 
@@ -214,25 +204,27 @@ abstract class TieredRecipeBlockEntity(type: BlockEntityType<*>, pos: BlockPos, 
             if (outputLiquids.isNotEmpty()) tag.put("fluids", fluids)
             return tag
         }
-    }
 
-    fun deserializeRecipeData(tag: CompoundTag, registries: HolderLookup.Provider): RecipeData {
-        val progress = tag.getInt("progress")
-        val maxProgress = tag.getInt("maxProgress")
-        val energyUsage = tag.getInt("energyUsage")
+        companion object {
+            fun deserialize(tag: CompoundTag, registries: HolderLookup.Provider): RecipeData {
+                val progress = tag.getInt("progress")
+                val maxProgress = tag.getInt("maxProgress")
+                val energyUsage = tag.getInt("energyUsage")
 
-        val items = arrayListOf<ItemStack>()
-        val fluids = arrayListOf<FluidStack>()
-        if (tag.contains("items")) {
-            val itemList = tag.getList("items", CompoundTag.TAG_COMPOUND.toInt())
-            itemList.forEach { if (it is CompoundTag) items.add(ItemStack.parseOptional(registries, it)) }
+                val items = arrayListOf<ItemStack>()
+                val fluids = arrayListOf<FluidStack>()
+                if (tag.contains("items")) {
+                    val itemList = tag.getList("items", CompoundTag.TAG_COMPOUND.toInt())
+                    itemList.forEach { if (it is CompoundTag) items.add(ItemStack.parseOptional(registries, it)) }
+                }
+                if (tag.contains("fluids")) {
+                    val fluidList = tag.getList("fluids", CompoundTag.TAG_COMPOUND.toInt())
+                    fluidList.forEach { if (it is CompoundTag) fluids.add(FluidStack.parseOptional(registries, it)) }
+                }
+                items.trimToSize()
+                fluids.trimToSize()
+                return RecipeData(items, fluids, maxProgress, energyUsage, progress)
+            }
         }
-        if (tag.contains("fluids")) {
-            val fluidList = tag.getList("fluids", CompoundTag.TAG_COMPOUND.toInt())
-            fluidList.forEach { if (it is CompoundTag) fluids.add(FluidStack.parseOptional(registries, it)) }
-        }
-        items.trimToSize()
-        fluids.trimToSize()
-        return RecipeData(items, fluids, maxProgress, energyUsage, progress)
     }
 }

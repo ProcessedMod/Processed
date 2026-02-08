@@ -14,15 +14,15 @@ import redcrafter07.processed.ProcessedPower
 import redcrafter07.processed.Translations
 import redcrafter07.processed.block.TieredRecipeBlock
 import redcrafter07.processed.block.tile_entities.TieredRecipeBlockEntity
-import redcrafter07.processed.gui.RenderUtils
 import redcrafter07.processed.gui.widgets.EnergyBarWidget
+import redcrafter07.processed.multiblock.AbstractRecipeMultiBlockEntity
 import redcrafter07.processed.multiblock.MultiblockBlock
 import redcrafter07.processed.multiblock.MultiblockBlockEntity
+import redcrafter07.processed.multiblock.RecipeMultiblockBlock
 import redcrafter07.processed.rl
 import snownee.jade.api.*
 import snownee.jade.api.config.IPluginConfig
 import snownee.jade.api.fluid.JadeFluidObject
-import snownee.jade.api.ui.BoxStyle
 import snownee.jade.api.ui.IElementHelper
 import snownee.jade.overlay.DisplayHelper
 import kotlin.math.max
@@ -32,13 +32,15 @@ class JadeIntegration : IWailaPlugin {
     override fun register(registration: IWailaCommonRegistration) {
         registration.registerBlockDataProvider(ProcessedEnergyServerProvider, Block::class.java)
         registration.registerBlockDataProvider(MultiblockAssembledStateServerProvider, MultiblockBlock::class.java)
-        registration.registerBlockDataProvider(MultiblockCraftingStateServerProvider, TieredRecipeBlock::class.java)
+        registration.registerBlockDataProvider(CraftingStateServerProvider, TieredRecipeBlock::class.java)
+        registration.registerBlockDataProvider(CraftingStateServerProvider, RecipeMultiblockBlock::class.java)
     }
 
     override fun registerClient(registration: IWailaClientRegistration) {
         registration.registerBlockComponent(ProcessedEnergyProvider, Block::class.java)
         registration.registerBlockComponent(MultiblockAssembledStateProvider, MultiblockBlock::class.java)
-        registration.registerBlockComponent(MultiblockCraftingStateProvider, TieredRecipeBlock::class.java)
+        registration.registerBlockComponent(CraftingStateProvider, TieredRecipeBlock::class.java)
+        registration.registerBlockComponent(CraftingStateProvider, RecipeMultiblockBlock::class.java)
     }
 
     object MultiblockAssembledStateProvider : IBlockComponentProvider {
@@ -78,7 +80,8 @@ class JadeIntegration : IWailaPlugin {
         ).cast()
 
         override fun streamData(accessor: BlockAccessor): EnergyData? {
-            val be = accessor.level.getCapability(ProcessedPower.BLOCK, accessor.position, null) ?: return null
+            @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") val be =
+                accessor.level.getCapability(ProcessedPower.BLOCK, accessor.position, null) ?: return null
             return EnergyData(be.energy().energyStored, be.energy().maxEnergyStored)
         }
 
@@ -104,7 +107,7 @@ class JadeIntegration : IWailaPlugin {
         override fun getUid() = rl("multiblock_state")
     }
 
-    object MultiblockCraftingStateServerProvider : StreamServerDataProvider<BlockAccessor, RecipeData> {
+    object CraftingStateServerProvider : StreamServerDataProvider<BlockAccessor, RecipeData> {
         val STREAM_CODEC: StreamCodec<RegistryFriendlyByteBuf, RecipeData> = StreamCodec.composite(
             ItemStack.OPTIONAL_LIST_STREAM_CODEC,
             RecipeData::items,
@@ -117,17 +120,36 @@ class JadeIntegration : IWailaPlugin {
             ::RecipeData
         )
 
-        override fun streamData(accessor: BlockAccessor): RecipeData? {
-            val be = accessor.level.getBlockEntity(accessor.position)
-            if (be !is TieredRecipeBlockEntity) return null
-            val recipe = be.recipeData ?: return null
-            val speed = be.tier.speedMultiplier
-            val ticksRemaining = max(0, (recipe.maxProgress - recipe.progress) / speed)
+        override fun streamData(accessor: BlockAccessor) =
+            when (val be = accessor.level.getBlockEntity(accessor.position)) {
+                is TieredRecipeBlockEntity -> {
+                    val recipe = be.recipeData ?: return null
+                    val speed = be.tier.speedMultiplier
+                    val ticksRemaining = max(0, (recipe.maxProgress - recipe.progress) / speed)
 
-            return RecipeData(
-                recipe.outputItems, recipe.outputLiquids, ticksRemaining, recipe.progress.toFloat() / recipe.maxProgress
-            )
-        }
+                    RecipeData(
+                        recipe.outputItems,
+                        recipe.outputLiquids,
+                        ticksRemaining,
+                        recipe.progress.toFloat() / recipe.maxProgress
+                    )
+                }
+
+                is AbstractRecipeMultiBlockEntity -> {
+                    val recipe = be.recipeData ?: return null
+                    val speed = be.tier.speedMultiplier
+                    val ticksRemaining = max(0, (recipe.maxProgress - recipe.progress) / speed)
+
+                    RecipeData(
+                        recipe.outputItems,
+                        recipe.outputLiquids,
+                        ticksRemaining,
+                        recipe.progress.toFloat() / recipe.maxProgress
+                    )
+                }
+
+                else -> null
+            }
 
         override fun streamCodec() = STREAM_CODEC
         override fun getUid() = rl("crafting_state")
@@ -137,11 +159,11 @@ class JadeIntegration : IWailaPlugin {
         val items: List<ItemStack>, val fluids: List<FluidStack>, val ticksRemaining: Int, val progress: Float
     )
 
-    object MultiblockCraftingStateProvider : IBlockComponentProvider {
+    object CraftingStateProvider : IBlockComponentProvider {
         override fun appendTooltip(
             tooltip: ITooltip, accessor: BlockAccessor, cfg: IPluginConfig
         ) {
-            val state = MultiblockCraftingStateServerProvider.decodeFromData(accessor)
+            val state = CraftingStateServerProvider.decodeFromData(accessor)
             if (state.isPresent) {
                 val state = state.get()
                 val helper = IElementHelper.get()

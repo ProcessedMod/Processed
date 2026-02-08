@@ -40,7 +40,8 @@ abstract class ProcessedBlock(properties: Properties) : Block(properties.pushRea
 
     protected open fun addBlockStateDefinition(stateDefinition: StateDefinition.Builder<Block, BlockState>) {}
 
-    override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
+    @Deprecated(replaceWith = ReplaceWith("addBlockStateDefinition"), message = "")
+    final override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
         when (rotationType()) {
             RotationType.RotatableHorizontal -> builder.add(BlockProperties.HORIZONTAL_FACING)
             RotationType.Rotatable -> builder.add(BlockProperties.FACING)
@@ -51,7 +52,8 @@ abstract class ProcessedBlock(properties: Properties) : Block(properties.pushRea
 
     protected open fun getBlockState(context: BlockPlaceContext): BlockState? = null
 
-    override fun getStateForPlacement(context: BlockPlaceContext): BlockState? {
+    @Deprecated(replaceWith = ReplaceWith("getBlockState"), message = "")
+    final override fun getStateForPlacement(context: BlockPlaceContext): BlockState? {
         var state = getBlockState(context)
         if (state == null) state = defaultBlockState()
         return when (rotationType()) {
