@@ -2,6 +2,7 @@ package redcrafter07.processed.multiblock
 
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.core.RegistryAccess
 import net.minecraft.core.SectionPos
 import net.minecraft.world.level.LevelAccessor
 import org.joml.Vector3i
@@ -97,6 +98,24 @@ class SquareMultiblockValidator(val data: List<Part>, val size: Vector3i, val re
         for (i in 0..<restrictions.size) if (restrictionOccurrences[i] < restrictions[i].minRequired || restrictionOccurrences[i] > restrictions[i].maxAllowed) return null
 
         return MultiblockValidator.Result(positions, specialBlocks)
+    }
+
+    override fun displayBlocks(displayer: MultiblockValidator.BlockDisplayer, regs: RegistryAccess, facing: Direction) {
+        for (x in -controllerPosition.x..<size.x - controllerPosition.x) {
+            val offsetX = BlockPos.ZERO.relative(facing, x)
+            for (z in -controllerPosition.z..<size.z - controllerPosition.z) {
+                val offsetZ = offsetX.relative(facing.clockWise, z)
+                for (y in -controllerPosition.y..<size.y - controllerPosition.y) {
+                    // controller
+                    if (x == 0 && y == 0 && z == 0) continue
+
+                    val part = blockAt(x + controllerPosition.x, y + controllerPosition.y, z + controllerPosition.z)
+                    val pos = offsetZ.offset(0, y, 0)
+
+                    displayer.display(pos, part.matchingBlocks(regs))
+                }
+            }
+        }
     }
 
     class Restriction(val part: Part, val minRequired: Int, val maxAllowed: Int)

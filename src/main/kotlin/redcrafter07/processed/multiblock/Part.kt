@@ -2,6 +2,8 @@ package redcrafter07.processed.multiblock
 
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
+import net.minecraft.core.RegistryAccess
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
@@ -9,10 +11,13 @@ import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockState
 import kotlin.collections.contains
+import kotlin.jvm.optionals.getOrNull
 import net.minecraft.world.level.block.Block as McBlock
 
-fun interface Part {
+interface Part {
     fun blockType(state: BlockState, level: LevelAccessor, pos: BlockPos): MultiblockBlockEntity.SpecialBlockType?
+    fun matchingBlocks(regs: RegistryAccess): List<BlockState>
+
     fun or(vararg other: Part) = if (this == Empty || other.contains(Empty)) Empty else Union(this, *other)
     fun itemInput() = SpecialBlock(this, MultiblockBlockEntity.SpecialBlockType.ItemInput)
     fun itemOutput() = SpecialBlock(this, MultiblockBlockEntity.SpecialBlockType.ItemOutput)
@@ -38,12 +43,16 @@ fun interface Part {
         override fun blockType(state: BlockState, level: LevelAccessor, pos: BlockPos) =
             inner.blockType(state, level, pos)?.run { type }
 
+        override fun matchingBlocks(regs: RegistryAccess) = inner.matchingBlocks(regs)
+
         override fun toString() = "SpecialBlock($inner, $type)"
     }
 
     object Empty : Part {
         override fun blockType(state: BlockState, level: LevelAccessor, pos: BlockPos) =
             MultiblockBlockEntity.SpecialBlockType.Ignored
+
+        override fun matchingBlocks(regs: RegistryAccess) = listOf<BlockState>()
 
         override fun or(vararg other: Part) = this
         override infix fun or(other: Part) = this
@@ -55,6 +64,8 @@ fun interface Part {
             state: BlockState, level: LevelAccessor, pos: BlockPos
         ) = throw IllegalStateException("Part.Controller's blockType called")
 
+        override fun matchingBlocks(regs: RegistryAccess) = listOf<BlockState>()
+
         override fun or(vararg other: Part) = throw IllegalStateException("Part.Controller's or called")
         override infix fun or(other: Part) = throw IllegalStateException("Part.Controller's or called")
         override fun toString() = "controller"
@@ -62,6 +73,8 @@ fun interface Part {
 
     class Union(var parts: MutableList<Part>?) : Part {
         constructor(vararg parts: Part) : this(parts.toMutableList())
+
+        override fun matchingBlocks(regs: RegistryAccess) = parts?.flatMap { it.matchingBlocks(regs) } ?: listOf()
 
         init {
             val parts = parts
@@ -128,6 +141,14 @@ fun interface Part {
             else -> throw IllegalStateException()
         }.run { if (this) MultiblockBlockEntity.SpecialBlockType.None else null }
 
+        override fun matchingBlocks(regs: RegistryAccess) = when (block) {
+            is ResourceLocation -> listOf(BuiltInRegistries.BLOCK.get(block).defaultBlockState())
+            is ResourceKey<*> -> listOf(BuiltInRegistries.BLOCK.get(block.location()).defaultBlockState())
+            is Holder<*> -> listOf((block.value() as McBlock).defaultBlockState())
+            is McBlock -> listOf(block.defaultBlockState())
+            else -> throw IllegalStateException()
+        }
+
         @Suppress("DEPRECATION")
         override fun toString() = when (block) {
             is ResourceLocation -> block.toString()
@@ -146,6 +167,12 @@ fun interface Part {
     class Tag(val tag: TagKey<McBlock>) : Part {
         override fun blockType(state: BlockState, level: LevelAccessor, pos: BlockPos) =
             if (state.`is`(tag)) MultiblockBlockEntity.SpecialBlockType.None else null
+
+        override fun matchingBlocks(regs: RegistryAccess): List<BlockState> {
+            val reg = regs.registry(tag.registry).getOrNull() ?: return listOf()
+            val contents = reg.getTag(tag).getOrNull() ?: return listOf()
+            return contents.stream().map { it.value().defaultBlockState() }.toList()
+        }
 
         override fun toString() = "#${tag.location}"
     }

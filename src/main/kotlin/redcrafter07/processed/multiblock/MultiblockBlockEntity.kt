@@ -36,6 +36,11 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
 
     open fun state(): Component? = null
 
+    fun displayBlocks(displayer: MultiblockValidator.BlockDisplayer) {
+        val regs = level?.registryAccess() ?: return
+        validator().displayBlocks(displayer, regs, getFacingDirection(blockState))
+    }
+
     override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
         super.loadAdditional(tag, registries)
         isAssembled = tag.getBoolean("isAssembled")
@@ -200,6 +205,9 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
         blocks = null
         val wasPreviouslyAssembled = isAssembled
         isAssembled = affectedBlocks != null && true && !affectedBlocks.isEmpty()
+
+        if (isAssembled) MultiblockPreview.removeIfLastDisplayed(blockPos)
+
         if (!isAssembled || affectedBlocks == null || result == null) {
             for (pos in old) {
                 MultiBlockBlockCache.removeBlock(serverLevel, pos)

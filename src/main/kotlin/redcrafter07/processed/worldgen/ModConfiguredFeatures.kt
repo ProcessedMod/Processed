@@ -22,7 +22,7 @@ object ModConfiguredFeatures {
             context,
             OVERWORLD_BLITZ_ORE_KEY,
             Feature.ORE,
-            OreConfiguration(stoneReplaceable, ModBlocks.BLITZ_ORE.get().defaultBlockState(), 3)
+            OreConfiguration(stoneReplaceable, ModBlocks.BLITZ_ORE.get().defaultBlockState(), 12)
         )
     }
 

@@ -41,6 +41,13 @@ class ModBlockLootTables(provider: HolderLookup.Provider) :
         dropSelf(ModBlocks.CABLES)
         dropSelf(ModBlocks.RAW_METAL_BLOCKS)
         dropSelf(ModBlocks.METAL_BLOCKS)
+        dropSelf(ModBlocks.LAUNCH_CONTROLLER)
+        dropSelf(ModBlocks.LANDING_PAD)
+        dropSelf(ModBlocks.ENERGY_HATCHES)
+        dropSelf(ModBlocks.ITEM_INPUT_HATCH)
+        dropSelf(ModBlocks.ITEM_OUTPUT_HATCH)
+        dropSelf(ModBlocks.FLUID_INPUT_HATCH)
+        dropSelf(ModBlocks.FLUID_OUTPUT_HATCH)
     }
 
     private fun dropSelf(block: DeferredBlock<*>) {

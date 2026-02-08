@@ -23,7 +23,7 @@ object ModPlacedFeatures {
             OVERWORLD_BLITZ_ORE_PLACED_KEY,
             configuredFeatures.getOrThrow(ModConfiguredFeatures.OVERWORLD_BLITZ_ORE_KEY),
             commonOrePlacement(
-                8, HeightRangePlacement.uniform(VerticalAnchor.absolute(8), VerticalAnchor.absolute(30))
+                5, HeightRangePlacement.uniform(VerticalAnchor.absolute(-40), VerticalAnchor.absolute(20))
             )
         )
     }

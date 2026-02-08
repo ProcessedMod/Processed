@@ -17,12 +17,11 @@ class LaunchControllerBlock : MultiblockBlock(Properties.of().pushReaction(PushR
     override fun useWithoutItem(
         state: BlockState, level: Level, pos: BlockPos, player: Player, hitResult: BlockHitResult
     ): InteractionResult {
-        if (level.isClientSide) return InteractionResult.SUCCESS
         val be = level.getBlockEntity(pos)
-        if (be is LaunchControllerBlockEntity) {
-            player.openMenu(be) { data -> data.writeBlockPos(pos) }
-            return InteractionResult.CONSUME
+        if (be is LaunchControllerBlockEntity && be.isAssembled) {
+            if (!level.isClientSide) player.openMenu(be) { data -> data.writeBlockPos(pos) }
+            return InteractionResult.sidedSuccess(level.isClientSide)
         }
-        return InteractionResult.PASS
+        return super.useWithoutItem(state, level, pos, player, hitResult)
     }
 }
