@@ -14,7 +14,7 @@ import java.util.List;
 public record ProcessedTier(int tier, int speedMultiplier, int energyMultiplier, @NotNull Material material) {
     @NotNull
     public static ProcessedTier fromTierNumber(int tier) {
-        return TIERS.get(tier);
+        return TIERS.get(Math.clamp(tier, 0, TIERS.size()));
     }
 
     @NotNull
@@ -70,7 +70,8 @@ public record ProcessedTier(int tier, int speedMultiplier, int energyMultiplier,
     public static final ProcessedTier Nuclear = new ProcessedTier(4, 81, 256, Materials.INSTANCE.getURANIUM());
     // Fusion
     @NotNull
-    public static final ProcessedTier Quantum = new ProcessedTier(5, 243, 1024, Materials.INSTANCE.getNICKEL_TITANIUM());
+    public static final ProcessedTier Quantum = new ProcessedTier(5, 243, 1024,
+        Materials.INSTANCE.getNICKEL_TITANIUM());
     // Void energy or sum idfk lmao
     @NotNull
     public static final ProcessedTier Void = new ProcessedTier(6, 729, 4096, Materials.INSTANCE.getTITANIUM());
@@ -79,12 +80,13 @@ public record ProcessedTier(int tier, int speedMultiplier, int energyMultiplier,
     public static final ProcessedTier Ultimate = new ProcessedTier(7, 2187, 16384, Materials.INSTANCE.getTITANIUM());
 
     @NotNull
-    public static final List<ProcessedTier> TIERS = List.of(Rudimentary, Basic, Advanced, IEnergyProMax, Nuclear, Quantum,
-        Void, Ultimate);
+    public static final List<ProcessedTier> TIERS = List.of(Rudimentary, Basic, Advanced, IEnergyProMax, Nuclear,
+        Quantum, Void, Ultimate);
 
     @NotNull
     public static Codec<@NotNull ProcessedTier> CODEC = Codec.INT.xmap(ProcessedTier::fromTierNumber,
         ProcessedTier::tier);
+
     @NotNull
     public static StreamCodec<@NotNull ByteBuf, @NotNull ProcessedTier> STREAM_CODEC = ByteBufCodecs.INT.map(
         ProcessedTier::fromTierNumber, ProcessedTier::tier);

@@ -31,7 +31,7 @@ class FluidHatchMenu(
     )
 
     init {
-        addFluidSlot(hatch.inventoryHandler())
+        addFluidSlot(hatch.inventoryHandler(), 0, 0, 0)
     }
 
 

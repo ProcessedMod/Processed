@@ -19,6 +19,9 @@ object ModRecipes {
     val MINER_FORM_SERIALIZER = registerSerializer("miner_forming") { MinerFormRecipe.Serializer }
 
     val SIFTING = registerRecipe("sifting") { SiftingRecipe.Serializer }
+    val CRUSHING = registerRecipe("crushing") { CrushingRecipe.Serializer }
+    val WASHING = registerRecipe("washing") { WashingRecipe.Serializer }
+    val PURIFYING = registerRecipe("purifying") { PurifyingRecipe.Serializer }
 
     fun <T : RecipeSerializer<*>> registerSerializer(
         key: String, serializer: Supplier<T>

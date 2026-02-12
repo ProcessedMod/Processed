@@ -65,6 +65,9 @@ object Translations {
 
     inline fun poweredFurnaceName(tier: ProcessedTier) = t("block.processed.powered_furnace", tier)
     inline fun sifterName(tier: ProcessedTier) = t("block.processed.sifter", tier)
+    inline fun crusherName(tier: ProcessedTier) = t("block.processed.crusher", tier)
+    inline fun washerName(tier: ProcessedTier) = t("block.processed.washer", tier)
+    inline fun purifierName(tier: ProcessedTier) = t("block.processed.purifier", tier)
     inline fun energyHatchName(tier: ProcessedTier) = t("block.processed.energy_hatch", tier)
     inline fun energyHatchTooltip(amount: Int) =
         t("block.processed.energy_hatch.tooltip", energy.translate(amount).withStyle(ChatFormatting.GREEN))
@@ -132,6 +135,7 @@ object Translations {
     inline fun assembledMinerItemComponents() = t("item.processed.assembled_mining_rocket.components")
     inline fun assembledMinerItemStats() = t("item.processed.assembled_mining_rocket.stats")
     inline fun fluidWidgetTooltip(fluid: C, amount: Int) = t("processed.gui.widget.fluid", fluid, mb(amount))
+    inline fun fluidWidgetTooltip(fluid: C, amount: Int, capacity: Int) = t("processed.gui.widget.fluid.capacity", fluid, mb(amount), mb(capacity))
 
     inline fun launchControllerScreenResult(item: C) = t("processed.gui.launch_controller_screen.result", item)
     inline fun launchControllerScreenResultAmount(amount: Int) =

@@ -22,5 +22,6 @@
         }
     ],
     "processingTime": 200,
-    "energyUsage": 8
+    "energyUsage": 8,
+    "baseTier": 0
 }

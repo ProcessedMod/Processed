@@ -20,6 +20,12 @@ object ModTileEntities {
         register("powered_furnace", ::PoweredFurnaceBlockEntity, *ModBlocks.BLOCKS_POWERED_FURNACE.toTypedArray())
     val SIFTER =
         register("sifter", ::SifterBlockEntity, *ModBlocks.BLOCKS_SIFTER.toTypedArray())
+    val CRUSHER =
+        register("crusher", ::CrusherBlockEntity, *ModBlocks.BLOCKS_CRUSHER.toTypedArray())
+    val PURIFIER =
+        register("purifier", ::PurifierBlockEntity, *ModBlocks.BLOCKS_PURIFIER.toTypedArray())
+    val WASHER =
+        register("washer", ::WasherBlockEntity, *ModBlocks.BLOCKS_WASHER.toTypedArray())
     val FLUID_TANK = register("fluid_tank", ::FluidTankBlockEntity, ModBlocks.FLUID_TANK)
     val BIG_SMELTER = register("big_smelter", ::BigSmelterBlockEntity, ModBlocks.BIG_SMELTER)
     val LAUNCH_CONTROLLER = register("launch_controller", ::LaunchControllerBlockEntity, ModBlocks.LAUNCH_CONTROLLER)

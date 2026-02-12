@@ -33,12 +33,13 @@ class FluidWidget(
 
         val fluidHandler = menu.getFluid(slot) ?: return
         val fluid = fluidHandler.getFluidInTank(0)
-        tooltip = Tooltip.create(Translations.fluidWidgetTooltip(fluid.hoverName, fluid.amount))
+        val capacity = fluidHandler.getTankCapacity(0)
+        tooltip = Tooltip.create(Translations.fluidWidgetTooltip(fluid.hoverName, fluid.amount, capacity))
         if (!fluid.isEmpty) {
             val sprite = getFluidTexture(fluid, false)
             val color = getFluidColor(fluid)
 
-            val filled = fluidHandler.getFluidInTank(0).amount / fluidHandler.getTankCapacity(0).toDouble()
+            val filled = fluidHandler.getFluidInTank(0).amount / capacity.toDouble()
             val filledHeight = (filled * (height - 2)).toInt()
 
             RenderUtils.drawSpriteDuplicated(

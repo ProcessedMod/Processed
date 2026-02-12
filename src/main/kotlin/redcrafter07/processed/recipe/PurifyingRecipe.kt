@@ -15,7 +15,7 @@ import redcrafter07.processed.ProcessedTier
 import java.util.*
 import kotlin.jvm.optionals.getOrDefault
 
-class SiftingRecipe(
+class PurifyingRecipe(
     val ingredient: SizedIngredient,
     val guaranteedItem: ItemStack,
     val extraOutputs: List<ChanceItemRecipeOutput>,
@@ -42,33 +42,34 @@ class SiftingRecipe(
         return list
     }
 
-    override fun getSerializer(): RecipeSerializer<SiftingRecipe> = ModRecipes.SIFTING.serializer
-    override fun getType(): RecipeType<SiftingRecipe> = ModRecipes.SIFTING.type
+    override fun getSerializer(): RecipeSerializer<PurifyingRecipe> = ModRecipes.PURIFYING.serializer
+    override fun getType(): RecipeType<PurifyingRecipe> = ModRecipes.PURIFYING.type
 
-    object Serializer : RecipeSerializer<SiftingRecipe> {
-        val CODEC: MapCodec<SiftingRecipe> = RecordCodecBuilder.mapCodec {
+    object Serializer : RecipeSerializer<PurifyingRecipe> {
+        val CODEC: MapCodec<PurifyingRecipe> = RecordCodecBuilder.mapCodec {
             it.group(
-                SizedIngredient.FLAT_CODEC.fieldOf("ingredient").forGetter(SiftingRecipe::ingredient),
+                SizedIngredient.FLAT_CODEC.fieldOf("ingredient").forGetter(PurifyingRecipe::ingredient),
                 ItemStack.OPTIONAL_CODEC.lenientOptionalFieldOf("guaranteedItem").xmap(
                     { opt -> opt.getOrDefault(ItemStack.EMPTY) }, Optional<ItemStack>::of
-                ).forGetter(SiftingRecipe::guaranteedItem),
-                ChanceItemRecipeOutput.LIST_CODEC.fieldOf("extraOutputs").forGetter(SiftingRecipe::extraOutputs),
+                ).forGetter(PurifyingRecipe::guaranteedItem),
+                ChanceItemRecipeOutput.LIST_CODEC.fieldOf("extraOutputs").forGetter(PurifyingRecipe::extraOutputs),
                 energy(),
                 processing(),
                 tier()
-            ).apply(it, ::SiftingRecipe)
+            ).apply(it, ::PurifyingRecipe)
         }
         val STREAM_CODEC = streamComp(
             SizedIngredient.STREAM_CODEC,
-            SiftingRecipe::ingredient,
+            PurifyingRecipe::ingredient,
             ItemStack.OPTIONAL_STREAM_CODEC,
-            SiftingRecipe::guaranteedItem,
+            PurifyingRecipe::guaranteedItem,
             ChanceItemRecipeOutput.LIST_STREAM_CODEC,
-            SiftingRecipe::extraOutputs,
-            ::SiftingRecipe
+            PurifyingRecipe::extraOutputs,
+            ::PurifyingRecipe
         )
 
         override fun codec() = CODEC
         override fun streamCodec() = STREAM_CODEC
     }
+
 }

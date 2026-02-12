@@ -37,6 +37,7 @@ abstract class AbstractProcessedContainerMenu(menuType: MenuType<*>, containerId
     private val fluidSlots = ArrayList<FluidHandlerModifiable>()
     private val remoteFluidSlots = ArrayList<FluidStack>()
     private var fluidStateId = 0
+    val fluidSlotData = ArrayList<FluidSlotData>()
 
     // Synchronisation stuff
     val syncData = SyncData(this)
@@ -45,9 +46,11 @@ abstract class AbstractProcessedContainerMenu(menuType: MenuType<*>, containerId
 
     private fun nextFluidStateId() = fluidStateId.let { fluidStateId++; it }
 
-    fun addFluidSlot(handler: FluidHandlerModifiable) {
+    fun addFluidSlot(handler: FluidHandlerModifiable, x: Int, y: Int, width: Int, big: Boolean = false) {
         fluidSlots.add(handler)
         remoteFluidSlots.add(handler.getFluidInTank(0))
+        if (!rpcSender.player.level().isClientSide) return
+        fluidSlotData.add(FluidSlotData(x,  y, width, big))
     }
 
 
@@ -195,4 +198,6 @@ abstract class AbstractProcessedContainerMenu(menuType: MenuType<*>, containerId
     fun setFluid(slot: Int, fluid: FluidStack) {
         fluidSlots.getOrNull(slot)?.setFluidInTank(0, fluid)
     }
+
+    class FluidSlotData(val x: Int, val y: Int, val width: Int, val big: Boolean)
 }

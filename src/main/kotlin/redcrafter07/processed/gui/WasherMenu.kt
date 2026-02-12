@@ -10,22 +10,22 @@ import net.minecraft.world.inventory.SimpleContainerData
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.neoforged.neoforge.items.SlotItemHandler
-import redcrafter07.processed.block.SifterBlock
-import redcrafter07.processed.block.tile_entities.SifterBlockEntity
+import redcrafter07.processed.block.WasherBlock
+import redcrafter07.processed.block.tile_entities.WasherBlockEntity
 import redcrafter07.processed.gui.inventory.ProcessedMachineMenu
 import redcrafter07.processed.gui.inventory.SlotOutputItemHandler
 import redcrafter07.processed.gui.widgets.ProgressBarWidget
 import redcrafter07.processed.gui.widgets.ProgressBars
 
-class SifterMenu(
+class WasherMenu(
     containerId: Int, playerInventory: Inventory, blockEntity: BlockEntity?, val data: ContainerData
-) : ProcessedMachineMenu<SifterBlockEntity>(
-    ModMenuTypes.SIFTER_MENU.get(), containerId, playerInventory, requireSifterBlockEntity(blockEntity)
+) : ProcessedMachineMenu<WasherBlockEntity>(
+    ModMenuTypes.WASHER_MENU.get(), containerId, playerInventory, requireBE(blockEntity)
 ) {
     companion object {
-        fun requireSifterBlockEntity(b: BlockEntity?): SifterBlockEntity {
+        fun requireBE(b: BlockEntity?): WasherBlockEntity {
             if (b == null) throw IllegalStateException("no block entity found  :<")
-            if (b !is SifterBlockEntity) throw IllegalStateException("non-powered furnace block entity found :<")
+            if (b !is WasherBlockEntity) throw IllegalStateException("non-powered furnace block entity found :<")
             return b
         }
     }
@@ -33,7 +33,8 @@ class SifterMenu(
     val level: Level = playerInventory.player.level()
 
     init {
-        addSlot(SlotItemHandler(this.blockEntity.inputItemHandler, 0, 21, 35))
+        addSlot(SlotItemHandler(this.blockEntity.inputItemHandler, 0, 35, 35))
+        addFluidSlot(this.blockEntity.inputFluidHandler, 10, 30, 20)
 
         addSlot(SlotOutputItemHandler(this.blockEntity.outputItemHandler, 0, 96, 24))
         addSlot(SlotOutputItemHandler(this.blockEntity.outputItemHandler, 1, 114, 24))
@@ -59,14 +60,14 @@ class SifterMenu(
         }
 
     override fun getProgressBar(offX: Int, offY: Int): ProgressBarWidget =
-        ProgressBars.SIFTER.create(offX + 60, offY + 40, this::progress)
+        ProgressBars.WASHER.create(offX + 64, offY + 40, this::progress)
 
     override val title: Component
         get() = blockEntity.displayName
 
     override fun stillValid(player: Player): Boolean =
         ContainerLevelAccess.create(level, blockEntity.blockPos).evaluate { level, pos ->
-            if (level.getBlockState(pos).block is SifterBlock) return@evaluate player.distanceToSqr(
+            if (level.getBlockState(pos).block is WasherBlock) return@evaluate player.distanceToSqr(
                 pos.x.toDouble() + 0.5,
                 pos.y.toDouble() + 0.5,
                 pos.z.toDouble() + 0.5,

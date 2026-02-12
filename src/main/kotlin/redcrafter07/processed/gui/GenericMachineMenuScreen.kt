@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
 import redcrafter07.processed.gui.RenderUtils.renderDefault
 import redcrafter07.processed.gui.inventory.ProcessedMachineMenu
+import redcrafter07.processed.gui.widgets.FluidWidget
 
 class GenericMachineMenuScreen(menu: ProcessedMachineMenu<*>, inventory: Inventory, val component: Component) :
     AbstractContainerScreen<ProcessedMachineMenu<*>>(menu, inventory, menu.title) {
@@ -14,6 +15,12 @@ class GenericMachineMenuScreen(menu: ProcessedMachineMenu<*>, inventory: Invento
         addRenderableOnly(menu.getProgressBar(leftPos, topPos))
         val energyWidget = menu.getEnergyContainer(leftPos, topPos)
         if (energyWidget != null) addRenderableWidget(energyWidget)
+
+        for ((i, v) in menu.fluidSlotData.withIndex()) addRenderableWidget(
+            FluidWidget(
+                leftPos + v.x, topPos + v.y, v.width, v.big, i, menu
+            )
+        )
     }
 
     override fun renderBg(guiGraphics: GuiGraphics, dt: Float, mouseX: Int, mouseY: Int) {

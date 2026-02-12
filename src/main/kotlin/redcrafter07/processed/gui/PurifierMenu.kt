@@ -10,22 +10,22 @@ import net.minecraft.world.inventory.SimpleContainerData
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.neoforged.neoforge.items.SlotItemHandler
-import redcrafter07.processed.block.SifterBlock
-import redcrafter07.processed.block.tile_entities.SifterBlockEntity
+import redcrafter07.processed.block.PurifierBlock
+import redcrafter07.processed.block.tile_entities.PurifierBlockEntity
 import redcrafter07.processed.gui.inventory.ProcessedMachineMenu
 import redcrafter07.processed.gui.inventory.SlotOutputItemHandler
 import redcrafter07.processed.gui.widgets.ProgressBarWidget
 import redcrafter07.processed.gui.widgets.ProgressBars
 
-class SifterMenu(
+class PurifierMenu(
     containerId: Int, playerInventory: Inventory, blockEntity: BlockEntity?, val data: ContainerData
-) : ProcessedMachineMenu<SifterBlockEntity>(
-    ModMenuTypes.SIFTER_MENU.get(), containerId, playerInventory, requireSifterBlockEntity(blockEntity)
+) : ProcessedMachineMenu<PurifierBlockEntity>(
+    ModMenuTypes.PURIFIER_MENU.get(), containerId, playerInventory, requireBE(blockEntity)
 ) {
     companion object {
-        fun requireSifterBlockEntity(b: BlockEntity?): SifterBlockEntity {
+        fun requireBE(b: BlockEntity?): PurifierBlockEntity {
             if (b == null) throw IllegalStateException("no block entity found  :<")
-            if (b !is SifterBlockEntity) throw IllegalStateException("non-powered furnace block entity found :<")
+            if (b !is PurifierBlockEntity) throw IllegalStateException("non-powered furnace block entity found :<")
             return b
         }
     }
@@ -59,14 +59,14 @@ class SifterMenu(
         }
 
     override fun getProgressBar(offX: Int, offY: Int): ProgressBarWidget =
-        ProgressBars.SIFTER.create(offX + 60, offY + 40, this::progress)
+        ProgressBars.PURIFIER.create(offX + 60, offY + 40, this::progress)
 
     override val title: Component
         get() = blockEntity.displayName
 
     override fun stillValid(player: Player): Boolean =
         ContainerLevelAccess.create(level, blockEntity.blockPos).evaluate { level, pos ->
-            if (level.getBlockState(pos).block is SifterBlock) return@evaluate player.distanceToSqr(
+            if (level.getBlockState(pos).block is PurifierBlock) return@evaluate player.distanceToSqr(
                 pos.x.toDouble() + 0.5,
                 pos.y.toDouble() + 0.5,
                 pos.z.toDouble() + 0.5,

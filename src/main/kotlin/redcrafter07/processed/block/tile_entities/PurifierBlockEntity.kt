@@ -9,12 +9,12 @@ import net.minecraft.world.level.block.state.BlockState
 import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.Translations
 import redcrafter07.processed.block.machine_abstractions.IoState
-import redcrafter07.processed.gui.SifterMenu
+import redcrafter07.processed.gui.PurifierMenu
 import redcrafter07.processed.recipe.ModRecipes
 import redcrafter07.processed.recipe.TieredInput
 
-class SifterBlockEntity(pos: BlockPos, blockState: BlockState) :
-    TieredRecipeBlockEntity(ModTileEntities.SIFTER.get(), pos, blockState) {
+class PurifierBlockEntity(pos: BlockPos, blockState: BlockState) :
+    TieredRecipeBlockEntity(ModTileEntities.PURIFIER.get(), pos, blockState) {
 
     init {
         useItemCapability(IoState.Input)
@@ -31,7 +31,7 @@ class SifterBlockEntity(pos: BlockPos, blockState: BlockState) :
             val stack = inputItemHandler.getStackInSlot(slot)
             val input = TieredInput.single(stack, tier)
             val recipe = level.recipeManager.getRecipeFor(
-                ModRecipes.SIFTING.type, input, level
+                ModRecipes.PURIFYING.type, input, level
             ).map { it.value }.orElse(null) ?: return null
             val remainingItem = stack.craftingRemainingItem
             if (remainingItem.isEmpty) {
@@ -49,7 +49,7 @@ class SifterBlockEntity(pos: BlockPos, blockState: BlockState) :
     }
 
     override fun createMenu(containerId: Int, inventory: Inventory, player: Player): AbstractContainerMenu =
-        SifterMenu(containerId, inventory, this, data)
+        PurifierMenu(containerId, inventory, this, data)
 
-    override fun getDisplayName(): Component = Translations.sifterName(tier)
+    override fun getDisplayName(): Component = Translations.purifierName(tier)
 }

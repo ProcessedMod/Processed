@@ -11,6 +11,10 @@ object ProgressBars {
         16
     )
     val SIFTER = right("textures/gui/progress_bars/sifter.png", 16, 8)
+    // TODO:
+    val CRUSHER = right("textures/gui/progress_bars/crusher.png", 16, 8)
+    val PURIFIER = right("textures/gui/progress_bars/purifier.png", 16, 8)
+    val WASHER = right("textures/gui/progress_bars/purifier.png", 16, 8)
 
     /**
      * @param width This should be *half* the width of the file, as it only matches the width of the "off-state" of the progress bar. However, the file has both the on and off state and thus is double the width of one of the states
