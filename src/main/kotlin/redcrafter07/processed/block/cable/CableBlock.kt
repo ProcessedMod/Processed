@@ -2,8 +2,7 @@ package redcrafter07.processed.block.cable
 
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
-import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.item.ItemStack
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
@@ -35,13 +34,6 @@ class CableBlock(override val material: Material) : Block(Properties.of().noOccl
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston)
     }
 
-    override fun setPlacedBy(level: Level, pos: BlockPos, state: BlockState, placer: LivingEntity?, stack: ItemStack) {
-        val blockEntity = level.getBlockEntity(pos)
-        if (blockEntity is CableBlockEntity) blockEntity.updateShape()
-
-        super.setPlacedBy(level, pos, state, placer, stack)
-    }
-
     override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
         val be = level.getBlockEntity(pos)
         return if (be is CableBlockEntity) shapeCache.value[be.connected.value and 0b111111] else shapeCache.value[0] // Only center block
@@ -50,6 +42,19 @@ class CableBlock(override val material: Material) : Block(Properties.of().noOccl
     override fun getVisualShape(
         state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext
     ): VoxelShape = Shapes.empty()
+
+    override fun onRemove(
+        state: BlockState, level: Level, pos: BlockPos, newState: BlockState, movedByPiston: Boolean
+    ) {
+        if (level is ServerLevel && !level.isClientSide) {
+            val be = level.getBlockEntity(pos)
+            if (be is CableBlockEntity) {
+                val network = be.network
+                if (network != null) CableNetworkData.getOrNull(level)?.remove(network)
+            }
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston)
+    }
 
     override fun propagatesSkylightDown(state: BlockState, level: BlockGetter, pos: BlockPos): Boolean = true
 

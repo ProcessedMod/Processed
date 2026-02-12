@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.HolderLookup
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.Tag
 import net.minecraft.network.Connection
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
@@ -20,7 +21,6 @@ import net.neoforged.neoforge.client.model.data.ModelData
 import net.neoforged.neoforge.client.model.data.ModelProperty
 import net.neoforged.neoforge.energy.IEnergyStorage
 import redcrafter07.processed.ProcessedPower
-import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.Translations
 import redcrafter07.processed.block.WrenchInteractableBlock
 import redcrafter07.processed.block.machine_abstractions.BlockSide
@@ -31,8 +31,7 @@ import redcrafter07.processed.materials.MaterialContainer
 import redcrafter07.processed.materials.data.CableData
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.minus
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.toVec3
-import java.util.function.BiFunction
-import java.util.function.Consumer
+import java.util.*
 
 class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
     BlockEntity(ModTileEntities.CABLE.get(), pos, blockState), EnergyCapableBlockEntity, WrenchInteractableBlock {
@@ -46,28 +45,44 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
 
     val connected = Connected()
     val disallowedConnections = Connected()
+    var network: UUID? = null
 
     class EnergyHandler(val cable: CableBlockEntity, val block: BlockPos) : IEnergyStorage {
         override fun receiveEnergy(amount: Int, sim: Boolean): Int {
             val lvl = cable.level ?: return 0
+            if (lvl !is ServerLevel || lvl.isClientSide) return 0
+            if (amount == 0) return 0
             var energyLeft = amount
+            if (cable.network == null) cable.scanNetwork()
+            val networkId = cable.network ?: return 0
 
-            for (entry in cable.outputs.entries) {
-                if (entry.key == block) continue
-                if (energyLeft <= 0) return amount
-                val cap: IEnergyStorage
-                val cap1 = lvl.getCapability(Capabilities.EnergyStorage.BLOCK, entry.key, entry.value.second)
-                if (cap1 != null) cap = cap1
-                else {
-                    val cap2 = lvl.getCapability(ProcessedPower.BLOCK, entry.key, entry.value.second) ?: continue
-                    if (!cable.cableTier.value.canInsertEnergy(cap2.minTier())) continue
-                    cap = cap2.energy()
-                }
+            val network = CableNetworkData.getNetwork(lvl, networkId, cable.blockPos)
+            if(network == null) {
+                cable.network = null
+                return 0
+            }
 
-                try {
-                    energyLeft -= cap.receiveEnergy(energyLeft, sim)
-                } catch (_: Exception) {
+            network.forEachEndpoint(true) { pos, dir ->
+                val actualPos = pos.relative(dir)
+                if (block != actualPos) {
+                    if (energyLeft <= 0) return@forEachEndpoint false
+
+                    val cap: IEnergyStorage
+                    val cap1 = lvl.getCapability(Capabilities.EnergyStorage.BLOCK, actualPos, dir)
+                    if (cap1 != null) cap = cap1
+                    else {
+                        val cap2 =
+                            lvl.getCapability(ProcessedPower.BLOCK, actualPos, dir) ?: return@forEachEndpoint false
+                        if (!cable.cableTier.value.canInsertEnergy(cap2.minTier())) return@forEachEndpoint false
+                        cap = cap2.energy()
+                    }
+
+                    try {
+                        energyLeft -= cap.receiveEnergy(energyLeft, sim)
+                    } catch (_: Exception) {
+                    }
                 }
+                energyLeft > 0
             }
 
             return amount - energyLeft
@@ -80,6 +95,46 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
         override fun canReceive(): Boolean = true
     }
 
+    fun scanNetwork(): Boolean {
+        val level = level ?: return false
+        if (level !is ServerLevel || level.isClientSide) return false
+
+        val id = network
+        val data = CableNetworkData.getOrMake(level)
+        val network = if (id == null) data.newNetwork()
+        else data.getNetwork(id, blockPos) ?: data.newNetwork()
+        network.clearBlocks(level)
+        this.network = network.id
+
+        val toScan = arrayListOf(blockPos)
+        while (toScan.isNotEmpty()) {
+            val pos = toScan.removeFirstOrNull() ?: break
+            if (network.containsBlock(pos)) continue
+            val be = level.getBlockEntity(pos)
+            if (be !is CableBlockEntity) continue
+
+            network.addBlock(pos, level)
+            val prev = be.network
+            be.network = network.id
+            if (prev != null && prev != network.id) data.remove(prev)
+
+            for (d in Direction.entries) {
+                val newPos = pos.relative(d)
+                if (!be.isConnected(level, d)) continue
+                be.connected[d] = true
+                if (level.getBlockState(newPos).`is`(blockState.block)) {
+                    toScan.add(newPos)
+                    continue
+                } else network.addEndpoint(pos, d, level)
+            }
+
+            level.blockEntityChanged(pos)
+        }
+
+        sync()
+        return true
+    }
+
     override fun energyCapabilityForSide(side: BlockSide?, state: BlockState): ProcessedPower? {
         val handler = if (side == null) EnergyHandler(this, blockPos)
         else if (connected[side.asDirectionNotRotated]) EnergyHandler(this, blockPos)
@@ -88,45 +143,9 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
         return ProcessedPowerStore(cableTier.value, handler)
     }
 
-    private var outputCacheInner: Map<BlockPos, Pair<ProcessedTier, Direction>>? = null
-    val outputs: Map<BlockPos, Pair<ProcessedTier, Direction>>
-        get() {
-            val outputCache = outputCacheInner
-            if (outputCache != null) return outputCache
-            val outputs = HashMap<BlockPos, Pair<ProcessedTier, Direction>>()
-
-            val level =
-                level ?: throw IllegalStateException("tried to update the output cache while not having a level")
-
-            traverse(worldPosition, cableTier.value) { cable, transferTier ->
-                val tier = transferTier.min(cable.cableTier.value)
-
-                for (direction in Direction.entries) {
-                    val pos = cable.blockPos.relative(direction)
-                    if (!cable.connected[direction]) continue
-
-                    val be = level.getBlockEntity(pos)
-                    if (be != null && be is CableBlockEntity) continue
-                    var cap = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, direction.opposite)
-                    if (cap == null) {
-                        val cap1 = level.getCapability(ProcessedPower.BLOCK, pos, direction.opposite) ?: continue
-                        if (!tier.canInsertEnergy(cap1.minTier())) continue
-                        cap = cap1.energy()
-                    }
-                    if (!cap.canReceive()) continue
-                    outputs.compute(pos) { _, value ->
-                        Pair(value?.first ?: tier, direction.opposite)
-                    }
-                }
-
-                tier
-            }
-            outputCacheInner = outputs
-            return outputs
-        }
-
     override fun saveAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
         super.saveAdditional(tag, registries)
+        network?.let { tag.putString("network", it.toString()) }
         tag.putInt("connected", connected.value)
         tag.putInt("disallowedConnections", disallowedConnections.value)
     }
@@ -135,14 +154,19 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
         super.loadAdditional(tag, registries)
         connected.value = tag.getInt("connected")
         disallowedConnections.value = tag.getInt("disallowedConnections")
+        network = if (tag.contains("network", Tag.TAG_STRING.toInt())) try {
+            UUID.fromString(tag.getString("network"))
+        } catch (_: IllegalArgumentException) {
+            null
+        }
+        else null
     }
 
     fun updateShape() {
         val level = level ?: return
         if (level.isClientSide || level !is ServerLevel) return
         for (direction in Direction.entries) connected[direction] = isConnected(level, direction)
-        sync()
-        traverse(worldPosition) { it.outputCacheInner = null }
+        scanNetwork()
     }
 
     fun sync() {
@@ -151,35 +175,6 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
             val state = blockState
             level.sendBlockUpdated(this.worldPosition, state, state, Block.UPDATE_CLIENTS)
             setChanged()
-        }
-    }
-
-    fun traverse(pos: BlockPos, f: Consumer<CableBlockEntity>) = traverse(pos, Unit) { model, _ -> f.accept(model) }
-
-    fun <T> traverse(pos: BlockPos, data: T, f: BiFunction<CableBlockEntity, T, T>) {
-        val set = hashSetOf(pos)
-        val data = f.apply(this, data)
-        val level = level ?: return
-        traverse(pos, f, set, level, data, this)
-    }
-
-    fun <T> traverse(
-        pos: BlockPos,
-        f: BiFunction<CableBlockEntity, T, T>,
-        set: MutableSet<BlockPos>,
-        level: Level,
-        data: T,
-        be: CableBlockEntity
-    ) {
-        for (direction in Direction.entries) {
-            val newPos = pos.relative(direction)
-            if (set.contains(newPos) || !be.connected[direction]) continue
-            set.add(newPos)
-            val blockEntity = level.getBlockEntity(newPos)
-            if (blockEntity is CableBlockEntity) {
-                val data = f.apply(blockEntity, data)
-                traverse(newPos, f, set, level, data, blockEntity)
-            }
         }
     }
 
