@@ -22,14 +22,10 @@ object DynPackBuilder {
     fun addMaterialBlocks() {
         val oreRL = rl("block/ore_block")
         val oreModel = DelegatedModel(oreRL).get()
-        val metalBlockRL = rl("block/metal_block")
-        val metalBlockModel = DelegatedModel(metalBlockRL).get()
         val cableRL = rl("block/cable")
         val cableModel = DelegatedModel(cableRL).get()
         val itemPipeRL = rl("block/item_pipe")
         val itemPipeModel = DelegatedModel(itemPipeRL).get()
-        val rawMetalBlockRLS = listOf(rl("block/raw_metal_block0"), rl("block/raw_metal_block1"))
-        val rawMetalBlocks = rawMetalBlockRLS.map { DelegatedModel(it).get() }.toList()
         val poweredFurnaceRL = rl("block/powered_furnace")
         val poweredFurnaceModel = DelegatedModel(poweredFurnaceRL).get()
         val creativePowerSourceRL = ResourceLocation.withDefaultNamespace("block/redstone_block")
@@ -51,16 +47,6 @@ object DynPackBuilder {
         for (block in ModBlocks.STONE_ORE_BLOCKS) {
             DynPackResources.addBlockState(block.id, createSimpleBlock(block.get(), oreRL).get())
             DynPackResources.addItemModel(block.id, oreModel)
-        }
-        for (block in ModBlocks.METAL_BLOCKS) {
-            DynPackResources.addBlockState(block.id, createSimpleBlock(block.get(), metalBlockRL).get())
-            DynPackResources.addItemModel(block.id, metalBlockModel)
-        }
-
-        for (block in ModBlocks.RAW_METAL_BLOCKS) {
-            val idx = block.get().material.info.rawBlockVariant.index
-            DynPackResources.addBlockState(block.id, createSimpleBlock(block.get(), rawMetalBlockRLS[idx]).get())
-            DynPackResources.addItemModel(block.id, rawMetalBlocks[idx])
         }
 
         for (block in ModBlocks.BLOCKS_POWERED_FURNACE) {
@@ -108,21 +94,20 @@ object DynPackBuilder {
 
     fun addMaterialItems() {
         val dustModel = DelegatedModel(rl("item/dust_item")).get()
+        val impureDustModel = DelegatedModel(rl("item/impure_dust_item")).get()
+        val pureDustModel = DelegatedModel(rl("item/pure_dust_item")).get()
+        val smallDustModel = DelegatedModel(rl("item/small_dust_item")).get()
         val ingotModel = DelegatedModel(rl("item/ingot_item")).get()
         val rawModel = DelegatedModel(rl("item/raw_item")).get()
-        val nuggetModels = listOf(
-            DelegatedModel(rl("item/nugget_item0")).get(),
-            DelegatedModel(rl("item/nugget_item1")).get(),
-            DelegatedModel(rl("item/nugget_item2")).get(),
-            DelegatedModel(rl("item/nugget_item3")).get(),
-        )
+        val nuggetModel = DelegatedModel(rl("item/nugget_item")).get()
 
         for (item in ModItems.DUST_ITEMS) DynPackResources.addItemModel(item.id, dustModel)
+        for (item in ModItems.IMPURE_DUST_ITEMS) DynPackResources.addItemModel(item.id, impureDustModel)
+        for (item in ModItems.PURE_DUST_ITEMS) DynPackResources.addItemModel(item.id, pureDustModel)
+        for (item in ModItems.SMALL_DUST_ITEMS) DynPackResources.addItemModel(item.id, smallDustModel)
         for (item in ModItems.INGOT_ITEMS) DynPackResources.addItemModel(item.id, ingotModel)
-        for (item in ModItems.NUGGET_ITEMS) DynPackResources.addItemModel(
-            item.id, nuggetModels[item.get().material.info.nuggetVariant.index]
-        )
-        for (item in ModItems.RAW_ITEMS) DynPackResources.addItemModel(item.id, rawModel)
+        for (item in ModItems.NUGGET_ITEMS) DynPackResources.addItemModel(item.id, nuggetModel)
+        for (item in ModItems.RAW_MATERIAL_ITEMS) DynPackResources.addItemModel(item.id, rawModel)
         for (fluid in ModFluids.REGISTERED_FLUIDS) {
             // Make all fluids be an item using `neoforge:fluid_container`, with the parent being `neoforge:item/bucket` and the fluid being this bucket's fluid.
             // This will cause them to render in a bucket! Yay!

@@ -19,10 +19,10 @@ import net.minecraft.world.phys.shapes.VoxelShape
 import redcrafter07.processed.block.cable.CableBlockEntity.Companion.Connected
 import redcrafter07.processed.block.tile_entities.ItemPipeBlockEntity
 import redcrafter07.processed.block.tile_entities.ModTileEntities
-import redcrafter07.processed.materials.Material
+import redcrafter07.processed.materials.data.MaterialBase
 import redcrafter07.processed.materials.MaterialContainer
 
-class ItemPipeBlock(override val material: Material) : Block(Properties.of().noOcclusion()), EntityBlock,
+class ItemPipeBlock(override val material: MaterialBase, val speed: Int) : Block(Properties.of().noOcclusion()), EntityBlock,
     MaterialContainer {
     override fun newBlockEntity(pos: BlockPos, state: BlockState) = ItemPipeBlockEntity(pos, state)
 

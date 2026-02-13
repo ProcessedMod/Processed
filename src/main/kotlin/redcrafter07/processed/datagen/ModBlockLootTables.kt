@@ -1,7 +1,6 @@
 package redcrafter07.processed.datagen
 
 import net.minecraft.core.HolderLookup
-import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.loot.BlockLootSubProvider
 import net.minecraft.world.flag.FeatureFlags
@@ -13,22 +12,17 @@ import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator
 import net.neoforged.neoforge.registries.DeferredBlock
+import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.block.ModBlocks
 import redcrafter07.processed.items.ModItems
-import redcrafter07.processed.materials.MaterialBlock
-import redcrafter07.processed.rl
+import redcrafter07.processed.materials.Materials
+import redcrafter07.processed.materials.data.MinableOreMaterial
+import redcrafter07.processed.materials.isntVanilla
 
 class ModBlockLootTables(provider: HolderLookup.Provider) :
     BlockLootSubProvider(mutableSetOf<Item?>(), FeatureFlags.REGISTRY.allFlags(), provider) {
     override fun generate() {
         createOreLootTable(ModBlocks.BLITZ_ORE.get(), ModItems.BLITZ_ORB.get(), 1f, 3f)
-
-        for (oreBlock in ModBlocks.STONE_ORE_BLOCKS) {
-            val instance: MaterialBlock = oreBlock.get()
-            createOreLootTable(
-                instance, BuiltInRegistries.ITEM.get(rl(instance.material.rawPath)), 1f, 2f
-            )
-        }
 
         dropSelf(ModBlocks.FLUID_TANK)
         dropSelf(ModBlocks.BLOCKS_POWERED_FURNACE)
@@ -42,8 +36,6 @@ class ModBlockLootTables(provider: HolderLookup.Provider) :
 
         dropSelf(ModBlocks.ITEM_PIPES)
         dropSelf(ModBlocks.CABLES)
-        dropSelf(ModBlocks.RAW_METAL_BLOCKS)
-        dropSelf(ModBlocks.METAL_BLOCKS)
         dropSelf(ModBlocks.LAUNCH_CONTROLLER)
         dropSelf(ModBlocks.LANDING_PAD)
         dropSelf(ModBlocks.ENERGY_HATCHES)
@@ -51,6 +43,13 @@ class ModBlockLootTables(provider: HolderLookup.Provider) :
         dropSelf(ModBlocks.ITEM_OUTPUT_HATCH)
         dropSelf(ModBlocks.FLUID_INPUT_HATCH)
         dropSelf(ModBlocks.FLUID_OUTPUT_HATCH)
+
+        Materials.getMaterials<MinableOreMaterial>().forEach {
+            if (isntVanilla(it.oreBlockHolder)) {
+                ProcessedMod.LOG.info("Making loot table for ${it.oreBlock().descriptionId}")
+                this.createOreLootTable(it.oreBlock(), it.rawMaterial(), 1f, 3f)
+            } else ProcessedMod.LOG.info("Skipping vanilla block ${it.oreBlock().descriptionId}")
+        }
     }
 
     private fun dropSelf(block: DeferredBlock<*>) {

@@ -19,10 +19,10 @@ class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<Holder
     RecipeProvider(output, registries) {
     override fun buildRecipes(recipeOutput: RecipeOutput) {
         SiftingRecipeBuilder(sIng(Tags.Items.GRAVELS), 8, 200)
-            .addChanceOutput(s(Materials.ALUMINIUM.dust, 2), 50)
-            .addChanceOutput(s(Materials.NICKEL.dust, 4), 70)
-            .addChanceOutput(s(Materials.URANIUM.dust), 10)
-            .addChanceOutput(s(Materials.TITANIUM.dust), 5)
+            .addChanceOutput(s(Materials.ALUMINIUM.dust(), 2), 50)
+            .addChanceOutput(s(Materials.NICKEL.dust(), 4), 70)
+            .addChanceOutput(s(Materials.URANIUM.dust()), 10)
+            .addChanceOutput(s(Materials.TITANIUM.dust()), 5)
             .save(recipeOutput, rl("gravel"))
     }
 

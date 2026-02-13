@@ -1,5 +1,6 @@
 package redcrafter07.processed.block
 
+import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
@@ -7,27 +8,26 @@ import net.minecraft.world.level.block.state.BlockBehaviour
 import net.neoforged.neoforge.registries.DeferredBlock
 import net.neoforged.neoforge.registries.DeferredItem
 import net.neoforged.neoforge.registries.DeferredRegister
+import org.apache.logging.log4j.util.TriConsumer
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.block.cable.CableBlock
+import redcrafter07.processed.block.cable.Pipelikes
 import redcrafter07.processed.items.ModItems
-import redcrafter07.processed.materials.Material
-import redcrafter07.processed.materials.MaterialBlock.*
-import redcrafter07.processed.materials.MaterialBlockItem
+import redcrafter07.processed.materials.MaterialBlock.OreBlock
 import redcrafter07.processed.materials.MaterialBlockItem.*
-import redcrafter07.processed.materials.MaterialInfo
 import redcrafter07.processed.materials.Materials
-import redcrafter07.processed.materials.data.CableData
-import redcrafter07.processed.materials.data.ItemPipeData
+import redcrafter07.processed.materials.data.MaterialBase
+import redcrafter07.processed.materials.data.MinableOreMaterial
+import redcrafter07.processed.materials.isntVanilla
 import java.util.function.BiFunction
 import java.util.function.Function
+import java.util.function.Predicate
 import java.util.function.Supplier
 import java.util.stream.Collectors
 
 object ModBlocks {
     val BLOCKS: DeferredRegister.Blocks = DeferredRegister.createBlocks(ProcessedMod.ID)
-    val MATERIAL_BLOCK_ITEMS = ArrayList<DeferredItem<MaterialBlockItem>>()
-    val MATERIAL_BLOCKS = ArrayList<DeferredBlock<*>>()
 
     val BLITZ_ORE = registerBlock("blitz_ore") {
         val props = BlockBehaviour.Properties.ofFullCopy(Blocks.DIAMOND_ORE).explosionResistance(1200f)
@@ -52,33 +52,39 @@ object ModBlocks {
 
     val ENERGY_HATCHES = registerTieredBlock("energy_hatch", ProcessedTier.TIERS, ::EnergyHatchBlock)
 
-    val CABLES = registerMaterialBlockExtra(
-        Materials.MATERIALS, CableData::class.java, { m, _ -> "${m.identifier}_cable" }, ::CableBlock, ::CableBlockItem
-    )
+    val CABLES = Pipelikes.cables.map { (tier, material) ->
+        registerBlockSpecial(
+            "${material.identifier}_cable",
+            { CableBlock(material, tier) },
+            { CableBlockItem(it, material, tier) })
+    }
+    val ITEM_PIPES = Pipelikes.itemPipes.map { (speed, material) ->
+        registerBlockSpecial(
+            "${material.identifier}_item_pipe",
+            { ItemPipeBlock(material, speed) },
+            { ItemPipeBlockItem(it, material, speed) })
+    }
 
-    val ITEM_PIPES = registerMaterialBlockExtra(
-        Materials.MATERIALS,
-        ItemPipeData::class.java,
-        { m, _ -> "${m.identifier}_item_pipe" },
-        ::ItemPipeBlock,
-        ::ItemPipeBlockItem
-    )
+    val STONE_ORE_BLOCKS = registerMaterialBlocks<MinableOreMaterial>(
+        { isntVanilla(it.oreBlockHolder) },
+        { it.identifier + "_ore" },
+        ::OreBlock,
+        ::OreBlockItem,
+        { v, item, block -> v.oreBlockHolder = block; v.oreBlockItemHolder = item })
 
-    val METAL_BLOCKS = registerMaterialBlock(
-        Materials.MATERIALS, Material::metalBlockPath, ::MetalBlock, ::MetalBlockItem, MaterialInfo.Types.MetalBlock
-    )
-
-    val RAW_METAL_BLOCKS = registerMaterialBlock(
-        Materials.MATERIALS,
-        Material::rawMetalBlockPath,
-        ::RawMetalBlock,
-        ::RawMetalBlockItem,
-        MaterialInfo.Types.OreLike
-    )
-
-    val STONE_ORE_BLOCKS = registerMaterialBlock(
-        Materials.MATERIALS, Material::oreBlockPath, ::OreBlock, ::OreBlockItem, MaterialInfo.Types.OreLike
-    )
+    inline fun <reified T : MaterialBase> registerMaterialBlocks(
+        filter: Predicate<T>,
+        name: Function<T, String>,
+        blockConstructor: Function<T, Block>,
+        itemConstructor: BiFunction<Block, T, Item>,
+        done: TriConsumer<T, DeferredItem<Item>, DeferredBlock<Block>>
+    ): List<DeferredBlock<Block>> = Materials.getMaterials<T>().filter(filter).map {
+        val name = name.apply(it)
+        val block = BLOCKS.register(name, Supplier { blockConstructor.apply(it) })
+        val item = ModItems.registerItem(name) { itemConstructor.apply(block.get(), it) }
+        done.accept(it, item, block)
+        block
+    }.toList()
 
     fun <T : Block> registerBlock(id: String, block: Supplier<T>): DeferredBlock<T> {
         val regBlock = BLOCKS.register(id, block)
@@ -86,49 +92,12 @@ object ModBlocks {
         return regBlock
     }
 
-    fun <T : Block, Data> registerMaterialBlockExtra(
-        materials: List<Material>,
-        dataClass: Class<Data>,
-        nameSupplier: BiFunction<Material, Data, String>,
-        blockConstructor: Function<Material, T>,
-        itemConstructor: BiFunction<Block, Material, MaterialBlockItem>,
-    ): List<DeferredBlock<T>> {
-        val list = ArrayList<DeferredBlock<T>>()
-
-        for (material in materials) {
-            val data = material.getExtraData(dataClass) ?: continue
-            val name = nameSupplier.apply(material, data)
-            val regBlock = BLOCKS.register(name, Supplier { blockConstructor.apply(material) })
-            list.add(regBlock)
-            MATERIAL_BLOCKS.add(regBlock)
-            val item = ModItems.registerItem(name) { itemConstructor.apply(regBlock.get(), material) }
-            MATERIAL_BLOCK_ITEMS.add(item)
-        }
-
-        return list
-    }
-
-
-    fun <T : Block> registerMaterialBlock(
-        materials: List<Material>,
-        nameSupplier: Function<Material, String>,
-        blockConstructor: Function<Material, T>,
-        itemConstructor: BiFunction<Block, Material, MaterialBlockItem>,
-        type: MaterialInfo.Types,
-    ): List<DeferredBlock<T>> {
-        val list = ArrayList<DeferredBlock<T>>()
-
-        for (material in materials) {
-            if (!material.info.types.has(type)) continue
-            val name = nameSupplier.apply(material)
-            val regBlock = BLOCKS.register(name, Supplier { blockConstructor.apply(material) })
-            MATERIAL_BLOCKS.add(regBlock)
-            list.add(regBlock)
-            val item = ModItems.registerItem(name) { itemConstructor.apply(regBlock.get(), material) }
-            MATERIAL_BLOCK_ITEMS.add(item)
-        }
-
-        return list
+    fun <T : Block> registerBlockSpecial(
+        id: String, block: Supplier<T>, item: Function<Block, BlockItem>
+    ): DeferredBlock<T> {
+        val regBlock = BLOCKS.register(id, block)
+        ModItems.registerItem(id) { item.apply(regBlock.get()) }
+        return regBlock
     }
 
     private fun <T> registerTieredBlock(

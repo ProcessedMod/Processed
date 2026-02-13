@@ -12,8 +12,8 @@ import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.Translations
 import redcrafter07.processed.block.TieredBlock
 import redcrafter07.processed.gui.widgets.EnergyBarWidget
-import redcrafter07.processed.materials.Material
 import redcrafter07.processed.materials.MaterialContainer
+import redcrafter07.processed.materials.data.MaterialBase
 
 open class TieredProcessedBlock(
     properties: Properties,
@@ -30,7 +30,7 @@ open class TieredProcessedBlock(
         tooltips.add(getMachineInfo(tier, flag.hasShiftDown()))
     }
 
-    override val material: Material get() = tier.material
+    override val material: MaterialBase get() = tier.material
 
     private fun getMachineInfo(tier: ProcessedTier, shift: Boolean): MutableComponent {
         val maxPower =

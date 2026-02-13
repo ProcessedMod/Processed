@@ -20,14 +20,13 @@ import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.client.model.data.ModelData
 import net.neoforged.neoforge.items.IItemHandler
 import redcrafter07.processed.Translations
+import redcrafter07.processed.block.ItemPipeBlock
 import redcrafter07.processed.block.WrenchInteractableBlock
 import redcrafter07.processed.block.cable.CableBlockEntity.Companion.Connected
 import redcrafter07.processed.block.cable.CableBlockEntity.Companion.TRANSMITTER_PROPERTY
 import redcrafter07.processed.block.cable.CableBlockEntity.Companion.actualDirection
 import redcrafter07.processed.block.machine_abstractions.BlockSide
 import redcrafter07.processed.block.machine_abstractions.ItemCapableBlockEntity
-import redcrafter07.processed.materials.MaterialContainer
-import redcrafter07.processed.materials.data.ItemPipeData
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.minus
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.toVec3
 import java.util.function.BiFunction
@@ -38,12 +37,7 @@ import kotlin.math.min
 class ItemPipeBlockEntity(pos: BlockPos, blockState: BlockState) :
     BlockEntity(ModTileEntities.ITEM_PIPE.get(), pos, blockState), ItemCapableBlockEntity, WrenchInteractableBlock {
 
-    val transferSpeed = lazy {
-        val blk = blockState.block
-        if (blk !is MaterialContainer) throw IllegalStateException("ItemPipe is not a material container")
-        blk.material.getExtraData(ItemPipeData::class.java)?.speed
-            ?: throw IllegalStateException("material data for material ${blk.material.identifier} does not have ItemPipeData.")
-    }
+    val speed = (blockState.block as? ItemPipeBlock ?: throw IllegalStateException("ItemPipeBlockEntity for non-item-pipe")).speed
 
     val connected = Connected()
     val disallowedConnections = Connected()
@@ -108,8 +102,8 @@ class ItemPipeBlockEntity(pos: BlockPos, blockState: BlockState) :
 
             val level =
                 level ?: throw IllegalStateException("tried to update the output cache while not having a level")
-            traverse(worldPosition, transferSpeed.value) { pipe, transferSpeed ->
-                val speed = min(transferSpeed, pipe.transferSpeed.value)
+            traverse(worldPosition, speed) { pipe, transferSpeed ->
+                val speed = min(transferSpeed, pipe.speed)
 
                 for (direction in Direction.entries) {
                     if (!pipe.connected[direction]) continue

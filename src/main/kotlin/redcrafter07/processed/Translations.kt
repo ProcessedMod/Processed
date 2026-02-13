@@ -9,22 +9,23 @@ import net.neoforged.neoforge.common.TranslatableEnum
 import org.apache.commons.lang3.time.DurationFormatUtils
 import redcrafter07.processed.block.machine_abstractions.IoState
 import redcrafter07.processed.items.WrenchMode
-import redcrafter07.processed.materials.Material
+import redcrafter07.processed.materials.data.MaterialBase
 import java.util.concurrent.TimeUnit
 import kotlin.math.truncate
 import net.minecraft.network.chat.Component as C
 import net.minecraft.network.chat.MutableComponent as MC
 
 object Translations {
-    inline fun materialDust(material: Material) = t("processed.material_dust", material)
-    inline fun materialIngot(material: Material) = t("processed.material_ingot", material)
-    inline fun materialNugget(material: Material) = t("processed.material_nugget", material)
-    inline fun materialRaw(material: Material) = t("processed.material_raw", material)
-    inline fun materialMetalBlock(material: Material) = t("processed.material_metal_block", material)
-    inline fun materialOre(material: Material) = t("processed.material_ore", material)
-    inline fun materialRawMetalBlock(material: Material) = t("processed.material_raw_metal_block", material)
-    inline fun materialCable(material: Material) = t("processed.material_cable", material)
-    inline fun materialItemPipe(material: Material) = t("processed.material_item_pipe", material)
+    inline fun materialDust(material: MaterialBase) = t("processed.material_dust", material)
+    inline fun materialSmallDust(material: MaterialBase) = t("processed.material_dust.small", material)
+    inline fun materialImpureDust(material: MaterialBase) = t("processed.material_dust.impure", material)
+    inline fun materialPureDust(material: MaterialBase) = t("processed.material_dust.pure", material)
+    inline fun materialIngot(material: MaterialBase) = t("processed.material_ingot", material)
+    inline fun materialNugget(material: MaterialBase) = t("processed.material_nugget", material)
+    inline fun materialRaw(material: MaterialBase) = t("processed.material_raw", material)
+    inline fun materialOre(material: MaterialBase) = t("processed.material_ore", material)
+    inline fun materialCable(material: MaterialBase) = t("processed.material_cable", material)
+    inline fun materialItemPipe(material: MaterialBase) = t("processed.material_item_pipe", material)
     inline fun materialName(identifier: String) = t("processed.material.$identifier")
     inline fun blockItemTooltip(id: String): MC = t("block.processed.$id.tooltip").withStyle(ChatFormatting.GRAY)
     inline fun itemTooltip(id: String) = t("item.processed.$id.tooltip")
@@ -243,7 +244,7 @@ inline fun t(key: String, vararg args: Any): MC {
         args[i] = when (val v = args[i]) {
             is C, String, Boolean, is Number -> v
             is TranslatableEnum -> v.translatedName
-            is Material -> v.component
+            is MaterialBase -> v.component
             is ProcessedTier -> v.name
             else -> throw IllegalStateException("Unknown translatable object: $v ${v.javaClass.name}")
         }

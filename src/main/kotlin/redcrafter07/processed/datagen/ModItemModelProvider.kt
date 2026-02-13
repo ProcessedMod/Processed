@@ -18,11 +18,11 @@ class ModItemModelProvider(output: PackOutput, existingFileHelper: ExistingFileH
         simpleItem(ModItems.WRENCH)
 
         simpleModel("dust_item", "item/dust")
+        simpleModel("impure_dust_item", "item/dust", "item/impure_dust_overlay")
+        simpleModel("pure_dust_item", "item/dust", "item/pure_dust_overlay")
+        simpleModel("small_dust_item", "item/small_dust")
         simpleModel("ingot_item", "item/ingot")
-        simpleModel("nugget_item0", "item/nugget0")
-        simpleModel("nugget_item1", "item/nugget1")
-        simpleModel("nugget_item2", "item/nugget2")
-        simpleModel("nugget_item3", "item/nugget3")
+        simpleModel("nugget_item", "item/nugget")
         simpleModel("raw_item", "item/raw_metal")
     }
 
@@ -34,4 +34,8 @@ class ModItemModelProvider(output: PackOutput, existingFileHelper: ExistingFileH
 
     private fun simpleModel(path: String, texture: String): ResourceLocation =
         withExistingParent(path, generatedItemModel).texture("layer0", rl(texture)).location
+
+    private fun simpleModel(path: String, layer0: String, layer1: String): ResourceLocation =
+        withExistingParent(path, generatedItemModel).texture("layer0", rl(layer0))
+            .texture("layer1", rl(layer1)).location
 }

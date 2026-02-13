@@ -6,12 +6,12 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
-import redcrafter07.processed.materials.Material;
 import redcrafter07.processed.materials.Materials;
+import redcrafter07.processed.materials.data.MaterialBase;
 
 import java.util.List;
 
-public record ProcessedTier(int tier, int speedMultiplier, int energyMultiplier, @NotNull Material material) {
+public record ProcessedTier(int tier, int speedMultiplier, int energyMultiplier, @NotNull MaterialBase material) {
     @NotNull
     public static ProcessedTier fromTierNumber(int tier) {
         return TIERS.get(Math.clamp(tier, 0, TIERS.size()));

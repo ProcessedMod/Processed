@@ -12,11 +12,12 @@ import net.minecraft.world.phys.shapes.BooleanOp
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
+import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.block.cable.CableBlockEntity.Companion.Connected
-import redcrafter07.processed.materials.Material
+import redcrafter07.processed.materials.data.MaterialBase
 import redcrafter07.processed.materials.MaterialContainer
 
-class CableBlock(override val material: Material) : Block(Properties.of().noOcclusion()), EntityBlock,
+class CableBlock(override val material: MaterialBase, val tier: ProcessedTier) : Block(Properties.of().noOcclusion()), EntityBlock,
     MaterialContainer {
     override fun newBlockEntity(pos: BlockPos, state: BlockState) = CableBlockEntity(pos, state)
 

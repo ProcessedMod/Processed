@@ -9,7 +9,9 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.ProcessedTags
 import redcrafter07.processed.block.ModBlocks
-import redcrafter07.processed.materials.MaterialBlock
+import redcrafter07.processed.materials.Materials
+import redcrafter07.processed.materials.data.MinableOreMaterial
+import redcrafter07.processed.materials.isntVanilla
 import java.util.concurrent.CompletableFuture
 
 
@@ -21,27 +23,22 @@ internal class ModBlockTagProvider(
     override fun addTags(provider: HolderLookup.Provider) {
         val oreBlocks = ModBlocks.STONE_ORE_BLOCKS.stream().map { it.get() }.toList().toTypedArray()
 
-        this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
-            .add(*ModBlocks.STONE_ORE_BLOCKS.stream().map { it.get() }.toList().toTypedArray())
-            .add(*ModBlocks.METAL_BLOCKS.stream().map { it.get() }.toList().toTypedArray())
-            .add(ModBlocks.BLITZ_ORE.get())
+        val pickaxeMinable = this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.BLITZ_ORE.get())
 
         this.tag(BlockTags.NEEDS_DIAMOND_TOOL).add(ModBlocks.BLITZ_ORE.get())
 
-        this.tag(Tags.Blocks.ORES).add(*oreBlocks).add(ModBlocks.BLITZ_ORE.get())
+        val ores = this.tag(Tags.Blocks.ORES).add(ModBlocks.BLITZ_ORE.get())
 
-        this.tag(Tags.Blocks.ORE_RATES_SINGULAR).add(ModBlocks.BLITZ_ORE.get()).add(*oreBlocks)
+        this.tag(Tags.Blocks.ORE_RATES_DENSE).add(ModBlocks.BLITZ_ORE.get()).add(*oreBlocks)
 
         this.tag(Tags.Blocks.ORES_IN_GROUND_STONE).add(ModBlocks.BLITZ_ORE.get()).add(*oreBlocks)
 
-        for (block in ModBlocks.METAL_BLOCKS) {
-            this.tag(block.get().material.materialTag).add(block.get())
-        }
-
-        for (block in ModBlocks.STONE_ORE_BLOCKS) {
-            val blockInstance: MaterialBlock = block.get()
-            this.tag(ProcessedTags.Blocks.commonTag("ores/${block.id.path}")).add(blockInstance)
-            this.tag(blockInstance.material.materialTag).add(blockInstance)
+        Materials.getMaterials<MinableOreMaterial>().forEach {
+            if (isntVanilla(it.oreBlockItemHolder)) {
+                this.tag(it.oreBlockTag()).add(it.oreBlock())
+                ores.add(it.oreBlock())
+                pickaxeMinable.add(it.oreBlock())
+            }
         }
 
         this.tag(ProcessedTags.Blocks.ORE_BLITZ).add(ModBlocks.BLITZ_ORE.get())

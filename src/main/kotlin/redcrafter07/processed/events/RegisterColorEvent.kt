@@ -34,15 +34,15 @@ object RegisterColorEvent {
     private object ItemColorProvider : ItemColor {
         override fun getColor(stack: ItemStack, tintIndex: Int): Int {
             return when (val item = stack.item) {
-                is MaterialContainer -> item.getColor(tintIndex) ?: 0xFFFFFF
+                is MaterialContainer -> item.getColor(tintIndex)
                 is ItemColor -> item.getColor(stack, tintIndex)
                 is BlockItem -> {
                     val block = item.block
-                    if(block is MaterialContainer) block.getColor(tintIndex) ?: 0xFFFFFF
-                    else 0xFFFFFF
+                    if(block is MaterialContainer) block.getColor(tintIndex)
+                    else -1
                 }
                 is ModFluids.TintedBucketItem -> item.getColor(stack, tintIndex)
-                else -> 0xFFFFFF
+                else -> -1
             }
         }
     }
@@ -61,9 +61,9 @@ object RegisterColorEvent {
     private object BlockColorProvider : BlockColor {
         override fun getColor(state: BlockState, level: BlockAndTintGetter?, pos: BlockPos?, tintIndex: Int): Int {
             return when (val block = state.block) {
-                is MaterialContainer -> block.getColor(tintIndex) ?: 0xFFFFFF
+                is MaterialContainer -> block.getColor(tintIndex)
                 is BlockColor -> block.getColor(state, level, pos, tintIndex)
-                else -> 0xFFFFFF
+                else -> -1
             }
         }
     }

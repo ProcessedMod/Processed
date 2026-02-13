@@ -10,6 +10,10 @@ import net.minecraft.world.level.block.Block
 object ProcessedTags {
     object Items {
         val INGOT_BLITZ = commonTag("ingots/blitz")
+        val SMALL_DUSTS = commonTag("small_dusts")
+
+        val IMPURE_DUSTS = commonTag("impure_dusts")
+        val PURE_DUSTS = commonTag("pure_dusts")
 
         fun commonTag(name: String): TagKey<Item> {
             return ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", name))

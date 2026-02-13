@@ -131,7 +131,7 @@ class CableBakedModel(center: ResourceLocation, side: ResourceLocation, val s: D
             val builder = QuadBakingVertexConsumer()
             builder.setSprite(sprite)
             builder.setDirection(Direction.getNearest(normal.x, normal.y, normal.z))
-            builder.setTintIndex(1)
+            builder.setTintIndex(0)
             putVertex(builder, normal, v1.x, v1.y, v1.z, 0f, 0f, sprite)
             putVertex(builder, normal, v2.x, v2.y, v2.z, 0f, 1f, sprite)
             putVertex(builder, normal, v3.x, v3.y, v3.z, 1f, 1f, sprite)

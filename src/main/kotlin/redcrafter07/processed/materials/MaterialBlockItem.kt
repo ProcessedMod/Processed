@@ -5,11 +5,11 @@ import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.level.block.Block
+import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.Translations
-import redcrafter07.processed.materials.data.CableData
-import redcrafter07.processed.materials.data.ItemPipeData
+import redcrafter07.processed.materials.data.MaterialBase
 
-abstract class MaterialBlockItem(block: Block, override val material: Material) : BlockItem(block, PROPS),
+abstract class MaterialBlockItem(block: Block, override val material: MaterialBase) : BlockItem(block, PROPS),
     MaterialContainer {
     companion object {
         val PROPS: Properties = Properties().stacksTo(64)
@@ -29,37 +29,27 @@ abstract class MaterialBlockItem(block: Block, override val material: Material) 
 
     override fun getName(stack: ItemStack): Component = description
 
-    class MetalBlockItem(block: Block, material: Material) : MaterialBlockItem(block, material) {
-        override fun getDescription(): Component = Translations.materialMetalBlock(material)
-    }
-
-    class OreBlockItem(block: Block, material: Material) : MaterialBlockItem(block, material) {
+    class OreBlockItem(block: Block, material: MaterialBase) : MaterialBlockItem(block, material) {
         override fun getDescription(): Component = Translations.materialOre(material)
     }
 
-    class RawMetalBlockItem(block: Block, material: Material) : MaterialBlockItem(block, material) {
-        override fun getDescription(): Component = Translations.materialRawMetalBlock(material)
-    }
-
-    class CableBlockItem(block: Block, material: Material) : MaterialBlockItem(block, material) {
+    class CableBlockItem(block: Block, material: MaterialBase, val tier: ProcessedTier) : MaterialBlockItem(block, material) {
         override fun getDescription(): Component = Translations.materialCable(material)
 
         override fun customHoverText(
             stack: ItemStack, context: TooltipContext, tooltip: MutableList<Component>, tooltipFlag: TooltipFlag
         ) {
-            val data = material.getExtraData(CableData::class.java) ?: return
-            tooltip.add(Translations.cableTierTooltip(data.tier.nameColored))
+            tooltip.add(Translations.cableTierTooltip(tier.nameColored))
         }
     }
 
-    class ItemPipeBlockItem(block: Block, material: Material) : MaterialBlockItem(block, material) {
+    class ItemPipeBlockItem(block: Block, material: MaterialBase, val speed: Int) : MaterialBlockItem(block, material) {
         override fun getDescription(): Component = Translations.materialItemPipe(material)
 
         override fun customHoverText(
             stack: ItemStack, context: TooltipContext, tooltip: MutableList<Component>, tooltipFlag: TooltipFlag
         ) {
-            val data = material.getExtraData(ItemPipeData::class.java) ?: return
-            tooltip.add(Translations.itemPipeTooltip(data.speed))
+            tooltip.add(Translations.itemPipeTooltip(speed))
         }
     }
 }

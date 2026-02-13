@@ -27,8 +27,6 @@ import redcrafter07.processed.block.machine_abstractions.BlockSide
 import redcrafter07.processed.block.machine_abstractions.EnergyCapableBlockEntity
 import redcrafter07.processed.block.tile_entities.ModTileEntities
 import redcrafter07.processed.block.tile_entities.capabilities.ProcessedPowerStore
-import redcrafter07.processed.materials.MaterialContainer
-import redcrafter07.processed.materials.data.CableData
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.minus
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.toVec3
 import java.util.*
@@ -36,12 +34,7 @@ import java.util.*
 class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
     BlockEntity(ModTileEntities.CABLE.get(), pos, blockState), EnergyCapableBlockEntity, WrenchInteractableBlock {
 
-    val cableTier = lazy {
-        val blk = blockState.block
-        if (blk !is MaterialContainer) throw IllegalStateException("CableBlock is not a material container")
-        blk.material.getExtraData(CableData::class.java)?.tier
-            ?: throw IllegalStateException("material data for material ${blk.material.identifier} does not have CableeData.")
-    }
+    val tier = (blockState.block as? CableBlock ?: throw IllegalStateException("CableBlockEntity for non-cable")).tier
 
     val connected = Connected()
     val disallowedConnections = Connected()
@@ -57,7 +50,7 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
             val networkId = cable.network ?: return 0
 
             val network = CableNetworkData.getNetwork(lvl, networkId, cable.blockPos)
-            if(network == null) {
+            if (network == null) {
                 cable.network = null
                 return 0
             }
@@ -73,7 +66,7 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
                     else {
                         val cap2 =
                             lvl.getCapability(ProcessedPower.BLOCK, actualPos, dir) ?: return@forEachEndpoint false
-                        if (!cable.cableTier.value.canInsertEnergy(cap2.minTier())) return@forEachEndpoint false
+                        if (!cable.tier.canInsertEnergy(cap2.minTier())) return@forEachEndpoint false
                         cap = cap2.energy()
                     }
 
@@ -140,7 +133,7 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
         else if (connected[side.asDirectionNotRotated]) EnergyHandler(this, blockPos)
         else return null
 
-        return ProcessedPowerStore(cableTier.value, handler)
+        return ProcessedPowerStore(tier, handler)
     }
 
     override fun saveAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
@@ -201,7 +194,7 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
         val cap1 = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, direction.opposite)
         if (cap1 != null) return true
         val cap2 = level.getCapability(ProcessedPower.BLOCK, pos, direction.opposite)
-        return cap2 != null && cableTier.value.canInsertEnergy(cap2.minTier())
+        return cap2 != null && tier.canInsertEnergy(cap2.minTier())
     }
 
     override fun getModelData(): ModelData = ModelData.builder().with(TRANSMITTER_PROPERTY, connected).build()

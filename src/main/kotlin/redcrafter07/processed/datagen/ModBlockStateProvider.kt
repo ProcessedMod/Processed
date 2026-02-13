@@ -19,35 +19,14 @@ class ModBlockStateProvider(output: PackOutput, existingFileHelper: ExistingFile
             ModBlocks.FLUID_TANK, ExistingModelFile(rl("block/fluid_tank"), this.models().existingFileHelper)
         )
 
-        models().withExistingParent("block/metal_block", ResourceLocation.withDefaultNamespace("block/block"))
-            .texture("all", rl("block/metal_block")).texture("particle", "#all").element().cube("#all")
-            .faces { dir, builder ->
-                builder.uvs(0f, 0f, 16f, 16f).cullface(dir).tintindex(0).end()
-            }.end()
-        models().withExistingParent("block/raw_metal_block0", ResourceLocation.withDefaultNamespace("block/block"))
-            .texture("all", rl("block/raw_block0")).texture("particle", "#all").element().cube("#all")
-            .faces { dir, builder ->
-                builder.uvs(0f, 0f, 16f, 16f).cullface(dir).tintindex(0).end()
-            }.end()
-        models().withExistingParent("block/raw_metal_block1", ResourceLocation.withDefaultNamespace("block/block"))
-            .texture("all", rl("block/raw_block1")).texture("particle", "#all").element().cube("#all")
-            .faces { dir, builder ->
-                builder.uvs(0f, 0f, 16f, 16f).cullface(dir).tintindex(0).end()
-            }.end()
-
         models().withExistingParent("block/ore_block", ResourceLocation.withDefaultNamespace("block/block"))
-            .texture("layer0", rl("block/ore")).texture("layer1", rl("block/ore_overlay"))
-            .texture("particle", "#layer0").renderType("cutout").element().cube("#layer0").faces { dir, builder ->
+            .texture("layer0", ResourceLocation.withDefaultNamespace("block/stone"))
+            .texture("layer1", rl("block/ore_overlay")).texture("particle", "#layer0").renderType("cutout").element()
+            .cube("#layer0").faces { dir, builder ->
                 builder.uvs(0f, 0f, 16f, 16f).cullface(dir).end()
             }.end().element().cube("#layer1").faces { dir, builder ->
-                builder.uvs(0f, 0f, 16f, 16f).cullface(dir).tintindex(1).end()
+                builder.uvs(0f, 0f, 16f, 16f).cullface(dir).tintindex(0).end()
             }.end()
-
-//        for (block in ModBlocks.BLOCKS_POWERED_FURNACE) {
-//            val modelRL = ResourceLocation.withDefaultNamespace("block/blast_furnace")
-//            simpleBlock(block.get(), models().getExistingFile(modelRL))
-//            itemModels().withExistingParent(block.id.path, modelRL)
-//        }
 
         for (block in ModBlocks.CREATIVE_POWER_SOURCE) {
             val modelRL = ResourceLocation.withDefaultNamespace("block/redstone_block")

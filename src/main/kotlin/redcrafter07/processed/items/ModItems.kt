@@ -5,15 +5,15 @@ import net.minecraft.world.item.Item
 import net.neoforged.neoforge.registries.DeferredItem
 import net.neoforged.neoforge.registries.DeferredRegister
 import redcrafter07.processed.ProcessedMod
-import redcrafter07.processed.materials.Material
-import redcrafter07.processed.materials.MaterialInfo
-import redcrafter07.processed.materials.MaterialItem
 import redcrafter07.processed.materials.MaterialItem.*
 import redcrafter07.processed.materials.Materials
+import redcrafter07.processed.materials.data.*
+import redcrafter07.processed.materials.isntVanilla
 import redcrafter07.processed.miner.MinerData
 import redcrafter07.processed.rl
 import java.util.function.Function
 import java.util.function.Supplier
+import kotlin.reflect.KMutableProperty1
 
 object ModItems {
     val ITEMS: DeferredRegister.Items = DeferredRegister.createItems(ProcessedMod.ID)
@@ -23,12 +23,22 @@ object ModItems {
 
     val LOCATION_SELECTOR = registerItem("location_selector", ::LocationSelectorItem)
 
-    val DUST_ITEMS = registerMaterialItem(Materials.MATERIALS, Material::dustPath, ::Dust, MaterialInfo.Types.Dust)
-    val INGOT_ITEMS =
-        registerMaterialItem(Materials.MATERIALS, Material::ingotPath, ::Ingot, MaterialInfo.Types.IngotLike)
-    val NUGGET_ITEMS =
-        registerMaterialItem(Materials.MATERIALS, Material::nuggetPath, ::Nugget, MaterialInfo.Types.IngotLike)
-    val RAW_ITEMS = registerMaterialItem(Materials.MATERIALS, Material::rawPath, ::Raw, MaterialInfo.Types.OreLike)
+    val DUST_ITEMS = registerMaterialItems(DustMaterial::dustHolder, ::Dust) { it.identifier + "_dust" }
+    val SMALL_DUST_ITEMS =
+        registerMaterialItems(DustMaterial::smallDustHolder, ::SmallDust) { "small_${it.identifier}_dust" }
+
+    val INGOT_ITEMS = registerMaterialItems(IngotMaterial::ingotHolder, ::Ingot) { it.identifier + "_ingot" }
+    val NUGGET_ITEMS = registerMaterialItems(IngotMaterial::nuggetHolder, ::Nugget) { it.identifier + "_nugget" }
+
+    val IMPURE_DUST_ITEMS =
+        registerMaterialItems(OreMaterial::impureDustHolder, ::ImpureDust) { "impure_${it.identifier}_dust" }
+    val PURE_DUST_ITEMS =
+        registerMaterialItems(OreMaterial::pureDustHolder, ::PureDust) { "pure_${it.identifier}_dust" }
+    val RAW_MATERIAL_ITEMS =
+        registerMaterialItems(OreMaterial::rawHolder, ::Raw) { "raw_${it.identifier}" }
+
+    val SPACE_ORE_ITEMS =
+        registerMaterialItems(SpaceOreMaterial::rawOreItem, ::Raw) { "raw_${it.identifier}" }
 
     val ASSEMBLED_MINER = registerItem("assembled_mining_rocket", ::AssembledMinerItem)
 
@@ -51,20 +61,13 @@ object ModItems {
         return ITEMS.register(name, item)
     }
 
-    fun <T : MaterialItem> registerMaterialItem(
-        materials: List<Material>,
-        nameSupplier: Function<Material, String>,
-        itemConstructor: Function<Material, T>,
-        type: MaterialInfo.Types
-    ): List<DeferredItem<T>> {
-        val list = ArrayList<DeferredItem<T>>()
-
-        for (material in materials) {
-            if (!material.info.types.has(type)) continue
-            val name = nameSupplier.apply(material)
-            list.add(ITEMS.register(name, Supplier { itemConstructor.apply(material) }))
-        }
-
-        return list
-    }
+    inline fun <reified T : MaterialBase> registerMaterialItems(
+        property: KMutableProperty1<T, DeferredItem<Item>?>,
+        itemConstructor: Function<T, Item>,
+        name: Function<T, String>,
+    ): List<DeferredItem<Item>> = Materials.getMaterials<T>().filter { isntVanilla(property.get(it)) }.map {
+        val item = ITEMS.register(name.apply(it), Supplier { itemConstructor.apply(it) })
+        property.set(it, item)
+        item
+    }.toList()
 }
