@@ -11,7 +11,7 @@ import redcrafter07.processed.ProcessedTags
 import redcrafter07.processed.items.ModItems
 import java.util.concurrent.CompletableFuture
 
-internal class ModItemTagGenerator(
+internal class ModItemTagProvider(
     packOutput: PackOutput,
     providerCompletableFuture: CompletableFuture<HolderLookup.Provider?>,
     tagLookupCompletableFuture: CompletableFuture<TagLookup<Block?>?>,

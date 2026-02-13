@@ -22,13 +22,14 @@ object DataGenerators {
         generator.addProvider(ev.includeClient(), ModBlockStateProvider(packOutput, existingFileHelper))
         generator.addProvider(ev.includeClient(), ModItemModelProvider(packOutput, existingFileHelper))
 
-        val blockTagGenerator = generator.addProvider(
-            ev.includeServer(), ModBlockTagGenerator(packOutput, lookupProvider, existingFileHelper)
+        val blockTagProvider = generator.addProvider(
+            ev.includeServer(), ModBlockTagProvider(packOutput, lookupProvider, existingFileHelper)
         )
         generator.addProvider(
             ev.includeServer(),
-            ModItemTagGenerator(packOutput, lookupProvider, blockTagGenerator.contentsGetter(), existingFileHelper)
+            ModItemTagProvider(packOutput, lookupProvider, blockTagProvider.contentsGetter(), existingFileHelper)
         )
-        generator.addProvider(ev.includeServer(), ModFluidTagGenerator(packOutput, lookupProvider, existingFileHelper))
+        generator.addProvider(ev.includeServer(), ModFluidTagProvider(packOutput, lookupProvider, existingFileHelper))
+        generator.addProvider(ev.includeServer(), ModRecipeProvider(packOutput, lookupProvider))
     }
 }

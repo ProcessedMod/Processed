@@ -13,7 +13,7 @@ import redcrafter07.processed.materials.MaterialBlock
 import java.util.concurrent.CompletableFuture
 
 
-internal class ModBlockTagGenerator(
+internal class ModBlockTagProvider(
     output: PackOutput,
     lookupProvider: CompletableFuture<HolderLookup.Provider?>,
     existingFileHelper: ExistingFileHelper?

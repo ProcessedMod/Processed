@@ -11,7 +11,7 @@ import redcrafter07.processed.fluid.ModFluids
 import java.util.concurrent.CompletableFuture
 
 
-internal class ModFluidTagGenerator(
+internal class ModFluidTagProvider(
     output: PackOutput,
     lookupProvider: CompletableFuture<HolderLookup.Provider?>,
     existingFileHelper: ExistingFileHelper?
