@@ -140,6 +140,7 @@
     "processed.material_dust": "%s Dust",
     "processed.material_dust.small": "Small %s Dust",
     "processed.material_dust.impure": "Dirty %s Dust",
+    "processed.material_dust.washed": "Washed %s Dust",
     "processed.material_dust.pure": "Pure %s Dust",
     "processed.material_ingot": "%s Ingot",
     "processed.material_nugget": "%s Nugget",

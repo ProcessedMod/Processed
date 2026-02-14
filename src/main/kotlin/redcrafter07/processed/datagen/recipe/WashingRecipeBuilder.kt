@@ -15,6 +15,6 @@ class WashingRecipeBuilder(
     private val tier: ProcessedTier = ProcessedTier.Rudimentary
 ) : SimpleChanceRecipeBuilder(result, "washing") {
     override fun getRecipe() = WashingRecipe(
-        ingredient, dissolver, result, chanceResults, energyUsage, processingTime, tier
+        ingredient, dissolver, resultStack, chanceResults, energyUsage, processingTime, tier
     )
 }

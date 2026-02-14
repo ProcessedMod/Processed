@@ -13,6 +13,6 @@ class CrushingRecipeBuilder(
     private val tier: ProcessedTier = ProcessedTier.Rudimentary
 ) : SimpleChanceRecipeBuilder(result, "crushing") {
     override fun getRecipe() = CrushingRecipe(
-        ingredient, result, chanceResults, energyUsage, processingTime, tier
+        ingredient, resultStack, chanceResults, energyUsage, processingTime, tier
     )
 }

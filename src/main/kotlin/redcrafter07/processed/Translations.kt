@@ -19,6 +19,7 @@ object Translations {
     inline fun materialDust(material: MaterialBase) = t("processed.material_dust", material)
     inline fun materialSmallDust(material: MaterialBase) = t("processed.material_dust.small", material)
     inline fun materialImpureDust(material: MaterialBase) = t("processed.material_dust.impure", material)
+    inline fun materialWashedDust(material: MaterialBase) = t("processed.material_dust.washed", material)
     inline fun materialPureDust(material: MaterialBase) = t("processed.material_dust.pure", material)
     inline fun materialIngot(material: MaterialBase) = t("processed.material_ingot", material)
     inline fun materialNugget(material: MaterialBase) = t("processed.material_nugget", material)

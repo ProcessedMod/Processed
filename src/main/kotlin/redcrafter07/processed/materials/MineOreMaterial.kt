@@ -16,6 +16,7 @@ class MineOreMaterial(override val identifier: String, override val color: Int) 
     override var oreBlockItemHolder: DeferredItem<Item>? = null
     override var impureDustHolder: DeferredItem<Item>? = null
     override var pureDustHolder: DeferredItem<Item>? = null
+    override var washedDustHolder: DeferredItem<Item>? = null
     override var rawHolder: DeferredItem<Item>? = null
     override var dustHolder: DeferredItem<Item>? = null
     override var smallDustHolder: DeferredItem<Item>? = null

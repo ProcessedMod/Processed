@@ -21,6 +21,7 @@ object IronMaterial : MaterialBase, MinableOreMaterial, OreMaterial, DustMateria
     override var oreBlockItemHolder: DeferredItem<Item>? = VANILLA_HOLDER_ITEM
     override var impureDustHolder: DeferredItem<Item>? = null
     override var pureDustHolder: DeferredItem<Item>? = null
+    override var washedDustHolder: DeferredItem<Item>? = null
     override var rawHolder: DeferredItem<Item>? = VANILLA_HOLDER_ITEM
     override var dustHolder: DeferredItem<Item>? = null
     override var smallDustHolder: DeferredItem<Item>? = null

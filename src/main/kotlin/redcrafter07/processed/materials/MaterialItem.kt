@@ -20,6 +20,9 @@ abstract class MaterialItem(override val material: MaterialBase) : Item(DEFAULT_
     class ImpureDust(material: MaterialBase) : MaterialItem(material) {
         override fun getDescription(): Component = Translations.materialImpureDust(material)
     }
+    class WashedDust(material: MaterialBase) : MaterialItem(material) {
+        override fun getDescription(): Component = Translations.materialWashedDust(material)
+    }
     class PureDust(material: MaterialBase) : MaterialItem(material) {
         override fun getDescription(): Component = Translations.materialPureDust(material)
     }

@@ -33,6 +33,7 @@ internal class ModItemTagProvider(
         val nuggets = this.tag(Tags.Items.NUGGETS)
 
         val impureDusts = this.tag(ProcessedTags.Items.IMPURE_DUSTS)
+        val washedDusts = this.tag(ProcessedTags.Items.WASHED_DUSTS)
         val pureDusts = this.tag(ProcessedTags.Items.PURE_DUSTS)
         val rawMaterials = this.tag(Tags.Items.RAW_MATERIALS)
 
@@ -66,6 +67,10 @@ internal class ModItemTagProvider(
             if (isntVanilla(it.impureDustHolder)) {
                 this.tag(it.impureDustTag()).add(it.impureDust())
                 impureDusts.add(it.impureDust())
+            }
+            if (isntVanilla(it.washedDustHolder)) {
+                this.tag(it.washedDustTag()).add(it.washedDust())
+                washedDusts.add(it.washedDust())
             }
             if (isntVanilla(it.pureDustHolder)) {
                 this.tag(it.pureDustTag()).add(it.pureDust())

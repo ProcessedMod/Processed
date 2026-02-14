@@ -9,13 +9,16 @@ import redcrafter07.processed.materials.getMaybeUnregistered
 interface OreMaterial: MaterialBase {
     var impureDustHolder: DeferredItem<Item>?
     var pureDustHolder: DeferredItem<Item>?
+    var washedDustHolder: DeferredItem<Item>?
     var rawHolder: DeferredItem<Item>?
 
     fun impureDust(): Item = getMaybeUnregistered(impureDustHolder)
     fun pureDust(): Item = getMaybeUnregistered(pureDustHolder)
+    fun washedDust(): Item = getMaybeUnregistered(washedDustHolder)
     fun rawMaterial(): Item = getMaybeUnregistered(rawHolder)
 
     fun impureDustTag(): TagKey<Item> = ProcessedTags.Items.commonTag("impure_dusts/$identifier")
     fun pureDustTag(): TagKey<Item> = ProcessedTags.Items.commonTag("pure_dusts/$identifier")
+    fun washedDustTag(): TagKey<Item> = ProcessedTags.Items.commonTag("washed_dusts/$identifier")
     fun rawMaterialTag(): TagKey<Item> = ProcessedTags.Items.commonTag("raw_materials/$identifier")
 }

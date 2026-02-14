@@ -13,6 +13,7 @@ object ProcessedTags {
         val SMALL_DUSTS = commonTag("small_dusts")
 
         val IMPURE_DUSTS = commonTag("impure_dusts")
+        val WASHED_DUSTS = commonTag("washed_dusts")
         val PURE_DUSTS = commonTag("pure_dusts")
 
         fun commonTag(name: String): TagKey<Item> {

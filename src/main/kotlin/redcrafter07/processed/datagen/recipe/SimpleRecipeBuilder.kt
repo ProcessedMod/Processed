@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.crafting.Recipe
 import net.neoforged.neoforge.common.conditions.ICondition
 
-abstract class SimpleRecipeBuilder(protected val result: ItemStack, private val prefix: String?) : RecipeBuilder {
+abstract class SimpleRecipeBuilder(val resultStack: ItemStack, private val prefix: String?) : RecipeBuilder {
     protected val criteria: MutableMap<String, Criterion<*>> = HashMap()
     protected val conditions: MutableList<ICondition> = ArrayList()
 
@@ -23,7 +23,7 @@ abstract class SimpleRecipeBuilder(protected val result: ItemStack, private val 
 
     fun addCondition(condition: ICondition) = this.apply { conditions.add(condition) }
 
-    override fun getResult(): Item = this.result.item
+    override fun getResult(): Item = this.resultStack.item
 
     protected abstract fun getRecipe(): Recipe<*>
 

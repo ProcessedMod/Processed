@@ -13,6 +13,6 @@ class PurifyingRecipeBuilder(
     private val tier: ProcessedTier = ProcessedTier.Rudimentary
 ) : SimpleChanceRecipeBuilder(result, "purifying") {
     override fun getRecipe() = PurifyingRecipe(
-        ingredient, result, chanceResults, energyUsage, processingTime, tier
+        ingredient, resultStack, chanceResults, energyUsage, processingTime, tier
     )
 }

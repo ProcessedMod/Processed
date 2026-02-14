@@ -34,6 +34,8 @@ object ModItems {
         registerMaterialItems(OreMaterial::impureDustHolder, ::ImpureDust) { "impure_${it.identifier}_dust" }
     val PURE_DUST_ITEMS =
         registerMaterialItems(OreMaterial::pureDustHolder, ::PureDust) { "pure_${it.identifier}_dust" }
+    val WASHED_DUST_ITEMS =
+        registerMaterialItems(OreMaterial::washedDustHolder, ::WashedDust) { "washed_${it.identifier}_dust" }
     val RAW_MATERIAL_ITEMS =
         registerMaterialItems(OreMaterial::rawHolder, ::Raw) { "raw_${it.identifier}" }
 

@@ -8,9 +8,9 @@ import redcrafter07.processed.recipe.SiftingRecipe
 class SiftingRecipeBuilder(
     result: ItemStack,
     private val ingredient: SizedIngredient,
-    private val energyUsage: Int,
-    private val processingTime: Int,
-    private val tier: ProcessedTier = ProcessedTier.Rudimentary
+    var energyUsage: Int,
+    var processingTime: Int,
+    var tier: ProcessedTier = ProcessedTier.Rudimentary
 ) : SimpleChanceRecipeBuilder(result, "sifting") {
     constructor(
         ingredient: SizedIngredient,
@@ -20,6 +20,6 @@ class SiftingRecipeBuilder(
     ) : this(ItemStack.EMPTY, ingredient, energyUsage, processingTime, tier)
 
     override fun getRecipe() = SiftingRecipe(
-        ingredient, result, chanceResults, energyUsage, processingTime, tier
+        ingredient, resultStack, chanceResults, energyUsage, processingTime, tier
     )
 }
