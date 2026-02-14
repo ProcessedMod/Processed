@@ -17,10 +17,13 @@ internal class ModFluidTagProvider(
     existingFileHelper: ExistingFileHelper?
 ) : FluidTagsProvider(output, lookupProvider, ProcessedMod.ID, existingFileHelper) {
     override fun addTags(provider: HolderLookup.Provider) {
+        val plsNoDupeTag = tag(FluidTags.create(ResourceLocation.fromNamespaceAndPath("create", "no_infinite_draining")))
+
         // add fuel tags
         for (fluid in ModFluids.REGISTERED_FLUIDS) {
             val tag = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", fluid.type.id.path))
-            this.tag(tag).add(fluid.still.get()).add(fluid.flowing.get())
+            this.tag(tag).add(fluid.still.get(), fluid.flowing.get())
+            plsNoDupeTag.add(fluid.still.get(), fluid.flowing.get())
         }
     }
 }

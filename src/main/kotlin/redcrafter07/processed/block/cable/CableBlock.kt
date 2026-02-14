@@ -8,6 +8,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.EntityBlock
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.material.PushReaction
 import net.minecraft.world.phys.shapes.BooleanOp
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
@@ -17,7 +18,9 @@ import redcrafter07.processed.block.cable.CableBlockEntity.Companion.Connected
 import redcrafter07.processed.materials.data.MaterialBase
 import redcrafter07.processed.materials.MaterialContainer
 
-class CableBlock(override val material: MaterialBase, val tier: ProcessedTier) : Block(Properties.of().noOcclusion()), EntityBlock,
+class CableBlock(override val material: MaterialBase, val tier: ProcessedTier) : Block(Properties.of().noOcclusion().pushReaction(
+    PushReaction.BLOCK
+)), EntityBlock,
     MaterialContainer {
     override fun newBlockEntity(pos: BlockPos, state: BlockState) = CableBlockEntity(pos, state)
 
@@ -55,6 +58,12 @@ class CableBlock(override val material: MaterialBase, val tier: ProcessedTier) :
             }
         }
         super.onRemove(state, level, pos, newState, movedByPiston)
+    }
+
+    override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, movedByPiston: Boolean) {
+        for (d in Direction.entries) if (level.getBlockState(pos.relative(d)).`is`(this)) return
+        val be = level.getBlockEntity(pos)
+        if(be is CableBlockEntity) be.scanNetwork()
     }
 
     override fun propagatesSkylightDown(state: BlockState, level: BlockGetter, pos: BlockPos): Boolean = true

@@ -9,6 +9,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.ProcessedTags
 import redcrafter07.processed.block.ModBlocks
+import redcrafter07.processed.fluid.ModFluids
 import redcrafter07.processed.materials.Materials
 import redcrafter07.processed.materials.data.MinableOreMaterial
 import redcrafter07.processed.materials.isntVanilla
@@ -36,11 +37,14 @@ internal class ModBlockTagProvider(
         Materials.getMaterials<MinableOreMaterial>().forEach {
             if (isntVanilla(it.oreBlockItemHolder)) {
                 this.tag(it.oreBlockTag()).add(it.oreBlock())
-                ores.add(it.oreBlock())
+                ores.addTag(it.oreBlockTag())
                 pickaxeMinable.add(it.oreBlock())
             }
         }
 
         this.tag(ProcessedTags.Blocks.ORE_BLITZ).add(ModBlocks.BLITZ_ORE.get())
+
+        val replaceable = tag(BlockTags.REPLACEABLE)
+        for (fluid in ModFluids.REGISTERED_FLUIDS) replaceable.add(fluid.block.get())
     }
 }

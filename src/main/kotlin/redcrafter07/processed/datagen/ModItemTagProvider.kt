@@ -44,48 +44,48 @@ internal class ModItemTagProvider(
         Materials.getMaterials<DustMaterial>().forEach {
             if (isntVanilla(it.dustHolder)) {
                 this.tag(it.dustTag()).add(it.dust())
-                dusts.add(it.dust())
+                dusts.addTag(it.dustTag())
             }
             if (isntVanilla(it.smallDustHolder)) {
                 this.tag(it.smallDustTag()).add(it.smallDust())
-                smallDusts.add(it.smallDust())
+                smallDusts.addTag(it.smallDustTag())
             }
         }
 
         Materials.getMaterials<IngotMaterial>().forEach {
             if (isntVanilla(it.ingotHolder)) {
                 this.tag(it.ingotTag()).add(it.ingot())
-                ingots.add(it.ingot())
+                ingots.addTag(it.ingotTag())
             }
             if (isntVanilla(it.nuggetHolder)) {
                 this.tag(it.nuggetTag()).add(it.nugget())
-                nuggets.add(it.nugget())
+                nuggets.addTag(it.nuggetTag())
             }
         }
 
         Materials.getMaterials<OreMaterial>().forEach {
             if (isntVanilla(it.impureDustHolder)) {
                 this.tag(it.impureDustTag()).add(it.impureDust())
-                impureDusts.add(it.impureDust())
+                impureDusts.addTag(it.impureDustTag())
             }
             if (isntVanilla(it.washedDustHolder)) {
                 this.tag(it.washedDustTag()).add(it.washedDust())
-                washedDusts.add(it.washedDust())
+                washedDusts.addTag(it.washedDustTag())
             }
             if (isntVanilla(it.pureDustHolder)) {
                 this.tag(it.pureDustTag()).add(it.pureDust())
-                pureDusts.add(it.pureDust())
+                pureDusts.addTag(it.pureDustTag())
             }
             if (isntVanilla(it.rawHolder)) {
                 this.tag(it.rawMaterialTag()).add(it.rawMaterial())
-                rawMaterials.add(it.rawMaterial())
+                rawMaterials.addTag(it.rawMaterialTag())
             }
         }
 
         Materials.getMaterials<MinableOreMaterial>().forEach {
             if(isntVanilla(it.oreBlockItemHolder)) {
                 this.tag(it.oreBlockItemTag()).add(it.oreBlockItem())
-                ores.add(it.oreBlockItem())
+                ores.addTag(it.oreBlockItemTag())
             }
         }
     }

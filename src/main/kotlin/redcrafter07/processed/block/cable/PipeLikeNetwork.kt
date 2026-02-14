@@ -46,16 +46,17 @@ abstract class PipeLikeNetwork(
      * @return Returns `true` if f returned false, otherwise returns `false`.
      */
     fun forEachEndpoint(roundRobin: Boolean, f: (BlockPos, Direction) -> Boolean): Boolean {
+        if(endpoints.isEmpty()) return false
         if (!roundRobin) {
             for (v in endpoints) if (!f(v.first, v.second)) return true
             return false
         }
 
-        val start = roundRobinOffset
-        while (++roundRobinOffset != start) {
-            if (roundRobinOffset >= endpoints.size) roundRobinOffset = 0
+        val max = endpoints.size
+        for (ignored in 0..<max) {
+            roundRobinOffset = (roundRobinOffset + 1) % endpoints.size
             val endpoint = endpoints[roundRobinOffset]
-            if (!f(endpoint.first, endpoint.second)) return true
+            if(!f(endpoint.first, endpoint.second)) return true
         }
         return false
     }

@@ -54,6 +54,7 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
                 cable.network = null
                 return 0
             }
+            // -75 steel, -76 nickel, -77 titanium, -78 uranium
 
             network.forEachEndpoint(true) { pos, dir ->
                 val actualPos = pos.relative(dir)
@@ -61,12 +62,12 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
                     if (energyLeft <= 0) return@forEachEndpoint false
 
                     val cap: IEnergyStorage
-                    val cap1 = lvl.getCapability(Capabilities.EnergyStorage.BLOCK, actualPos, dir)
+                    val cap1 = lvl.getCapability(Capabilities.EnergyStorage.BLOCK, actualPos, dir.opposite)
                     if (cap1 != null) cap = cap1
                     else {
                         val cap2 =
-                            lvl.getCapability(ProcessedPower.BLOCK, actualPos, dir) ?: return@forEachEndpoint false
-                        if (!cable.tier.canInsertEnergy(cap2.minTier())) return@forEachEndpoint false
+                            lvl.getCapability(ProcessedPower.BLOCK, actualPos, dir.opposite) ?: return@forEachEndpoint true
+                        if (!cable.tier.canInsertEnergy(cap2.minTier())) return@forEachEndpoint true
                         cap = cap2.energy()
                     }
 
@@ -130,7 +131,7 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
 
     override fun energyCapabilityForSide(side: BlockSide?, state: BlockState): ProcessedPower? {
         val handler = if (side == null) EnergyHandler(this, blockPos)
-        else if (connected[side.asDirectionNotRotated]) EnergyHandler(this, blockPos)
+        else if (connected[side.asDirectionNotRotated]) EnergyHandler(this, blockPos.relative(side.asDirectionNotRotated))
         else return null
 
         return ProcessedPowerStore(tier, handler)
@@ -193,8 +194,11 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
         if (be is CableBlockEntity) return !be.disallowedConnections[direction.opposite]
         val cap1 = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, direction.opposite)
         if (cap1 != null) return true
-        val cap2 = level.getCapability(ProcessedPower.BLOCK, pos, direction.opposite)
-        return cap2 != null && tier.canInsertEnergy(cap2.minTier())
+        val cap2 = level.getCapability(ProcessedPower.BLOCK, pos, direction.opposite) ?: return false
+        val energy = cap2.energy()
+        if(energy.canReceive() && tier.canInsertEnergy(cap2.minTier())) return true
+        if(energy.canExtract() && cap2.minTier().canInsertEnergy(tier)) return true
+        return false
     }
 
     override fun getModelData(): ModelData = ModelData.builder().with(TRANSMITTER_PROPERTY, connected).build()
