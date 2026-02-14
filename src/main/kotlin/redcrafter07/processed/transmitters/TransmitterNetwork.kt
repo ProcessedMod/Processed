@@ -1,4 +1,4 @@
-package redcrafter07.processed.block.cable
+package redcrafter07.processed.transmitters
 
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -8,45 +8,76 @@ import net.minecraft.server.level.ServerLevel
 import java.util.*
 
 // Endpoints are the position of the cable, meaning the actual block is `pos.relative(direction)`.
-abstract class PipeLikeNetwork(
+abstract class TransmitterNetwork(
     val id: UUID,
     private val blocks: MutableSet<BlockPos> = HashSet(),
     private val endpoints: MutableList<Pair<BlockPos, Direction>> = ArrayList(),
     private var roundRobinOffset: Int = 0,
+    var invalid: Boolean = false
 ) {
     /**
-     * Adds an endpoint. Note that the position of the block with the capability should be `pos.relative(direction)`
+     * Should only be called from the network data
+     *
+     * If you are looking for a way to update this network,
+     * invalidate the network instead using [TransmitterNetworkData.invalidate].
+     * The network data's tick method will automatically update it.
+     *
+     * @see TransmitterNetworkData.invalidate
      */
+    @Deprecated(
+        message = "this should only be called from a TransmitterNetworkData. If you are not, don't ignore this warning or things may break.",
+        replaceWith = ReplaceWith("TransmitterNetworkData::invalidate")
+    )
     fun addEndpoint(pos: BlockPos, direction: Direction, level: ServerLevel) {
         if (!endpoints.contains(Pair(pos, direction))) {
             endpoints.add(Pair(pos, direction))
-            setDirty(level)
         }
+    }
+
+    /**
+     * Should only be called from the network data
+     *
+     * If you are looking for a way to update this network,
+     * invalidate the network instead using [TransmitterNetworkData.invalidate].
+     * The network data's tick method will automatically update it.
+     *
+     * @see TransmitterNetworkData.invalidate
+     */
+    @Deprecated(
+        message = "this should only be called from a TransmitterNetworkData. If you are not, don't ignore this warning or things may break.",
+        replaceWith = ReplaceWith("TransmitterNetworkData::invalidate")
+    )
+    fun addBlock(block: BlockPos) {
+        blocks.add(block)
+    }
+
+    /**
+     * Should only be called from the network data
+     *
+     * If you are looking for a way to invalidate this network, use [TransmitterNetworkData.invalidate]
+     *
+     * @see TransmitterNetworkData.invalidate
+     */
+    @Deprecated(
+        message = "this should only be called from a TransmitterNetworkData. If you are not, don't ignore this warning or things may break.",
+        replaceWith = ReplaceWith("TransmitterNetworkData::invalidate")
+    )
+    fun invalidate() {
+        blocks.clear()
+        endpoints.clear()
+        invalid = true
     }
 
     fun isEmpty() = blocks.isEmpty()
 
     fun containsBlock(block: BlockPos) = blocks.contains(block)
 
-    fun addBlock(block: BlockPos, level: ServerLevel) {
-        if (blocks.add(block)) setDirty(level)
-    }
-
-    fun clearBlocks(level: ServerLevel) {
-        blocks.clear()
-        endpoints.clear()
-        setDirty(level)
-    }
-
-    abstract fun setDirty(level: ServerLevel)
-    abstract fun removeNetwork(level: ServerLevel)
-
     /**
      * Iterates through all endpoints until either all were iterated through or `f` returns false.
      * @return Returns `true` if f returned false, otherwise returns `false`.
      */
     fun forEachEndpoint(roundRobin: Boolean, f: (BlockPos, Direction) -> Boolean): Boolean {
-        if(endpoints.isEmpty()) return false
+        if (endpoints.isEmpty()) return false
         if (!roundRobin) {
             for (v in endpoints) if (!f(v.first, v.second)) return true
             return false
@@ -56,16 +87,17 @@ abstract class PipeLikeNetwork(
         for (ignored in 0..<max) {
             roundRobinOffset = (roundRobinOffset + 1) % endpoints.size
             val endpoint = endpoints[roundRobinOffset]
-            if(!f(endpoint.first, endpoint.second)) return true
+            if (!f(endpoint.first, endpoint.second)) return true
         }
         return false
     }
 
-    // TODO: Figure out if it's worth doing more complex saving. Specifically, saving a chunk coordinate (which is 2 ints),
-    //  and then a list of ints that are 'offsets' into that chunk, where the last 8 bits are the x and y offset,
-    //  which is only 8 bits in total (a chunk is 16x16 and 0..<16 is representable by a u4), and the rest 23 / 24 bits
-    //  are for the height (allowing for chunks with a maximum height of 16,777,216 blocks
+    //TODO: Figure out if it's worth doing more complex saving. Specifically, saving a chunk coordinate (which is 2 ints),
+    // and then a list of ints that are 'offsets' into that chunk, where the last 8 bits are the x and y offset,
+    // which is only 8 bits in total (a chunk is 16x16 and 0..<16 is representable by a u4), and the rest 23 / 24 bits
+    // are for the height (allowing for chunks with a maximum height of 16,777,216 blocks
     fun save(tag: CompoundTag): CompoundTag {
+        if(invalid) throw IllegalStateException()
         val blocksList = IntArray(blocks.size * 3)
         val endpointsList = IntArray(endpoints.size * 4)
         tag.putInt("roundRobinOffset", roundRobinOffset)

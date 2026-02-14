@@ -1,8 +1,10 @@
-package redcrafter07.processed.block.cable
+package redcrafter07.processed.transmitters
 
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
@@ -13,17 +15,10 @@ import net.minecraft.world.phys.shapes.BooleanOp
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
-import redcrafter07.processed.ProcessedTier
-import redcrafter07.processed.block.cable.CableBlockEntity.Companion.Connected
-import redcrafter07.processed.materials.data.MaterialBase
-import redcrafter07.processed.materials.MaterialContainer
+import redcrafter07.processed.transmitters.TransmitterBlockEntity.Companion.Connected
 
-class CableBlock(override val material: MaterialBase, val tier: ProcessedTier) : Block(Properties.of().noOcclusion().pushReaction(
-    PushReaction.BLOCK
-)), EntityBlock,
-    MaterialContainer {
-    override fun newBlockEntity(pos: BlockPos, state: BlockState) = CableBlockEntity(pos, state)
-
+abstract class TransmitterBlock(properties: Properties) :
+    Block(properties.noOcclusion().pushReaction(PushReaction.BLOCK)), EntityBlock {
     override fun neighborChanged(
         state: BlockState,
         level: Level,
@@ -32,15 +27,18 @@ class CableBlock(override val material: MaterialBase, val tier: ProcessedTier) :
         neighborPos: BlockPos,
         movedByPiston: Boolean
     ) {
-        val blockEntity = level.getBlockEntity(pos)
-        if (blockEntity is CableBlockEntity) blockEntity.updateShape()
+        val be = level.getBlockEntity(pos)
+        if (!level.isClientSide && level is ServerLevel && be is TransmitterBlockEntity) {
+            be.reloadNetwork(level)
+            be.updateVisual(level)
+        }
 
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston)
     }
 
     override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
         val be = level.getBlockEntity(pos)
-        return if (be is CableBlockEntity) shapeCache.value[be.connected.value and 0b111111] else shapeCache.value[0] // Only center block
+        return if (be is TransmitterBlockEntity) shapeCache.value[be.connected.value and 0b111111] else shapeCache.value[0] // Only center block
     }
 
     override fun getVisualShape(
@@ -52,33 +50,41 @@ class CableBlock(override val material: MaterialBase, val tier: ProcessedTier) :
     ) {
         if (level is ServerLevel && !level.isClientSide) {
             val be = level.getBlockEntity(pos)
-            if (be is CableBlockEntity) {
-                val network = be.network
-                if (network != null) CableNetworkData.getOrNull(level)?.remove(network)
-            }
+            if (be is TransmitterBlockEntity) be.reloadNetwork(level)
         }
+
         super.onRemove(state, level, pos, newState, movedByPiston)
     }
 
     override fun onPlace(state: BlockState, level: Level, pos: BlockPos, oldState: BlockState, movedByPiston: Boolean) {
         for (d in Direction.entries) if (level.getBlockState(pos.relative(d)).`is`(this)) return
         val be = level.getBlockEntity(pos)
-        if(be is CableBlockEntity) be.scanNetwork()
+        if (be is TransmitterBlockEntity) be.reloadNetwork(level)
+    }
+
+    override fun setPlacedBy(level: Level, pos: BlockPos, state: BlockState, placer: LivingEntity?, stack: ItemStack) {
+        if (placer != null) {
+            val be = level.getBlockEntity(pos)
+            if (be is TransmitterBlockEntity) be.updateVisual(level)
+        }
+
+
+        super.setPlacedBy(level, pos, state, placer, stack)
     }
 
     override fun propagatesSkylightDown(state: BlockState, level: BlockGetter, pos: BlockPos): Boolean = true
 
     companion object {
-        // Start of the center of the cable, determines the thickness of it.
+        // Start of the center of the transmitter, determines the thickness of it.
         const val START = .35
         const val END = 1 - START
 
-        val SHAPE_CABLE_NORTH: VoxelShape = Shapes.box(START, START, 0.0, END, END, START)
-        val SHAPE_CABLE_SOUTH: VoxelShape = Shapes.box(START, START, END, END, END, 1.0)
-        val SHAPE_CABLE_WEST: VoxelShape = Shapes.box(0.0, START, START, START, END, END)
-        val SHAPE_CABLE_EAST: VoxelShape = Shapes.box(END, START, START, 1.0, END, END)
-        val SHAPE_CABLE_UP: VoxelShape = Shapes.box(START, END, START, END, 1.0, END)
-        val SHAPE_CABLE_DOWN: VoxelShape = Shapes.box(START, 0.0, START, END, START, END)
+        val SHAPE_NORTH: VoxelShape = Shapes.box(START, START, 0.0, END, END, START)
+        val SHAPE_SOUTH: VoxelShape = Shapes.box(START, START, END, END, END, 1.0)
+        val SHAPE_WEST: VoxelShape = Shapes.box(0.0, START, START, START, END, END)
+        val SHAPE_EAST: VoxelShape = Shapes.box(END, START, START, 1.0, END, END)
+        val SHAPE_UP: VoxelShape = Shapes.box(START, END, START, END, 1.0, END)
+        val SHAPE_DOWN: VoxelShape = Shapes.box(START, 0.0, START, END, START, END)
 
         val shapeCache = lazy { makeShapes() }
 
@@ -89,12 +95,12 @@ class CableBlock(override val material: MaterialBase, val tier: ProcessedTier) :
                 val connected = Connected(value)
                 // center
                 var shape = Shapes.box(START, START, START, END, END, END)
-                if (connected[Direction.NORTH]) shape = Shapes.join(shape, SHAPE_CABLE_NORTH, BooleanOp.OR)
-                if (connected[Direction.SOUTH]) shape = Shapes.join(shape, SHAPE_CABLE_SOUTH, BooleanOp.OR)
-                if (connected[Direction.WEST]) shape = Shapes.join(shape, SHAPE_CABLE_WEST, BooleanOp.OR)
-                if (connected[Direction.EAST]) shape = Shapes.join(shape, SHAPE_CABLE_EAST, BooleanOp.OR)
-                if (connected[Direction.UP]) shape = Shapes.join(shape, SHAPE_CABLE_UP, BooleanOp.OR)
-                if (connected[Direction.DOWN]) shape = Shapes.join(shape, SHAPE_CABLE_DOWN, BooleanOp.OR)
+                if (connected[Direction.NORTH]) shape = Shapes.join(shape, SHAPE_NORTH, BooleanOp.OR)
+                if (connected[Direction.SOUTH]) shape = Shapes.join(shape, SHAPE_SOUTH, BooleanOp.OR)
+                if (connected[Direction.WEST]) shape = Shapes.join(shape, SHAPE_WEST, BooleanOp.OR)
+                if (connected[Direction.EAST]) shape = Shapes.join(shape, SHAPE_EAST, BooleanOp.OR)
+                if (connected[Direction.UP]) shape = Shapes.join(shape, SHAPE_UP, BooleanOp.OR)
+                if (connected[Direction.DOWN]) shape = Shapes.join(shape, SHAPE_DOWN, BooleanOp.OR)
                 list[value] = shape
             }
 

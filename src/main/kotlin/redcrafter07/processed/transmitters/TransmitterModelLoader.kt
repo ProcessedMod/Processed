@@ -1,4 +1,4 @@
-package redcrafter07.processed.block.cable
+package redcrafter07.processed.transmitters
 
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject
@@ -15,13 +15,13 @@ import net.neoforged.neoforge.client.model.geometry.IUnbakedGeometry
 import redcrafter07.processed.rl
 import java.util.function.Function
 
-object CableModelLoader : IGeometryLoader<CableModelLoader.CableModel> {
-    override fun read(p0: JsonObject, p1: JsonDeserializationContext): CableModel {
+object TransmitterModelLoader : IGeometryLoader<TransmitterModelLoader.TransmitterModel> {
+    override fun read(p0: JsonObject, p1: JsonDeserializationContext): TransmitterModel {
         val centerEl = p0.get("center")
         val sideEl = p0.get("side")
-        val size = p0.get("start")?.asDouble ?: CableBlock.START
-        var centerRL = rl("block/cable_center")
-        var sideRL = rl("block/cable_side")
+        val size = p0.get("start")?.asDouble ?: TransmitterBlock.START
+        var centerRL = rl("block/transmitter_center")
+        var sideRL = rl("block/transmitter_side")
         try {
             if(centerEl != null) centerRL = ResourceLocation.parse(centerEl.asString)
         } catch (_: Exception) {}
@@ -29,16 +29,16 @@ object CableModelLoader : IGeometryLoader<CableModelLoader.CableModel> {
             if(sideEl != null) sideRL = ResourceLocation.parse(sideEl.asString)
         } catch (_: Exception) {}
 
-        return CableModel(centerRL, sideRL, size)
+        return TransmitterModel(centerRL, sideRL, size)
     }
 
-    class CableModel(val center: ResourceLocation, val side: ResourceLocation, val start: Double) : IUnbakedGeometry<CableModel> {
+    class TransmitterModel(val center: ResourceLocation, val side: ResourceLocation, val start: Double) : IUnbakedGeometry<TransmitterModel> {
         override fun bake(
             p0: IGeometryBakingContext,
             p1: ModelBaker,
             p2: Function<Material?, TextureAtlasSprite?>,
             p3: ModelState,
             p4: ItemOverrides
-        ): BakedModel = CableBakedModel(center, side, start)
+        ): BakedModel = TransmitterBakedModel(center, side, start)
     }
 }

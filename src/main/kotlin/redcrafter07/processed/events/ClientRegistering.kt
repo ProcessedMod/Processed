@@ -10,7 +10,6 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
 import redcrafter07.processed.ProcessedMod
-import redcrafter07.processed.block.cable.CableModelLoader
 import redcrafter07.processed.block.tile_entities.FluidTankEntityRenderer
 import redcrafter07.processed.block.tile_entities.ModTileEntities
 import redcrafter07.processed.entity.ModEntities
@@ -19,6 +18,7 @@ import redcrafter07.processed.entity.RocketEntityRenderer
 import redcrafter07.processed.fluid.ModFluids
 import redcrafter07.processed.gui.*
 import redcrafter07.processed.rl
+import redcrafter07.processed.transmitters.TransmitterModelLoader
 
 @EventBusSubscriber(modid = ProcessedMod.ID, bus = EventBusSubscriber.Bus.MOD, value = [Dist.CLIENT])
 object ClientRegistering {
@@ -46,7 +46,7 @@ object ClientRegistering {
     }
 
     @SubscribeEvent
-    fun registerModelLoaders(e: ModelEvent.RegisterGeometryLoaders) = e.register(rl("cable"), CableModelLoader)
+    fun registerModelLoaders(e: ModelEvent.RegisterGeometryLoaders) = e.register(rl("transmitter"), TransmitterModelLoader)
 
     @SubscribeEvent
     fun registerClientExtensions(e: RegisterClientExtensionsEvent) {

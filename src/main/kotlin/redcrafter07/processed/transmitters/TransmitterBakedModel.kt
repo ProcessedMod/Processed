@@ -1,4 +1,4 @@
-package redcrafter07.processed.block.cable
+package redcrafter07.processed.transmitters
 
 import com.google.common.collect.ImmutableMap
 import com.mojang.blaze3d.vertex.VertexConsumer
@@ -20,10 +20,10 @@ import net.neoforged.neoforge.client.model.IDynamicBakedModel
 import net.neoforged.neoforge.client.model.data.ModelData
 import net.neoforged.neoforge.client.model.pipeline.QuadBakingVertexConsumer
 import org.joml.Vector3f
-import redcrafter07.processed.block.cable.CableBlockEntity.Companion.Connected
+import redcrafter07.processed.transmitters.TransmitterBlockEntity.Companion.Connected
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.minus
 
-class CableBakedModel(center: ResourceLocation, side: ResourceLocation, val s: Double) : IDynamicBakedModel {
+class TransmitterBakedModel(center: ResourceLocation, side: ResourceLocation, val s: Double) : IDynamicBakedModel {
     val e = 1 - s
 
     val center = lazy { Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(center) }
@@ -33,7 +33,7 @@ class CableBakedModel(center: ResourceLocation, side: ResourceLocation, val s: D
         p0: BlockState?, p1: Direction?, p2: RandomSource, modelData: ModelData, p4: RenderType?
     ): List<BakedQuad> {
         val quads = ArrayList<BakedQuad>()
-        val connected = modelData.get(CableBlockEntity.TRANSMITTER_PROPERTY) ?: itemConnected
+        val connected = modelData.get(TransmitterBlockEntity.TRANSMITTER_PROPERTY) ?: itemConnected
 
         val center = center.value
         val side = side.value

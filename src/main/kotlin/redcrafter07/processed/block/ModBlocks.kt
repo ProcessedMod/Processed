@@ -11,8 +11,6 @@ import net.neoforged.neoforge.registries.DeferredRegister
 import org.apache.logging.log4j.util.TriConsumer
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.ProcessedTier
-import redcrafter07.processed.block.cable.CableBlock
-import redcrafter07.processed.block.cable.Pipelikes
 import redcrafter07.processed.items.ModItems
 import redcrafter07.processed.materials.MaterialBlock.OreBlock
 import redcrafter07.processed.materials.MaterialBlockItem.*
@@ -20,6 +18,8 @@ import redcrafter07.processed.materials.Materials
 import redcrafter07.processed.materials.data.MaterialBase
 import redcrafter07.processed.materials.data.MinableOreMaterial
 import redcrafter07.processed.materials.isntVanilla
+import redcrafter07.processed.transmitters.Transmitters
+import redcrafter07.processed.transmitters.cable.CableBlock
 import java.util.function.BiFunction
 import java.util.function.Function
 import java.util.function.Predicate
@@ -52,13 +52,13 @@ object ModBlocks {
 
     val ENERGY_HATCHES = registerTieredBlock("energy_hatch", ProcessedTier.TIERS, ::EnergyHatchBlock)
 
-    val CABLES = Pipelikes.cables.map { (tier, material) ->
+    val CABLES = Transmitters.cables.map { (tier, material) ->
         registerBlockSpecial(
             "${material.identifier}_cable",
             { CableBlock(material, tier) },
             { CableBlockItem(it, material, tier) })
     }
-    val ITEM_PIPES = Pipelikes.itemPipes.map { (speed, material) ->
+    val ITEM_PIPES = Transmitters.itemPipes.map { (speed, material) ->
         registerBlockSpecial(
             "${material.identifier}_item_pipe",
             { ItemPipeBlock(material, speed) },

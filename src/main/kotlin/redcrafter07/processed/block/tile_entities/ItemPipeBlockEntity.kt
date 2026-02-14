@@ -22,11 +22,11 @@ import net.neoforged.neoforge.items.IItemHandler
 import redcrafter07.processed.Translations
 import redcrafter07.processed.block.ItemPipeBlock
 import redcrafter07.processed.block.WrenchInteractableBlock
-import redcrafter07.processed.block.cable.CableBlockEntity.Companion.Connected
-import redcrafter07.processed.block.cable.CableBlockEntity.Companion.TRANSMITTER_PROPERTY
-import redcrafter07.processed.block.cable.CableBlockEntity.Companion.actualDirection
 import redcrafter07.processed.block.machine_abstractions.BlockSide
 import redcrafter07.processed.block.machine_abstractions.ItemCapableBlockEntity
+import redcrafter07.processed.transmitters.TransmitterBlockEntity.Companion.Connected
+import redcrafter07.processed.transmitters.TransmitterBlockEntity.Companion.TRANSMITTER_PROPERTY
+import redcrafter07.processed.transmitters.TransmitterBlockEntity.Companion.actualDirection
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.minus
 import thedarkcolour.kotlinforforge.neoforge.forge.vectorutil.v3d.toVec3
 import java.util.function.BiFunction

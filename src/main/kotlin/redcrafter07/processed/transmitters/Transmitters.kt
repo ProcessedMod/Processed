@@ -1,9 +1,9 @@
-package redcrafter07.processed.block.cable
+package redcrafter07.processed.transmitters
 
 import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.materials.Materials
 
-object Pipelikes {
+object Transmitters {
     val cables = listOf(
         Pair(ProcessedTier.Basic, Materials.STEEL),
         Pair(ProcessedTier.Advanced, Materials.NICKEL),

@@ -16,11 +16,11 @@ import net.minecraft.world.phys.shapes.BooleanOp
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
-import redcrafter07.processed.block.cable.CableBlockEntity.Companion.Connected
 import redcrafter07.processed.block.tile_entities.ItemPipeBlockEntity
 import redcrafter07.processed.block.tile_entities.ModTileEntities
 import redcrafter07.processed.materials.data.MaterialBase
 import redcrafter07.processed.materials.MaterialContainer
+import redcrafter07.processed.transmitters.TransmitterBlockEntity.Companion.Connected
 
 class ItemPipeBlock(override val material: MaterialBase, val speed: Int) : Block(Properties.of().noOcclusion()), EntityBlock,
     MaterialContainer {

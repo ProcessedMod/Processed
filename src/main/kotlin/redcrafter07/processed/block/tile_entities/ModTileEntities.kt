@@ -9,7 +9,7 @@ import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.block.ModBlocks
-import redcrafter07.processed.block.cable.CableBlockEntity
+import redcrafter07.processed.transmitters.cable.CableBlockEntity
 import java.util.function.Supplier
 
 object ModTileEntities {
