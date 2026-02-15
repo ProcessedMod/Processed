@@ -10,6 +10,8 @@ import net.neoforged.neoforge.registries.DeferredRegister
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.block.ModBlocks
 import redcrafter07.processed.transmitters.cable.CableBlockEntity
+import redcrafter07.processed.transmitters.pipes.PipeBlockEntity
+import redcrafter07.processed.transmitters.transporters.TransporterBlockEntity
 import java.util.function.Supplier
 
 object ModTileEntities {
@@ -30,7 +32,8 @@ object ModTileEntities {
     val BIG_SMELTER = register("big_smelter", ::BigSmelterBlockEntity, ModBlocks.BIG_SMELTER)
     val LAUNCH_CONTROLLER = register("launch_controller", ::LaunchControllerBlockEntity, ModBlocks.LAUNCH_CONTROLLER)
     val CABLE = register("cable", ::CableBlockEntity, *ModBlocks.CABLES.toTypedArray())
-    val ITEM_PIPE = register("item_pipe", ::ItemPipeBlockEntity, *ModBlocks.ITEM_PIPES.toTypedArray())
+    val TRANSPORTER = register("transporter", ::TransporterBlockEntity, *ModBlocks.TRANSPORTERS.toTypedArray())
+    val PIPE = register("pipe", ::PipeBlockEntity, *ModBlocks.PIPES.toTypedArray())
     val CREATIVE_POWER_SOURCE = register(
         "creative_power_source", ::CreativePowerSourceBlockEntity, *ModBlocks.CREATIVE_POWER_SOURCE.toTypedArray()
     )

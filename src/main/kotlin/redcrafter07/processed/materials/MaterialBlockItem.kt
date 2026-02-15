@@ -39,17 +39,27 @@ abstract class MaterialBlockItem(block: Block, override val material: MaterialBa
         override fun customHoverText(
             stack: ItemStack, context: TooltipContext, tooltip: MutableList<Component>, tooltipFlag: TooltipFlag
         ) {
-            tooltip.add(Translations.cableTierTooltip(tier.nameColored))
+            tooltip.add(Translations.cableTierTooltip(tier.nameColored, tier.scalePower(64)))
         }
     }
 
-    class ItemPipeBlockItem(block: Block, material: MaterialBase, val speed: Int) : MaterialBlockItem(block, material) {
-        override fun getDescription(): Component = Translations.materialItemPipe(material)
+    class TransporterBlockItem(block: Block, material: MaterialBase, val speed: Int) : MaterialBlockItem(block, material) {
+        override fun getDescription(): Component = Translations.materialTransporter(material)
 
         override fun customHoverText(
             stack: ItemStack, context: TooltipContext, tooltip: MutableList<Component>, tooltipFlag: TooltipFlag
         ) {
-            tooltip.add(Translations.itemPipeTooltip(speed))
+            tooltip.add(Translations.transporterTooltip(speed))
+        }
+    }
+
+    class PipeBlockItem(block: Block, material: MaterialBase, val speed: Int) : MaterialBlockItem(block, material) {
+        override fun getDescription(): Component = Translations.materialPipe(material)
+
+        override fun customHoverText(
+            stack: ItemStack, context: TooltipContext, tooltip: MutableList<Component>, tooltipFlag: TooltipFlag
+        ) {
+            tooltip.add(Translations.pipeTooltip(speed))
         }
     }
 }

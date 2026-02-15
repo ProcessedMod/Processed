@@ -9,6 +9,9 @@ import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.EntityBlock
+import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.entity.BlockEntityTicker
+import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.material.PushReaction
 import net.minecraft.world.phys.shapes.BooleanOp
@@ -35,6 +38,12 @@ abstract class TransmitterBlock(properties: Properties) :
 
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston)
     }
+
+    override fun <T : BlockEntity> getTicker(
+        level: Level, state: BlockState, blockEntityType: BlockEntityType<T>
+    ): BlockEntityTicker<T>? = if (!blockEntityType.isValid(state)) null
+    else if (level.isClientSide || level !is ServerLevel) null
+    else BlockEntityTicker { _, _, _, entity -> (entity as? TransmitterBlockEntity)?.tickServer() }
 
     override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
         val be = level.getBlockEntity(pos)

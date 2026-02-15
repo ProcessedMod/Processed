@@ -80,9 +80,10 @@ class JadeIntegration : IWailaPlugin {
         ).cast()
 
         override fun streamData(accessor: BlockAccessor): EnergyData? {
-            @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") val be =
+            @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") val cap =
                 accessor.level.getCapability(ProcessedPower.BLOCK, accessor.position, null) ?: return null
-            return EnergyData(be.energy().energyStored, be.energy().maxEnergyStored)
+            if (cap.energy().maxEnergyStored <= 0) return null
+            return EnergyData(cap.energy().energyStored, cap.energy().maxEnergyStored)
         }
 
         override fun streamCodec() = STREAM_CODEC

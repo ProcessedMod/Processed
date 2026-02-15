@@ -7,8 +7,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.saveddata.SavedData
-import redcrafter07.processed.ProcessedMod
-import java.util.UUID
+import java.util.*
 import java.util.function.BiFunction
 
 abstract class TransmitterNetworkData<Network : TransmitterNetwork>(protected val networks: MutableMap<UUID, Network> = HashMap()) :
@@ -69,7 +68,6 @@ abstract class TransmitterNetworkData<Network : TransmitterNetwork>(protected va
         // This is in a transmitter network data and this has been set to dirty, so it's fine.
         @Suppress("DEPRECATION") network.invalidate()
         network.invalid = false
-        ProcessedMod.LOG.info("updating :>")
 
         val toScan = arrayListOf(block)
         while (toScan.isNotEmpty()) {

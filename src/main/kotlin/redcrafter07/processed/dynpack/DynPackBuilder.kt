@@ -24,8 +24,10 @@ object DynPackBuilder {
         val oreModel = DelegatedModel(oreRL).get()
         val cableRL = rl("block/cable")
         val cableModel = DelegatedModel(cableRL).get()
-        val itemPipeRL = rl("block/item_pipe")
-        val itemPipeModel = DelegatedModel(itemPipeRL).get()
+        val transporter = rl("block/transporter")
+        val transporterModel = DelegatedModel(transporter).get()
+        val pipe = rl("block/pipe")
+        val pipeModel = DelegatedModel(transporter).get()
         val poweredFurnaceRL = rl("block/powered_furnace")
         val poweredFurnaceModel = DelegatedModel(poweredFurnaceRL).get()
         val creativePowerSourceRL = ResourceLocation.withDefaultNamespace("block/redstone_block")
@@ -39,9 +41,14 @@ object DynPackBuilder {
             DynPackResources.addItemModel(block.id, cableModel)
         }
 
-        for (block in ModBlocks.ITEM_PIPES) {
-            DynPackResources.addBlockState(block.id, createSimpleBlock(block.get(), itemPipeRL).get())
-            DynPackResources.addItemModel(block.id, itemPipeModel)
+        for (block in ModBlocks.TRANSPORTERS) {
+            DynPackResources.addBlockState(block.id, createSimpleBlock(block.get(), transporter).get())
+            DynPackResources.addItemModel(block.id, transporterModel)
+        }
+
+        for (block in ModBlocks.PIPES) {
+            DynPackResources.addBlockState(block.id, createSimpleBlock(block.get(), pipe).get())
+            DynPackResources.addItemModel(block.id, pipeModel)
         }
 
         for (block in ModBlocks.STONE_ORE_BLOCKS) {

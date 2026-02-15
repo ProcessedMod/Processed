@@ -26,7 +26,8 @@ object Translations {
     inline fun materialRaw(material: MaterialBase) = t("processed.material_raw", material)
     inline fun materialOre(material: MaterialBase) = t("processed.material_ore", material)
     inline fun materialCable(material: MaterialBase) = t("processed.material_cable", material)
-    inline fun materialItemPipe(material: MaterialBase) = t("processed.material_item_pipe", material)
+    inline fun materialTransporter(material: MaterialBase) = t("processed.material_transporter", material)
+    inline fun materialPipe(material: MaterialBase) = t("processed.material_pipe", material)
     inline fun materialName(identifier: String) = t("processed.material.$identifier")
     inline fun blockItemTooltip(id: String): MC = t("block.processed.$id.tooltip").withStyle(ChatFormatting.GRAY)
     inline fun itemTooltip(id: String) = t("item.processed.$id.tooltip")
@@ -59,8 +60,11 @@ object Translations {
     inline fun energyBarUnitOnes(amount: Number) = t("processed.gui.widget.energy_bar.normal", amount)
     val energy = IntUnit(1, ::energyBarUnitOnes, 1_000, ::energyBarUnitThousand, 1_000_000, ::energyBarUnitMillion)
 
-    inline fun cableTierTooltip(tier: C) = t("block.processed.cable.tooltip", tier)
-    inline fun itemPipeTooltip(transferSpeed: Int) = t("block.processed.item_pipe.tooltip", transferSpeed)
+    inline fun cableTierTooltip(tier: C, transferSpeed: Int) =
+        t("block.processed.cable.tooltip", tier, energy(transferSpeed))
+
+    inline fun transporterTooltip(transferSpeed: Int) = t("block.processed.transporter.tooltip", items(transferSpeed))
+    inline fun pipeTooltip(transferSpeed: Int) = t("block.processed.pipe.tooltip", mb(transferSpeed))
 
     inline fun tieredMachineInfo(maxPower: C, nameColored: C) =
         t("processed.tiered_machine_info", maxPower, nameColored)
@@ -137,7 +141,8 @@ object Translations {
     inline fun assembledMinerItemComponents() = t("item.processed.assembled_mining_rocket.components")
     inline fun assembledMinerItemStats() = t("item.processed.assembled_mining_rocket.stats")
     inline fun fluidWidgetTooltip(fluid: C, amount: Int) = t("processed.gui.widget.fluid", fluid, mb(amount))
-    inline fun fluidWidgetTooltip(fluid: C, amount: Int, capacity: Int) = t("processed.gui.widget.fluid.capacity", fluid, mb(amount), mb(capacity))
+    inline fun fluidWidgetTooltip(fluid: C, amount: Int, capacity: Int) =
+        t("processed.gui.widget.fluid.capacity", fluid, mb(amount), mb(capacity))
 
     inline fun launchControllerScreenResult(item: C) = t("processed.gui.launch_controller_screen.result", item)
     inline fun launchControllerScreenResultAmount(amount: Int) =
@@ -155,9 +160,14 @@ object Translations {
     inline fun launchControllerScreenWaiting() = t("processed.gui.launch_controller_screen.waiting")
     inline fun launchControllerScreenStored() = t("processed.gui.launch_controller_screen.stored")
     inline fun launchControllerScreenStoredInfinity() = t("processed.gui.launch_controller_screen.stored.infinity")
-    inline fun launchControllerScreenFuel(amount: Int, max: Int) = t("processed.gui.launch_controller_screen.fuel", mb(amount), mb(max))
-    inline fun launchControllerScreenDestination(name: C) = t("processed.gui.launch_controller_screen.destination", name)
-    inline fun launchControllerScreenDuration(seconds: Long) = t("processed.gui.launch_controller_screen.duration", duration(seconds))
+    inline fun launchControllerScreenFuel(amount: Int, max: Int) =
+        t("processed.gui.launch_controller_screen.fuel", mb(amount), mb(max))
+
+    inline fun launchControllerScreenDestination(name: C) =
+        t("processed.gui.launch_controller_screen.destination", name)
+
+    inline fun launchControllerScreenDuration(seconds: Long) =
+        t("processed.gui.launch_controller_screen.duration", duration(seconds))
 
     inline fun jadeCraftingOutput() = t("config.jade.plugin_processed.crafting_state.output")
 
@@ -165,10 +175,9 @@ object Translations {
     inline fun craftingDurationSecs(n: Number) = t("processed.unit.crafting_duration.secs", n)
     inline fun craftingDurationMins(n: Number) = t("processed.unit.crafting_duration.mins", n)
     val craftingDuration = IntUnit(
-        1, ::craftingDurationTicks,
-        20, ::craftingDurationSecs,
-        1200, ::craftingDurationMins
+        1, ::craftingDurationTicks, 20, ::craftingDurationSecs, 1200, ::craftingDurationMins
     )
+
     inline fun duration(secs: Long): MC {
         // TODO: Make this configurable
         return C.literal(DurationFormatUtils.formatDuration(TimeUnit.SECONDS.toMillis(secs), "HH:mm:ss", true))

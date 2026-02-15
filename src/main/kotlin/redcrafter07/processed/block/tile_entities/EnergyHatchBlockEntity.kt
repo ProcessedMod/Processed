@@ -26,7 +26,7 @@ class EnergyHatchBlockEntity(pos: BlockPos, blockState: BlockState, tier: Proces
         private fun getTier(blk: Block) = if (blk is EnergyHatchBlock) blk.tier else ProcessedTier.None
     }
 
-    val handler = SimpleEnergyStore(tier.maxPower * 16, tier.energyMultiplier, 0)
+    val handler = SimpleEnergyStore(tier.maxPower * 16, tier.maxPower, 0)
     val wrapper = ProcessedPowerStore(tier, handler)
 
     override fun getUpdatePacket(): Packet<ClientGamePacketListener>? = ClientboundBlockEntityDataPacket.create(this)

@@ -20,6 +20,8 @@ import redcrafter07.processed.materials.data.MinableOreMaterial
 import redcrafter07.processed.materials.isntVanilla
 import redcrafter07.processed.transmitters.Transmitters
 import redcrafter07.processed.transmitters.cable.CableBlock
+import redcrafter07.processed.transmitters.pipes.PipeBlock
+import redcrafter07.processed.transmitters.transporters.TransporterBlock
 import java.util.function.BiFunction
 import java.util.function.Function
 import java.util.function.Predicate
@@ -58,11 +60,17 @@ object ModBlocks {
             { CableBlock(material, tier) },
             { CableBlockItem(it, material, tier) })
     }
-    val ITEM_PIPES = Transmitters.itemPipes.map { (speed, material) ->
+    val TRANSPORTERS = Transmitters.transporters.map { (speed, material) ->
         registerBlockSpecial(
-            "${material.identifier}_item_pipe",
-            { ItemPipeBlock(material, speed) },
-            { ItemPipeBlockItem(it, material, speed) })
+            "${material.identifier}_transporter",
+            { TransporterBlock(material, speed) },
+            { TransporterBlockItem(it, material, speed) })
+    }
+    val PIPES = Transmitters.pipes.map { (speed, material) ->
+        registerBlockSpecial(
+            "${material.identifier}_pipe",
+            { PipeBlock(material, speed) },
+            { PipeBlockItem(it, material, speed) })
     }
 
     val STONE_ORE_BLOCKS = registerMaterialBlocks<MinableOreMaterial>(

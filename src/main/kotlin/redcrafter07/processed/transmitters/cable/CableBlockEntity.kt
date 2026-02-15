@@ -30,8 +30,8 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
         if (cap1 != null) return true
         val cap2 = level.getCapability(ProcessedPower.BLOCK, pos, direction.opposite) ?: return false
         val energy = cap2.energy()
-        if(energy.canReceive() && tier.canInsertEnergy(cap2.minTier())) return true
-        if(energy.canExtract() && cap2.minTier().canInsertEnergy(tier)) return true
+        if (energy.canReceive() && tier.canInsertEnergy(cap2.minTier())) return true
+        if (energy.canExtract() && cap2.minTier().canInsertEnergy(tier)) return true
         return false
     }
 
@@ -45,33 +45,22 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
         return ProcessedPowerStore(tier, handler)
     }
 
-    private fun makeNetwork(level: ServerLevel) {
-        CableNetworkData.getOrCreate(level).invalidate(blockPos, network)
-    }
+    // Can feed up to two max power machines
+    override fun getLimit() = tier.scalePower(64)
 
     class EnergyHandler(val cable: CableBlockEntity, val block: BlockPos) : IEnergyStorage {
         override fun receiveEnergy(amount: Int, sim: Boolean): Int {
+            if (amount == 0 || cable.currentCapacity <= 0) return 0
             val lvl = cable.level ?: return 0
             if (lvl !is ServerLevel || lvl.isClientSide) return 0
-            if (amount == 0) return 0
-            var energyLeft = amount
-            val networkId = cable.network
-            if (networkId == null) {
-                cable.makeNetwork(lvl)
-                return 0
-            }
+            val network = cable.getOrMakeNetwork(lvl) ?: return 0
 
-            val network = CableNetworkData.getOrCreate(lvl).getNetwork(networkId, cable.blockPos)
-            if (network == null) {
-                cable.makeNetwork(lvl)
-                cable.network = null
-                return 0
-            }
+            var energyLeft = amount
 
             network.forEachEndpoint(true) { pos, dir ->
                 val actualPos = pos.relative(dir)
                 if (block != actualPos) {
-                    if (energyLeft <= 0) return@forEachEndpoint false
+                    if (energyLeft <= 0 || cable.currentCapacity <= 0) return@forEachEndpoint false
 
                     val cap: IEnergyStorage
                     val cap1 = lvl.getCapability(Capabilities.EnergyStorage.BLOCK, actualPos, dir.opposite)
@@ -83,12 +72,20 @@ class CableBlockEntity(pos: BlockPos, blockState: BlockState) :
                         cap = cap2.energy()
                     }
 
+                    val targetCable =
+                        (lvl.getBlockEntity(pos) as? TransmitterBlockEntity ?: return@forEachEndpoint true)
+                    val limit = targetCable.remainingCapacity(cable.remainingCapacity(energyLeft))
                     try {
-                        energyLeft -= cap.receiveEnergy(energyLeft, sim)
+                        val extracted = cap.receiveEnergy(limit, sim)
+                        energyLeft -= extracted
+                        if (!sim) {
+                            cable.useCapacity(extracted)
+                            targetCable.useCapacity(extracted)
+                        }
                     } catch (_: Exception) {
                     }
                 }
-                energyLeft > 0
+                energyLeft > 0 && cable.currentCapacity > 0
             }
 
             return amount - energyLeft

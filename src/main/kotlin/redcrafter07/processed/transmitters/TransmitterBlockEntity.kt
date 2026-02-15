@@ -30,7 +30,9 @@ abstract class TransmitterBlockEntity(typ: BlockEntityType<*>, pos: BlockPos, bl
     val connected = Connected()
     val disallowedConnections = Connected()
     var network: UUID? = null
+    var currentCapacity = 0
 
+    protected abstract fun getLimit(): Int
     protected abstract fun getNetworkData(level: ServerLevel): TransmitterNetworkData<*>
 
     override fun saveAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
@@ -51,6 +53,32 @@ abstract class TransmitterBlockEntity(typ: BlockEntityType<*>, pos: BlockPos, bl
         } else null
     }
 
+    fun tickServer() {
+        currentCapacity = getLimit()
+    }
+
+    protected fun getOrMakeNetwork(level: ServerLevel): TransmitterNetwork? {
+        val networkId = network
+        val data = getNetworkData(level)
+        if (networkId == null) {
+            data.invalidate(blockPos, networkId)
+            return null
+        }
+
+        val network = data.getNetwork(networkId, blockPos)
+        if (network == null) {
+            data.invalidate(blockPos, networkId)
+            this.network = null
+            return null
+        }
+        return network
+    }
+
+    fun remainingCapacity(max: Int) = currentCapacity.coerceAtMost(max)
+    fun useCapacity(amount: Int) {
+        currentCapacity = (currentCapacity - amount).coerceAtLeast(0)
+    }
+
     fun reloadNetwork(level: Level?) {
         val level = level ?: this.level ?: return
         if (level.isClientSide || level !is ServerLevel) return
@@ -60,8 +88,8 @@ abstract class TransmitterBlockEntity(typ: BlockEntityType<*>, pos: BlockPos, bl
     fun updateVisual(level: Level) {
         val prev = connected.value
         connected.value = 0
-        for (d in Direction.entries) if(isConnected(level, d)) connected[d] = true
-        if(connected.value == prev) return
+        for (d in Direction.entries) if (isConnected(level, d)) connected[d] = true
+        if (connected.value == prev) return
 
         level.blockEntityChanged(blockPos)
         sync()
@@ -112,7 +140,7 @@ abstract class TransmitterBlockEntity(typ: BlockEntityType<*>, pos: BlockPos, bl
         val player = ctx.player ?: return
         if (player !is ServerPlayer) return
         val state = if (disallowedConnections[direction]) Translations.pipeLikeStateSplit() else {
-            if (connected[direction]) Translations.pipeLikeStateConnected()
+            if (isConnected(level, direction)) Translations.pipeLikeStateConnected()
             else Translations.pipeLikeStateDisconnected()
         }
         player.displayClientMessage(Translations.pipeLikeState(state), true)
