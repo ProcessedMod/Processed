@@ -2,17 +2,23 @@ package redcrafter07.processed.network
 
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.core.SectionPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
+import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.chunk.status.ChunkStatus
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.registries.RegisterEvent
+import redcrafter07.processed.Attachments
 import redcrafter07.processed.block.machine_abstractions.BlockSide
 import redcrafter07.processed.block.machine_abstractions.IoState
 import redcrafter07.processed.block.machine_abstractions.ProcessedMachine
 import redcrafter07.processed.block.tile_entities.LaunchControllerBlockEntity
+import redcrafter07.processed.covers.ClientCoverAttachment
+import redcrafter07.processed.covers.Cover
+import redcrafter07.processed.covers.CoverAttachment
 import redcrafter07.processed.items.*
 import redcrafter07.processed.multiblock.MultiBlockBlockCache
 import redcrafter07.processed.rpc.RpcRegistry
@@ -83,8 +89,41 @@ object RPCFunctions {
                 }
             }
         }
+
     fun notifyMultiblockDestroyed(player: ServerPlayer, relPackedPositions: LongArray, controllerPosition: BlockPos) {
         multiblockDestroyNotification.sendToClient(player, relPackedPositions, controllerPosition)
+    }
+
+    val syncCovers =
+        RpcRegistry.registerClient<ChunkPos, ClientCoverAttachment>("sync_covers") { sender, pos, attachment ->
+            val level = sender.player.level()
+            val c = level.getChunk(pos.x, pos.z)
+            if (attachment.map.isEmpty()) c.removeData(Attachments.COVERS_CLIENT)
+            else c.setData(Attachments.COVERS_CLIENT, attachment)
+        }
+
+    val coverPlaced =
+        RpcRegistry.registerClient<BlockPos, Direction, ResourceLocation>("cover_placed") { sender, pos, dir, rl ->
+            val chunk = sender.player.level().getChunk(pos)
+            val data = chunk.getData(Attachments.COVERS_CLIENT)
+            val cover = Cover.REGISTRY.get(rl)
+            val key = CoverAttachment.pack(dir, pos, chunk.pos)
+            if (key != -1 && cover != null) data.map[key] = cover
+        }
+
+    val coverRemoved = RpcRegistry.registerClient<BlockPos>("cover_removed") { sender, pos ->
+        val chunk = sender.player.level().getChunk(pos)
+        val data = chunk.getExistingData(Attachments.COVERS_CLIENT)
+        if (data.isEmpty) return@registerClient
+        val key = CoverAttachment.pack(pos, chunk.pos)
+        for (d in Direction.entries) data.get().map.remove(key or d.get3DDataValue())
+    }
+
+    val singleCoverRemoved = RpcRegistry.registerClient<BlockPos, Direction>("single_cover_removed") { sender, pos, dir ->
+        val chunk = sender.player.level().getChunk(pos)
+        val data = chunk.getExistingData(Attachments.COVERS_CLIENT)
+        if (data.isEmpty) return@registerClient
+        data.get().map.remove(CoverAttachment.pack(dir, pos, chunk.pos))
     }
 
     fun register(bus: IEventBus) {

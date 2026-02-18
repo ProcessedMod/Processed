@@ -1,0 +1,4 @@
+{
+    "parent": "processed:block/cover",
+    "textures": {"tex": "processed:cover/fluid"}
+}

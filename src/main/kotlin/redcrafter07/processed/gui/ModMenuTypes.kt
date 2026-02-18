@@ -9,6 +9,7 @@ import net.neoforged.neoforge.network.IContainerFactory
 import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
 import redcrafter07.processed.ProcessedMod
+import redcrafter07.processed.covers.covers.FluidCoverMenu
 import java.util.function.Supplier
 
 object ModMenuTypes {
@@ -22,6 +23,7 @@ object ModMenuTypes {
     val LAUNCH_CONTROLLER_MENU = register("launch_controller_menu", ::LaunchControllerMenu)
     val ITEM_HATCH_MENU = register("item_hatch_menu", ::ItemHatchMenu)
     val FLUID_HATCH_MENU = register("fluid_hatch_menu", ::FluidHatchMenu)
+    val FLUID_COVER_MENU = register("fluid_cover_menu", ::FluidCoverMenu)
 
     fun <T : AbstractContainerMenu> register(
         name: String,

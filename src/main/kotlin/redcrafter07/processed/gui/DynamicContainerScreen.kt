@@ -6,8 +6,8 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
 import redcrafter07.processed.gui.inventory.ProcessedContainerMenu
 
-open class DynamicContainerScreen(menu: ProcessedContainerMenu, playerInventory: Inventory, title: Component) :
-    AbstractContainerScreen<ProcessedContainerMenu>(menu, playerInventory, title) {
+open class DynamicContainerScreen<T: ProcessedContainerMenu>(menu: T, playerInventory: Inventory, title: Component) :
+    AbstractContainerScreen<T>(menu, playerInventory, title) {
     override fun renderBg(graphics: GuiGraphics, p1: Float, p2: Int, p3: Int) {
         RenderUtils.renderDefault(this, graphics)
     }

@@ -14,6 +14,7 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator
 import net.neoforged.neoforge.registries.DeferredBlock
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.block.ModBlocks
+import redcrafter07.processed.covers.covers.ModCovers
 import redcrafter07.processed.items.ModItems
 import redcrafter07.processed.materials.Materials
 import redcrafter07.processed.materials.data.MinableOreMaterial
@@ -44,6 +45,8 @@ class ModBlockLootTables(provider: HolderLookup.Provider) :
         dropSelf(ModBlocks.ITEM_OUTPUT_HATCH)
         dropSelf(ModBlocks.FLUID_INPUT_HATCH)
         dropSelf(ModBlocks.FLUID_OUTPUT_HATCH)
+
+        ModCovers.COVERS.entries.forEach { holder -> dropSelf(holder.get().block) }
 
         Materials.getMaterials<MinableOreMaterial>().forEach {
             if (isntVanilla(it.oreBlockHolder)) {

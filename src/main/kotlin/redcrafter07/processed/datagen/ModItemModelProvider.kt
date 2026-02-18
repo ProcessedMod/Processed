@@ -6,6 +6,7 @@ import net.neoforged.neoforge.client.model.generators.ItemModelProvider
 import net.neoforged.neoforge.common.data.ExistingFileHelper
 import net.neoforged.neoforge.registries.DeferredItem
 import redcrafter07.processed.ProcessedMod
+import redcrafter07.processed.covers.covers.ModCovers
 import redcrafter07.processed.items.ModItems
 import redcrafter07.processed.rl
 
@@ -25,12 +26,19 @@ class ModItemModelProvider(output: PackOutput, existingFileHelper: ExistingFileH
         simpleModel("ingot_item", "item/ingot")
         simpleModel("nugget_item", "item/nugget")
         simpleModel("raw_item", "item/raw_metal")
+        ModCovers.COVERS.entries.forEach { def -> simpleItem(def.get().location.value) }
     }
 
     private fun simpleItem(item: DeferredItem<*>) {
         withExistingParent(
             item.id.path, generatedItemModel
         ).texture("layer0", rl("item/${item.id.path}"))
+    }
+
+    private fun simpleItem(item: ResourceLocation) {
+        withExistingParent(
+            item.path, generatedItemModel
+        ).texture("layer0", item.withPrefix("item/"))
     }
 
     private fun simpleModel(path: String, texture: String): ResourceLocation =

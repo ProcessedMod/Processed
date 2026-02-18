@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "facing=north": {"model": "processed:block/fluid_cover"},
+        "facing=south": {"model": "processed:block/fluid_cover", "y": 180},
+        "facing=west": {"model": "processed:block/fluid_cover", "y": -90},
+        "facing=east": {"model": "processed:block/fluid_cover", "y": 90},
+        "facing=up": {"model": "processed:block/fluid_cover", "x": -90},
+        "facing=down": {"model": "processed:block/fluid_cover", "x": 90}
+    }
+}

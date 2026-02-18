@@ -34,7 +34,6 @@ object MultiblockEvents {
                     player, positions, machineBlock
                 )
             }
-
         }
     }
 

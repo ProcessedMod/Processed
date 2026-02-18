@@ -12,6 +12,7 @@ import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsE
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.block.tile_entities.FluidTankEntityRenderer
 import redcrafter07.processed.block.tile_entities.ModTileEntities
+import redcrafter07.processed.covers.covers.FluidCoverScreen
 import redcrafter07.processed.entity.ModEntities
 import redcrafter07.processed.entity.RocketEntityModel
 import redcrafter07.processed.entity.RocketEntityRenderer
@@ -32,6 +33,7 @@ object ClientRegistering {
         event.register(ModMenuTypes.LAUNCH_CONTROLLER_MENU.get(), ::LaunchControllerMenuScreen)
         event.register(ModMenuTypes.ITEM_HATCH_MENU.get(), ::DynamicContainerScreen)
         event.register(ModMenuTypes.FLUID_HATCH_MENU.get(), ::FluidHatchScreen)
+        event.register(ModMenuTypes.FLUID_COVER_MENU.get(), ::FluidCoverScreen)
     }
 
     @SubscribeEvent

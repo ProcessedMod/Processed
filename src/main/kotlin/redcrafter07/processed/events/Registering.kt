@@ -14,6 +14,7 @@ import net.neoforged.neoforge.event.AddPackFindersEvent
 import net.neoforged.neoforge.fluids.capability.wrappers.FluidBucketWrapper
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
 import net.neoforged.neoforge.registries.DataPackRegistryEvent
+import net.neoforged.neoforge.registries.NewRegistryEvent
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.ProcessedPower
 import redcrafter07.processed.block.machine_abstractions.BlockSide
@@ -21,6 +22,7 @@ import redcrafter07.processed.block.machine_abstractions.EnergyCapableBlockEntit
 import redcrafter07.processed.block.machine_abstractions.FluidCapableBlockEntity
 import redcrafter07.processed.block.machine_abstractions.ItemCapableBlockEntity
 import redcrafter07.processed.block.tile_entities.ModTileEntities
+import redcrafter07.processed.covers.Cover
 import redcrafter07.processed.dynpack.DynPackSource
 import redcrafter07.processed.fluid.ModFluids
 import redcrafter07.processed.integration.theoneprobe.TheOneProbeIntegration
@@ -126,18 +128,6 @@ object Registering {
     fun registerNetworkHandlers(event: RegisterPayloadHandlersEvent) {
         val registrar = event.registrar(ProcessedMod.ID)
 
-//        registrar.playToServer(
-//            FluidHandlerClickPacket.TYPE, FluidHandlerClickPacket.CODEC, FluidHandlerClickPacket::handleServer
-//        )
-//
-//        registrar.playToClient(
-//            SetFluidMenuContentsPacket.TYPE, SetFluidMenuContentsPacket.CODEC, SetFluidMenuContentsPacket::handleClient
-//        )
-//        registrar.playToClient(
-//            UpdateFluidMenuContentPacket.TYPE,
-//            UpdateFluidMenuContentPacket.CODEC,
-//            UpdateFluidMenuContentPacket::handleClient
-//        )
         registrar.playBidirectional(MenuRPCPacket.TYPE, MenuRPCPacket.CODEC, MenuRPCPacket::handle)
         registrar.playBidirectional(RPCPacket.TYPE, RPCPacket.CODEC, RPCPacket::handle)
     }
@@ -169,5 +159,10 @@ object Registering {
     fun registerParticleProviders(e: RegisterParticleProvidersEvent) {
         e.registerSpriteSet(ModParticles.SMOKE.get(), ::SmokeParticleProvider)
         e.registerSpriteSet(ModParticles.FIRE.get(), ::FireParticleProvider)
+    }
+
+    @SubscribeEvent
+    fun registerRegistries(e: NewRegistryEvent) {
+        e.register(Cover.REGISTRY)
     }
 }

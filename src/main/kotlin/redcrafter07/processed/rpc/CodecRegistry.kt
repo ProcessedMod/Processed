@@ -2,6 +2,7 @@ package redcrafter07.processed.rpc
 
 import io.netty.buffer.ByteBuf
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import net.minecraft.network.RegistryFriendlyByteBuf
@@ -11,9 +12,11 @@ import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.InteractionHand
+import net.minecraft.world.level.ChunkPos
 import net.neoforged.neoforge.fluids.FluidStack
 import redcrafter07.processed.block.machine_abstractions.BlockSide
 import redcrafter07.processed.block.machine_abstractions.IoState
+import redcrafter07.processed.covers.ClientCoverAttachment
 import redcrafter07.processed.gui.sync.SyncFieldList
 import redcrafter07.processed.gui.widgets.FluidWidget
 import redcrafter07.processed.items.WrenchMode
@@ -26,36 +29,38 @@ object CodecRegistry {
 
     init {
         register(Boolean::class.java, ByteBufCodecs.BOOL)
-        register(
+        @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN") register(
             java.lang.Boolean::class.java,
             ByteBufCodecs.BOOL.map({ it as java.lang.Boolean }, java.lang.Boolean::booleanValue)
         )
 
         register(Byte::class.java, ByteBufCodecs.BYTE)
-        register(
+        @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN") register(
             java.lang.Byte::class.java, ByteBufCodecs.BYTE.map({ it as java.lang.Byte }, java.lang.Byte::toByte)
         )
 
         register(Short::class.java, ByteBufCodecs.SHORT)
-        register(
+        @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN") register(
             java.lang.Short::class.java, ByteBufCodecs.SHORT.map({ it as java.lang.Short }, java.lang.Short::toShort)
         )
 
         register(Int::class.java, ByteBufCodecs.INT)
-        register(Integer::class.java, ByteBufCodecs.INT.map({ it as Integer }, Integer::toInt))
+        @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN") register(
+            Integer::class.java, ByteBufCodecs.INT.map({ it as Integer }, Integer::toInt)
+        )
 
         register(Long::class.java, ByteBufCodecs.VAR_LONG)
-        register(
+        @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN") register(
             java.lang.Long::class.java, ByteBufCodecs.VAR_LONG.map({ it as java.lang.Long }, java.lang.Long::toLong)
         )
 
         register(Float::class.java, ByteBufCodecs.FLOAT)
-        register(
+        @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN") register(
             java.lang.Float::class.java, ByteBufCodecs.FLOAT.map({ it as java.lang.Float }, java.lang.Float::toFloat)
         )
 
         register(Double::class.java, ByteBufCodecs.DOUBLE)
-        register(
+        @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN") register(
             java.lang.Double::class.java,
             ByteBufCodecs.DOUBLE.map({ it as java.lang.Double }, java.lang.Double::toDouble)
         )
@@ -87,6 +92,9 @@ object CodecRegistry {
         registerRegistryFriendly(FluidStackList::class.java, FluidStackList.STREAM_CODEC)
         register(SyncFieldList::class.java, SyncFieldList.STREAM_CODEC)
         registerRegistryFriendly(Component::class.java, ComponentSerialization.STREAM_CODEC)
+        register(ClientCoverAttachment::class.java, ClientCoverAttachment.CODEC)
+        register(ChunkPos::class.java, ByteBufCodecs.VAR_LONG.map(::ChunkPos, ChunkPos::toLong))
+        register(Direction::class.java, Direction.STREAM_CODEC)
     }
 
     private fun <T> register(clazz: Class<T>, codec: StreamCodec<ByteBuf, T>) {

@@ -33,6 +33,7 @@ object Translations {
     inline fun itemTooltip(id: String) = t("item.processed.$id.tooltip")
     inline fun wrenchMode(modeName: String) = t("item.processed.wrench.mode.$modeName")
     inline fun wrenchModeTooltip(mode: WrenchMode) = t("item.processed.wrench.mode", mode)
+    inline fun itemFluidCover() = t("item.processed.fluid_cover")
 
     inline fun mainItemGroup() = t("item_group.processed.main")
     inline fun materialsItemGroup() = t("item_group.processed.materials")
@@ -168,6 +169,8 @@ object Translations {
 
     inline fun launchControllerScreenDuration(seconds: Long) =
         t("processed.gui.launch_controller_screen.duration", duration(seconds))
+    inline fun buttonPushPullPush() = t("processed.gui.button_push_pull.push")
+    inline fun buttonPushPullPull() = t("processed.gui.button_push_pull.pull")
 
     inline fun jadeCraftingOutput() = t("config.jade.plugin_processed.crafting_state.output")
 

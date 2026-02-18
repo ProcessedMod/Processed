@@ -19,7 +19,7 @@ import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 import redcrafter07.processed.block.tile_entities.FluidTankBlockEntity
 
-class FluidTankBlock() : Block(Properties.of().noOcclusion().sound(SoundType.STONE).pushReaction(PushReaction.DESTROY)),
+class FluidTankBlock : Block(Properties.of().noOcclusion().sound(SoundType.STONE).pushReaction(PushReaction.DESTROY)),
     EntityBlock {
     companion object {
         val SHAPE: VoxelShape = box(1.0, 0.0, 1.0, 15.0, 16.0, 15.0)

@@ -36,7 +36,7 @@ class SyncFieldMeta<T, Parent>(
         }
 
         /** Runs a protected or private method */
-        fun invokePrivate(method: Method, obj: Any, vararg args: Any): Any {
+        fun invokePrivate(method: Method, obj: Any, vararg args: Any): Any? {
             method.isAccessible = true
             try {
                 return method.invoke(obj, *args)

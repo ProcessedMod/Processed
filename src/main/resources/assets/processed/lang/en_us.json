@@ -9,6 +9,7 @@
     "item.processed.space_engine": "Space Engine",
     "item.processed.space_miner": "Space Miner",
     "item.processed.space_cargo_bay": "Space Cargo Bay",
+    "item.processed.fluid_cover": "Fluid Cover",
 
     "item.processed.wrench.tooltip": "§7Tweak other blocks from Processed!",
     "item.processed.blitz_orb.tooltip": "§7A big orb of energy.",
@@ -185,6 +186,8 @@
     "config.jade.plugin_processed.crafting_state": "Crafting State",
     "config.jade.plugin_processed.crafting_state.output": "Output:",
 
+    "processed.gui.button_push_pull.push": "Pushing",
+    "processed.gui.button_push_pull.pull": "Pulling",
     "processed.gui.planetoid_selection_screen.go_up": "Go Up",
     "processed.gui.planetoid_widget.tooltip": "Planetoid: %s",
     "processed.gui.planetoid.distance": "Distance: %s",
