@@ -8,30 +8,30 @@ import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent
 import net.neoforged.neoforge.fluids.FluidStack
+import net.neoforged.neoforge.registries.NeoForgeRegistries
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.Translations
 import redcrafter07.processed.items.ModDataComponents
 import redcrafter07.processed.miner.MinerCalc
 import redcrafter07.processed.miner.MinerData
-import kotlin.jvm.optionals.getOrNull
 
 @EventBusSubscriber(modid = ProcessedMod.ID, bus = EventBusSubscriber.Bus.GAME)
 object MinerComponentTooltipEvent {
     @SubscribeEvent
     fun onTooltip(e: ItemTooltipEvent) {
         if (e.itemStack.has(ModDataComponents.ASSEMBLED_MINER)) return
-        val level = e.context.level() ?: return
-        val registry = level.registryAccess().registry(MinerData.Fuel.REGISTRY_KEY).getOrNull() ?: return
 
         fun add(translation: MutableComponent) = e.toolTip.add(1, translation.withStyle(ChatFormatting.GOLD))
 
         val item = e.itemStack.item
         if (item is BucketItem) {
-            val key = BuiltInRegistries.FLUID.getKey(item.content)
-            val fuel = registry.get(key) ?: return
+            val key = NeoForgeRegistries.FLUID_TYPES.getKey(item.content.fluidType) ?: return
+            val holder = NeoForgeRegistries.FLUID_TYPES.getHolder(key)
+            if (holder.isEmpty) return
+            val data = holder.get().getData(MinerData.Fuel.DATA_MAP) ?: return
 
-            add(Translations.specificImpulse(fuel.specificImpulse))
-            add(Translations.density(MinerCalc.kgPerLiterToKgPerMb(fuel.density)))
+            add(Translations.specificImpulse(data.specificImpulse))
+            add(Translations.density(MinerCalc.kgPerLiterToKgPerMb(data.density)))
             return
         }
 

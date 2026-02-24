@@ -15,6 +15,7 @@ import net.neoforged.neoforge.fluids.capability.wrappers.FluidBucketWrapper
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
 import net.neoforged.neoforge.registries.DataPackRegistryEvent
 import net.neoforged.neoforge.registries.NewRegistryEvent
+import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.ProcessedPower
 import redcrafter07.processed.block.machine_abstractions.BlockSide
@@ -148,11 +149,6 @@ object Registering {
             Planetoid.CODEC,
             Planetoid.CODEC,
         )
-        e.dataPackRegistry(
-            MinerData.Fuel.REGISTRY_KEY,
-            MinerData.Fuel.CODEC,
-            MinerData.Fuel.CODEC,
-        )
     }
 
     @SubscribeEvent
@@ -164,5 +160,10 @@ object Registering {
     @SubscribeEvent
     fun registerRegistries(e: NewRegistryEvent) {
         e.register(Cover.REGISTRY)
+    }
+
+    @SubscribeEvent
+    fun registerDataMaps(e: RegisterDataMapTypesEvent) {
+        e.register(MinerData.Fuel.DATA_MAP)
     }
 }

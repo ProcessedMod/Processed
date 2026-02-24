@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '1.0.21'
+    id 'net.neoforged.moddev' version '2.0.140'
     id "org.jetbrains.kotlin.jvm" version '2.0.21'
 }
 
@@ -165,9 +165,9 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 // IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.
-idea {
-    module {
-        downloadSources = true
-        downloadJavadoc = true
-    }
-}
+//idea {
+//    module {
+//        downloadSources = true
+//        downloadJavadoc = true
+//    }
+//}

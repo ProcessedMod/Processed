@@ -34,10 +34,10 @@ abstract class CoverBehavior(val position: BlockPos, val level: Level, val direc
         loadAdditional(tag, registries)
     }
 
-    fun <T> getCapability(level: Level, capability: BlockCapability<T, Direction?>): T? =
+    protected fun <T> getCapability(level: Level, capability: BlockCapability<T, Direction?>): T? =
         getCapability(level, capability, position, direction)
 
-    fun <T> getCapability(level: Level, capability: BlockCapability<T, Direction?>, pos: BlockPos, dir: Direction): T? {
+    protected fun <T> getCapability(level: Level, capability: BlockCapability<T, Direction?>, pos: BlockPos, dir: Direction): T? {
         @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") return level.getCapability(capability, pos, dir)
             ?: level.getCapability(capability, pos, null)
     }
@@ -52,7 +52,6 @@ abstract class CoverBehavior(val position: BlockPos, val level: Level, val direc
      * @return Returns if this function did any work. if not, this cover will be put to sleep for 1 second (20 ticks).
      */
     protected open fun tick(level: ServerLevel): Boolean = false
-    open fun <T> getCapabilityValue(value: T): T? = null
     fun wakeup() {
         sleepLeft = 0
     }

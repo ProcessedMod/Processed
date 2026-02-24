@@ -1,10 +1,10 @@
 package redcrafter07.processed.miner
 
 import io.netty.buffer.ByteBuf
-import net.minecraft.core.RegistryAccess
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.world.item.ItemStack
+import net.neoforged.neoforge.registries.NeoForgeRegistries
 import org.openjdk.nashorn.internal.objects.NativeMath.LN2
 import redcrafter07.processed.items.ModDataComponents
 import kotlin.jvm.optionals.getOrNull
@@ -22,17 +22,16 @@ object MinerCalc {
 
     /** density: kg/block */
     fun calculate(
-        assembled: ItemStack, registries: RegistryAccess, destination: Planetoid, blockDensity: Double = DEFAULT_DENSITY
+        assembled: ItemStack, destination: Planetoid, blockDensity: Double = DEFAULT_DENSITY
     ): Result? {
         val distance = destination.distance.getOrNull() ?: return null
         val gravity = destination.gravity.getOrNull() ?: return null
-        return calculate(assembled, registries, distance, gravity.toDouble(), blockDensity)
+        return calculate(assembled, distance, gravity.toDouble(), blockDensity)
     }
 
     /** distance: km, gravity: m/s², density: kg/block, dvPerKm: m/s/km */
     fun calculate(
         assembled: ItemStack,
-        registries: RegistryAccess,
         distance: Long,
         gravity: Double,
         blockDensity: Double,
@@ -44,7 +43,9 @@ object MinerCalc {
         val miners = assembled.get(ModDataComponents.MINER_DATA) ?: return null
         val cargoBay = assembled.get(ModDataComponents.CARGO_BAY_DATA) ?: return null
         val orePerMission = cargoBay.capacity
-        val fuel = registries.registry(MinerData.Fuel.REGISTRY_KEY).getOrNull()?.get(engine.fuel) ?: return null
+
+        val holder = NeoForgeRegistries.FLUID_TYPES.getHolder(engine.fuel).getOrNull() ?: return null
+        val fuel = holder.getData(MinerData.Fuel.DATA_MAP) ?: return null
 
         // intermediaries
         val structureMass = (hull.mass + tank.mass + engine.mass + miners.mass + cargoBay.mass).toDouble() // B22

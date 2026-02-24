@@ -76,7 +76,6 @@ class AssembledMinerItem : Item(Properties().stacksTo(1)) {
         if (planetoid.distance.isEmpty || planetoid.gravity.isEmpty) return
         val calc = MinerCalc.calculate(
             player.mainHandItem,
-            level.registryAccess(),
             planetoid,
         ) ?: return
 

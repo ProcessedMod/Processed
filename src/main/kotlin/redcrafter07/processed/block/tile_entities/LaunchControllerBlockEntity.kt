@@ -257,7 +257,7 @@ class LaunchControllerBlockEntity(pos: BlockPos, blockState: BlockState) :
                 lastLoadedMiner?.first ?: ItemStack.EMPTY, miner.first
             ) || !planetoid.isCalcSame(lastDestination?.first) || dst.second != lastDestination?.second
         ) {
-            lastResult = MinerCalc.calculate(miner.first, lvl.registryAccess(), planetoid)
+            lastResult = MinerCalc.calculate(miner.first, planetoid)
             lastLoadedMiner = if (lastResult != null) miner else null
         }
         if (lastLoadedMiner != null && lastResult != null) lastDestination = Pair(planetoid, dst.second)

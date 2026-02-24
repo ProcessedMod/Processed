@@ -28,6 +28,12 @@ class CoverAttachment(private val undeserializedCovers: MutableMap<Int, Compound
     private val ticking: MutableSet<Int> = HashSet()
     val map: MutableMap<Int, CoverBehavior> = HashMap()
 
+    fun getCover(pos: BlockPos, dir: Direction, chunk: ChunkPos): CoverBehavior? {
+        val v = pack(dir, pos, chunk)
+        if(v == -1) return null
+        return map[v]
+    }
+
     /// Tries placing a cover, returning if it succeeded.
     fun placeCover(
         pos: BlockPos, dir: Direction, chunk: ChunkPos, level: ServerLevel, cover: () -> CoverBehavior

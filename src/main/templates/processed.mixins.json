@@ -5,8 +5,7 @@
     "compatibilityLevel": "JAVA_21",
     "client": [
         "PlayerSkinMixin",
-        "ModelManagerMixin",
-        "LevelMixin",
-        "ServerLevelMixin"
-    ]
+        "ModelManagerMixin"
+    ],
+    "common": ["ServerLevelMixin"]
 }

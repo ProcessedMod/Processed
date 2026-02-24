@@ -4,13 +4,14 @@ import com.mojang.datafixers.kinds.App
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import io.netty.buffer.ByteBuf
-import net.minecraft.core.Registry
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
-import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.neoforged.neoforge.fluids.FluidStack
+import net.neoforged.neoforge.fluids.FluidType
+import net.neoforged.neoforge.registries.NeoForgeRegistries
+import net.neoforged.neoforge.registries.datamaps.DataMapType
 import redcrafter07.processed.rl
 
 object MinerData {
@@ -95,16 +96,16 @@ object MinerData {
         val specificImpulse: Int
     ) {
         companion object {
-            // The registry key of all fuels that were registered by a datapack.
-            // This is registered in the `DataPackRegistryEvent.NewRegistry` event.
-            val REGISTRY_KEY: ResourceKey<Registry<Fuel>> = ResourceKey.createRegistryKey(rl("fuel"))
-
             val CODEC = c {
                 it.group(
                     Codec.FLOAT.fieldOf("density").forGetter(Fuel::density),
                     Codec.INT.fieldOf("specificImpulse").forGetter(Fuel::specificImpulse)
                 ).apply(it, ::Fuel)
             }
+
+            val DATA_MAP: DataMapType<FluidType, Fuel> = DataMapType.builder(
+                rl("fuel"), NeoForgeRegistries.Keys.FLUID_TYPES, CODEC
+            ).synced(CODEC, false).build()
         }
     }
 
@@ -157,11 +158,7 @@ object MinerData {
                 ).apply(it, ::Miners)
             }
             val STREAM_CODEC = sc(
-                ByteBufCodecs.INT,
-                Miners::mass,
-                ByteBufCodecs.INT,
-                Miners::miningSpeed,
-                ::Miners
+                ByteBufCodecs.INT, Miners::mass, ByteBufCodecs.INT, Miners::miningSpeed, ::Miners
             )
         }
     }
