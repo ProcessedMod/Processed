@@ -3,6 +3,7 @@ package redcrafter07.processed.block.tile_entities
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.Connection
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
@@ -10,6 +11,7 @@ import net.minecraft.world.InteractionHand
 import net.minecraft.world.ItemInteractionResult
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.neoforged.neoforge.capabilities.Capabilities
@@ -22,6 +24,23 @@ import redcrafter07.processed.block.tile_entities.capabilities.SimpleFluidStore
 class FluidTankBlockEntity(pos: BlockPos, state: BlockState) :
     BlockEntity(ModTileEntities.FLUID_TANK.get(), pos, state), FluidCapableBlockEntity {
     val fluidHandler: SimpleFluidStore = SimpleFluidStore(1, 80000)
+
+    init {
+        fluidHandler.setOnChange {
+            setChanged()
+            level?.sendBlockUpdated(this.worldPosition, state, state, Block.UPDATE_CLIENTS)
+        }
+    }
+
+    override fun onDataPacket(
+        net: Connection,
+        pkt: ClientboundBlockEntityDataPacket,
+        lookupProvider: HolderLookup.Provider
+    ) {
+        super.onDataPacket(net, pkt, lookupProvider)
+
+        requestModelDataUpdate()
+    }
 
     override fun getUpdatePacket(): Packet<ClientGamePacketListener?>? {
         return ClientboundBlockEntityDataPacket.create(this)

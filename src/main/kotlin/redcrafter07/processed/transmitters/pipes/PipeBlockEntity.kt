@@ -26,19 +26,19 @@ class PipeBlockEntity(pos: BlockPos, blockState: BlockState) :
         val pos = blockPos.relative(direction)
         val be = level.getBlockEntity(pos)
         if (be is PipeBlockEntity) return !be.disallowedConnections[direction.opposite]
-        return level.getCapability(Capabilities.ItemHandler.BLOCK, pos, direction.opposite) != null
+        return level.getCapability(Capabilities.FluidHandler.BLOCK, pos, direction.opposite) != null
     }
 
     override fun fluidCapabilityForSide(side: BlockSide?, state: BlockState): IFluidHandler? {
-        return if (side == null) ItemHandler(this, blockPos)
-        else if (connected[side.asDirectionNotRotated]) ItemHandler(this, blockPos.relative(side.asDirectionNotRotated))
+        return if (side == null) FluidHandler(this, blockPos)
+        else if (connected[side.asDirectionNotRotated]) FluidHandler(this, blockPos.relative(side.asDirectionNotRotated))
         else null
     }
 
     // Can feed up to two max power machines
     override fun getLimit() = speed
 
-    class ItemHandler(val transporter: PipeBlockEntity, val block: BlockPos) : IFluidHandler {
+    class FluidHandler(val transporter: PipeBlockEntity, val block: BlockPos) : IFluidHandler {
         override fun fill(
             resource: FluidStack, action: IFluidHandler.FluidAction
         ): Int {
