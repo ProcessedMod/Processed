@@ -1,5 +1,6 @@
 package redcrafter07.processed
 
+import net.createmod.ponder.foundation.PonderIndex
 import net.minecraft.resources.ResourceLocation
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.fml.ModContainer
@@ -17,6 +18,7 @@ import redcrafter07.processed.items.ModItemGroup
 import redcrafter07.processed.items.ModItems
 import redcrafter07.processed.network.RPCFunctions
 import redcrafter07.processed.particles.ModParticles
+import redcrafter07.processed.ponders.ProcessedPonderPlugin
 import redcrafter07.processed.recipe.ModRecipes
 
 fun rl(path: String): ResourceLocation = ResourceLocation.fromNamespaceAndPath(ProcessedMod.ID, path)
@@ -46,6 +48,8 @@ class ProcessedMod(bus: IEventBus, modContainer: ModContainer) {
         ModFluids.FLUID_TYPES.register(bus)
         ModFluids.FLUIDS.register(bus)
         RPCFunctions.register(bus)
+
+        PonderIndex.addPlugin(ProcessedPonderPlugin)
 
         LOG.info("Loaded processed :3")
     }

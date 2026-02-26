@@ -1,6 +1,7 @@
 package redcrafter07.processed.items
 
 import net.minecraft.core.component.DataComponentType
+import net.minecraft.core.registries.Registries
 import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
 import redcrafter07.processed.ProcessedMod
@@ -10,7 +11,7 @@ import java.util.function.Supplier
 import java.util.function.UnaryOperator
 
 object ModDataComponents {
-    val DATA_COMPONENTS: DeferredRegister.DataComponents = DeferredRegister.createDataComponents(ProcessedMod.ID)
+    val DATA_COMPONENTS: DeferredRegister.DataComponents = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, ProcessedMod.ID)
     val WRENCH_MODE =
         register("wrench_mode") { it.persistent(WrenchMode.CODEC).networkSynchronized(WrenchMode.STREAM_CODEC) }
     val BOUND_PLANETOID = register("bound_planetoid") {

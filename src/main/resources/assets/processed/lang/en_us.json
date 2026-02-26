@@ -229,6 +229,12 @@
     "processed.planetoid.triton": "Triton",
     "processed.planetoid.umbriel": "Umbriel",
     "processed.planetoid.uranus": "Uranus",
-    "processed.planetoid.venus": "Venus"
+    "processed.planetoid.venus": "Venus",
 
+    "processed.ponder.launch_controller_launch.header": "Launching Space Miners",
+    "processed.ponder.launch_controller_launch.text_1": "Insert fuel for the miner to use",
+    "processed.ponder.launch_controller_launch.text_2": "Craft a location selector, select a target, and insert the location selector into the input hatch",
+    "processed.ponder.launch_controller_launch.text_3": "Assemble a space miner out of it's component and insert it. It will be consumed.",
+    "processed.ponder.launch_controller_launch.text_4": "After launch, check the progress in the gui of the controller",
+    "processed.ponder.launch_controller_launch.text_5": "After the miner returned and landed, it will deposit it's resources into the output hatch and any excess will be stored until the output hatch is empty again."
 }
