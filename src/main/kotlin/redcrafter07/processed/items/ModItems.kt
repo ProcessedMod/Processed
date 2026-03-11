@@ -36,25 +36,22 @@ object ModItems {
         registerMaterialItems(OreMaterial::pureDustHolder, ::PureDust) { "pure_${it.identifier}_dust" }
     val WASHED_DUST_ITEMS =
         registerMaterialItems(OreMaterial::washedDustHolder, ::WashedDust) { "washed_${it.identifier}_dust" }
-    val RAW_MATERIAL_ITEMS =
-        registerMaterialItems(OreMaterial::rawHolder, ::Raw) { "raw_${it.identifier}" }
+    val RAW_MATERIAL_ITEMS = registerMaterialItems(OreMaterial::rawHolder, ::Raw) { "raw_${it.identifier}" }
 
-    val SPACE_ORE_ITEMS =
-        registerMaterialItems(SpaceOreMaterial::rawOreItem, ::Raw) { "raw_${it.identifier}" }
+    val SPACE_ORE_ITEMS = registerMaterialItems(SpaceOreMaterial::rawOreItem, ::Raw) { "raw_${it.identifier}" }
 
     val ASSEMBLED_MINER = registerItem("assembled_mining_rocket", ::AssembledMinerItem)
+    val SPACE_HULL = registerWithComponent("space_hull", ModDataComponents.HULL_DATA, MinerData.Hull(1, 5000000))
 
-    init {
-        registerWithComponent("space_hull", ModDataComponents.HULL_DATA, MinerData.Hull(1, 5000000))
-        registerWithComponent("space_tank", ModDataComponents.TANK_DATA, MinerData.Tank(1, 10000))
-        registerWithComponent(
-            "space_engine", ModDataComponents.ENGINE_DATA, MinerData.Engine(
-                1, 15000000, 200, rl("fuel")
-            )
+    val SPACE_TANK = registerWithComponent("space_tank", ModDataComponents.TANK_DATA, MinerData.Tank(1, 10000))
+    val SPACE_ENGINE = registerWithComponent(
+        "space_engine", ModDataComponents.ENGINE_DATA, MinerData.Engine(
+            1, 15000000, 200, rl("fuel")
         )
-        registerWithComponent("space_miner", ModDataComponents.MINER_DATA, MinerData.Miners(1, 32))
+    )
+    val SPACE_MINER = registerWithComponent("space_miner", ModDataComponents.MINER_DATA, MinerData.Miners(1, 32))
+    val SPACE_CARGO_BAY =
         registerWithComponent("space_cargo_bay", ModDataComponents.CARGO_BAY_DATA, MinerData.CargoBay(1, 128))
-    }
 
     fun <T> registerWithComponent(name: String, type: Supplier<DataComponentType<T>>, value: T): DeferredItem<Item> =
         registerItem(name) { Item(Item.Properties().component(type, value)) }

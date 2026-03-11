@@ -10,10 +10,12 @@ import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.material.Fluid
 import net.minecraft.world.level.material.PushReaction
 import net.neoforged.neoforge.fluids.BaseFlowingFluid
+import net.neoforged.neoforge.fluids.FluidStack
 import net.neoforged.neoforge.fluids.FluidType
 import net.neoforged.neoforge.fluids.FluidType.Properties
 import net.neoforged.neoforge.registries.*
 import redcrafter07.processed.ProcessedMod
+import redcrafter07.processed.Translations
 import redcrafter07.processed.block.ModBlocks
 import redcrafter07.processed.gui.RenderUtils
 import redcrafter07.processed.items.ModItems
@@ -66,6 +68,7 @@ object ModFluids {
         // we only want to tint the fluid in the bucket, not the bucket itself. The fluid's element has tint index 1, so only tint that.
         // Return -1 otherwise, which is in 2's complement 32-bit signed integer all bits set, meaning 0xFFFFFFFF, equivalent to #ffffffff, which is white.
         fun getColor(stack: ItemStack, tintIndex: Int): Int = if (tintIndex == 1) color else -1
+        override fun getName(stack: ItemStack) = Translations.bucketName(FluidStack(content, 1).hoverName)
     }
 
     data class RegisteredFluid<Type : FluidType, Still : Fluid, Flowing : Fluid, Block : LiquidBlock, Bucket : BucketItem>(

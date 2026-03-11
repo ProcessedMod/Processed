@@ -12,7 +12,7 @@ class GenericMachineMenuScreen(menu: ProcessedMachineMenu<*>, inventory: Invento
     AbstractContainerScreen<ProcessedMachineMenu<*>>(menu, inventory, menu.title) {
     override fun init() {
         super.init()
-        addRenderableOnly(menu.getProgressBar(leftPos, topPos))
+        addRenderableWidget(menu.getProgressBar(leftPos, topPos))
         val energyWidget = menu.getEnergyContainer(leftPos, topPos)
         if (energyWidget != null) addRenderableWidget(energyWidget)
 

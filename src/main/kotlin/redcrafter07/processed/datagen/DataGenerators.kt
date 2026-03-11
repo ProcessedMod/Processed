@@ -31,5 +31,7 @@ object DataGenerators {
         )
         generator.addProvider(ev.includeServer(), ModFluidTagProvider(packOutput, lookupProvider, existingFileHelper))
         generator.addProvider(ev.includeServer(), ModRecipeProvider(packOutput, lookupProvider))
+
+        generator.addProvider(ev.includeClient(), EnUsLanguageProvider(packOutput))
     }
 }

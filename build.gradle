@@ -26,6 +26,7 @@ repositories {
 
     maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/" }
     maven { url = "https://maven.createmod.net" }
+    maven { url = "https://maven.terraformersmc.com/" }
 }
 
 base {
@@ -115,16 +116,18 @@ dependencies {
     // Use the latest version of NeoForge
     implementation "thedarkcolour:kotlinforforge-neoforge:$kff_version"
 
-    compileOnly "mcjty.theoneprobe:theoneprobe:1.21_neo-12.0.4-6"
-    compileOnly "maven.modrinth:jade:15.10.3+neoforge"
+    // apis
+    compileOnly "maven.modrinth:jade:${jade_version}+neoforge"
+    compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
 
+    runtimeOnly "dev.emi:emi-neoforge:${emi_version}" // EMI
     runtimeOnly "mekanism:Mekanism:1.21-10.6.7.54" // Mekanism
-    localRuntime "maven.modrinth:jade:15.10.3+neoforge"
+    localRuntime "maven.modrinth:jade:${jade_version}+neoforge" // jade
 
     implementation "net.createmod.ponder:Ponder-NeoForge-${minecraft_version}:${ponder_version}"
 
-    // for creating ponders, we depend on create (create blueprints work for ponder scene nbts)
-    implementation("com.simibubi.create:create-${minecraft_version}:6.0.0-4") { transitive = false }
+    // for creating ponders, we depend on create (create blueprints work for ponder scene nbts). may need to be commented out during datagen.
+    runtimeOnly ("com.simibubi.create:create-${minecraft_version}:6.0.0-4") { transitive = false }
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

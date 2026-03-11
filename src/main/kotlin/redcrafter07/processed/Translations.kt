@@ -16,18 +16,18 @@ import net.minecraft.network.chat.Component as C
 import net.minecraft.network.chat.MutableComponent as MC
 
 object Translations {
-    inline fun materialDust(material: MaterialBase) = t("processed.material_dust", material)
-    inline fun materialSmallDust(material: MaterialBase) = t("processed.material_dust.small", material)
-    inline fun materialImpureDust(material: MaterialBase) = t("processed.material_dust.impure", material)
-    inline fun materialWashedDust(material: MaterialBase) = t("processed.material_dust.washed", material)
-    inline fun materialPureDust(material: MaterialBase) = t("processed.material_dust.pure", material)
-    inline fun materialIngot(material: MaterialBase) = t("processed.material_ingot", material)
-    inline fun materialNugget(material: MaterialBase) = t("processed.material_nugget", material)
-    inline fun materialRaw(material: MaterialBase) = t("processed.material_raw", material)
-    inline fun materialOre(material: MaterialBase) = t("processed.material_ore", material)
-    inline fun materialCable(material: MaterialBase) = t("processed.material_cable", material)
-    inline fun materialTransporter(material: MaterialBase) = t("processed.material_transporter", material)
-    inline fun materialPipe(material: MaterialBase) = t("processed.material_pipe", material)
+    inline fun materialDust(material: MaterialBase) = t("processed.item.material_dust", material)
+    inline fun materialSmallDust(material: MaterialBase) = t("processed.item.material_dust.small", material)
+    inline fun materialImpureDust(material: MaterialBase) = t("processed.item.material_dust.impure", material)
+    inline fun materialWashedDust(material: MaterialBase) = t("processed.item.material_dust.washed", material)
+    inline fun materialPureDust(material: MaterialBase) = t("processed.item.material_dust.pure", material)
+    inline fun materialIngot(material: MaterialBase) = t("processed.item.material_ingot", material)
+    inline fun materialNugget(material: MaterialBase) = t("processed.item.material_nugget", material)
+    inline fun materialRaw(material: MaterialBase) = t("processed.item.material_raw", material)
+    inline fun materialOre(material: MaterialBase) = t("processed.item.material_ore", material)
+    inline fun materialCable(material: MaterialBase) = t("processed.item.material_cable", material)
+    inline fun materialTransporter(material: MaterialBase) = t("processed.item.material_transporter", material)
+    inline fun materialPipe(material: MaterialBase) = t("processed.item.material_pipe", material)
     inline fun materialName(identifier: String) = t("processed.material.$identifier")
     inline fun blockItemTooltip(id: String): MC = t("block.processed.$id.tooltip").withStyle(ChatFormatting.GRAY)
     inline fun itemTooltip(id: String) = t("item.processed.$id.tooltip")
@@ -39,15 +39,14 @@ object Translations {
     inline fun materialsItemGroup() = t("item_group.processed.materials")
 
     inline fun tierName(tier: Int) = t("processed.tier_$tier")
-    inline fun tierNameColored(tier: Int) = t("processed.tier_$tier.colored")
 
     inline fun ioStateName(stateName: String) = t("processed.io_state.$stateName")
     inline fun blockSide(sideName: String) = t("processed.side.$sideName")
 
-    inline fun pipeLikeState(state: C) = t("processed.pipe_like_state", state)
-    inline fun pipeLikeStateDisconnected() = t("processed.pipe_like_state.disconnected")
-    inline fun pipeLikeStateConnected() = t("processed.pipe_like_state.connected")
-    inline fun pipeLikeStateSplit() = t("processed.pipe_like_state.disallowed")
+    inline fun pipeLikeState(state: C) = t("processed.transmitter_state", state)
+    inline fun pipeLikeStateDisconnected() = t("processed.transmitter_state.disconnected")
+    inline fun pipeLikeStateConnected() = t("processed.transmitter_state.connected")
+    inline fun pipeLikeStateSplit() = t("processed.transmitter_state.disallowed")
 
     inline fun ioButtonMessage(name: C, state: IoState) = t("processed.io_button.message", name, state)
     inline fun ioButtonTooltip(state: IoState) = t("processed.io_button.tooltip", state)
@@ -102,6 +101,7 @@ object Translations {
     inline fun planetoidResource(resource: ResourceLocation) = t("processed.gui.planetoid.resource", itemName(resource))
     inline fun planetoidSelectionScreenGoUp() = t("processed.gui.planetoid_selection_screen.go_up")
     inline fun itemName(rl: ResourceLocation): C = BuiltInRegistries.ITEM.get(rl).description
+    inline fun bucketName(fluid: C) = t("item.processed.bucket", fluid)
 
     inline fun locationSelectorChangeTooltip() = t("item.processed.location_selector.change_tooltip")
     inline fun locationSelectorUnbound() = t("item.processed.location_selector.unbound")
@@ -185,6 +185,8 @@ object Translations {
         // TODO: Make this configurable
         return C.literal(DurationFormatUtils.formatDuration(TimeUnit.SECONDS.toMillis(secs), "HH:mm:ss", true))
     }
+
+    inline fun guiProgressTooltip(durationTicks: Int) = t("processed.gui.progress_tooltip", craftingDuration(durationTicks))
 }
 
 class IntUnit(variants: List<Pair<Int, (Number) -> MC>>) : (Int) -> MC {

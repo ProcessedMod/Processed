@@ -4,9 +4,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.EntityBlock
 import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.ModList
 import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent
@@ -26,10 +24,10 @@ import redcrafter07.processed.block.tile_entities.ModTileEntities
 import redcrafter07.processed.covers.Cover
 import redcrafter07.processed.dynpack.DynPackSource
 import redcrafter07.processed.fluid.ModFluids
-import redcrafter07.processed.integration.theoneprobe.TheOneProbeIntegration
 import redcrafter07.processed.miner.MinerData
 import redcrafter07.processed.miner.Planetoid
-import redcrafter07.processed.network.*
+import redcrafter07.processed.network.MenuRPCPacket
+import redcrafter07.processed.network.RPCPacket
 import redcrafter07.processed.particles.FireParticle.FireParticleProvider
 import redcrafter07.processed.particles.ModParticles
 import redcrafter07.processed.particles.SmokeParticle.SmokeParticleProvider
@@ -136,11 +134,6 @@ object Registering {
 
     @SubscribeEvent
     fun registerPackSources(event: AddPackFindersEvent) = event.addRepositorySource(DynPackSource)
-
-    @SubscribeEvent
-    fun loadComplete(e: FMLLoadCompleteEvent) {
-        e.enqueueWork { if (ModList.get().isLoaded("theoneprobe")) TheOneProbeIntegration.init() }
-    }
 
     @SubscribeEvent
     fun registerDatapackRegistries(e: DataPackRegistryEvent.NewRegistry) {
