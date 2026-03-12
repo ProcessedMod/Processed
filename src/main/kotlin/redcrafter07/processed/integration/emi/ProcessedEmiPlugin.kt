@@ -19,6 +19,9 @@ object ProcessedEmiPlugin : EmiPlugin {
         // add electric furnaces to smelting
         addWorkstations(registry, VanillaEmiRecipeCategories.SMELTING, ModBlocks.BLOCKS_POWERED_FURNACE)
         registry.addCategory(Categories.SIFTING)
+        registry.addCategory(Categories.CRUSHING)
+        registry.addCategory(Categories.PURIFYING)
+        registry.addCategory(Categories.WASHING)
         addWorkstations(registry, Categories.SIFTING, ModBlocks.BLOCKS_SIFTER)
         addWorkstations(registry, Categories.CRUSHING, ModBlocks.BLOCKS_CRUSHER)
         addWorkstations(registry, Categories.PURIFYING, ModBlocks.BLOCKS_PURIFIER)
