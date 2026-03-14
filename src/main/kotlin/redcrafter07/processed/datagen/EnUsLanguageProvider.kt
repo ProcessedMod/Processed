@@ -22,6 +22,8 @@ class EnUsLanguageProvider(output: PackOutput) :
         addItem(ModItems.SPACE_ENGINE, "Space Engine")
         addItem(ModItems.SPACE_MINER, "Space Miner")
         addItem(ModItems.SPACE_CARGO_BAY, "Space Cargo Bay")
+        addItem(ModItems.MASS_SPECTROMETRY_DATA, "Mass Spectrometry Data")
+        addItem(ModItems.MATERIAL_ANALYSIS, "Material Analysis Data")
 
         add("item.processed.fluid_cover", "Fluid Cover")
         add("item.processed.bucket", "%s Bucket")
@@ -57,6 +59,8 @@ class EnUsLanguageProvider(output: PackOutput) :
         add("processed.item.material_transporter", "%s Transporter")
         add("processed.item.material_pipe", "%s Pipe")
 
+        add("item.processed.component.research", "Contains Research from: %s")
+
         // -- Blocks --
         addBlock(ModBlocks.BLITZ_ORE, "Blitz Ore")
         addBlock(ModBlocks.FLUID_TANK, "Fluid Tank")
@@ -68,6 +72,11 @@ class EnUsLanguageProvider(output: PackOutput) :
         addBlock(ModBlocks.ITEM_OUTPUT_HATCH, "Item Output Hatch")
         addBlock(ModBlocks.FLUID_INPUT_HATCH, "Fluid Input Hatch")
         addBlock(ModBlocks.FLUID_OUTPUT_HATCH, "Fluid Output Hatch")
+        addBlock(ModBlocks.MAGNET, "Magnet")
+        addBlock(ModBlocks.ION_DETECTOR, "Ion Detector")
+        addBlock(ModBlocks.REINFORCED_GLASS, "Reinforced Glass")
+        addBlock(ModBlocks.HEAT_VENT, "Heat Vent")
+        addBlock(ModBlocks.MATERIAL_ANALYSER_CORE, "Materials analyser core")
         addBlock(ModFluids.FUEL.block, "Fuel")
 
         // Tiered Blocks
@@ -96,6 +105,11 @@ class EnUsLanguageProvider(output: PackOutput) :
         add("block.processed.creative_power_source.tooltip", "§7Generates unlimited power for the given tier!")
         add("block.processed.basic_casing.tooltip", "§7The base casing for Processed machines!")
         add("block.processed.energy_hatch.tooltip", "§7Stores %s")
+        add("block.processed.magnet.tooltip", "§7Traps ions with the magic of magnets")
+        add("block.processed.ion_detector.tooltip", "§7Detects ions")
+        add("block.processed.reinforced_glass.tooltip", "§7Glass meant to resist high temperatures and ion beams")
+        add("block.processed.heat_vent.tooltip", "§7For venting however much heat u want. seriously. even 15.7 MK")
+        add("block.processed.material_analyser_core.tooltip", "§7Analyzes the results of the mass spectrometer")
 
         // Launch Controller State
         add("block.processed.launch_controller.state.idle", "Idle")

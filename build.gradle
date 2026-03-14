@@ -127,7 +127,7 @@ dependencies {
     implementation "net.createmod.ponder:Ponder-NeoForge-${minecraft_version}:${ponder_version}"
 
     // for creating ponders, we depend on create (create blueprints work for ponder scene nbts). may need to be commented out during datagen.
-    runtimeOnly ("com.simibubi.create:create-${minecraft_version}:6.0.0-4") { transitive = false }
+//    runtimeOnly ("com.simibubi.create:create-${minecraft_version}:6.0.0-4") { transitive = false }
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

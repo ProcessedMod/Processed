@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "emitting_heat=false": {"model": "processed:block/heat_vent"},
+    "emitting_heat=true": {"model": "processed:block/heat_vent_on"}
+  }
+}

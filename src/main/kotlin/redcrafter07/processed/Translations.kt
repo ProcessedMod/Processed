@@ -174,6 +174,8 @@ object Translations {
 
     inline fun jadeCraftingOutput() = t("config.jade.plugin_processed.crafting_state.output")
 
+    inline fun itemContainedResearch(contained: C) = t("item.processed.component.research", contained)
+
     inline fun craftingDurationTicks(n: Number) = t("processed.unit.crafting_duration.ticks", n)
     inline fun craftingDurationSecs(n: Number) = t("processed.unit.crafting_duration.secs", n)
     inline fun craftingDurationMins(n: Number) = t("processed.unit.crafting_duration.mins", n)

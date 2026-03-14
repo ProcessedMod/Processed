@@ -40,6 +40,9 @@ object ModItems {
 
     val SPACE_ORE_ITEMS = registerMaterialItems(SpaceOreMaterial::rawOreItem, ::Raw) { "raw_${it.identifier}" }
 
+    val MASS_SPECTROMETRY_DATA = registerItem("mass_spectrometry_data", ::ResearchContainingItem)
+    val MATERIAL_ANALYSIS = registerItem("material_analysis", ::ResearchContainingItem)
+
     val ASSEMBLED_MINER = registerItem("assembled_mining_rocket", ::AssembledMinerItem)
     val SPACE_HULL = registerWithComponent("space_hull", ModDataComponents.HULL_DATA, MinerData.Hull(1, 5000000))
 

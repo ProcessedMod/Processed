@@ -1,0 +1,14 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "down": "#default",
+        "up": "processed:block/heat_vent_top_active",
+        "north": "#default",
+        "east": "#default",
+        "south": "#default",
+        "west": "#default",
+
+        "particle": "#default",
+        "default": "processed:block/heat_vent"
+    }
+}

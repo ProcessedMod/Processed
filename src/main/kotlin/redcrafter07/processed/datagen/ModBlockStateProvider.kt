@@ -2,6 +2,7 @@ package redcrafter07.processed.datagen
 
 import net.minecraft.data.PackOutput
 import net.minecraft.resources.ResourceLocation
+import net.neoforged.neoforge.client.model.generators.BlockModelBuilder
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider
 import net.neoforged.neoforge.client.model.generators.ModelFile
 import net.neoforged.neoforge.client.model.generators.ModelFile.ExistingModelFile
@@ -15,9 +16,18 @@ class ModBlockStateProvider(output: PackOutput, existingFileHelper: ExistingFile
     BlockStateProvider(output, ProcessedMod.ID, existingFileHelper) {
     override fun registerStatesAndModels() {
         blockWithItem(ModBlocks.BLITZ_ORE)
+        blockWithItem(ModBlocks.BASIC_CASING)
         blockWithItem(
             ModBlocks.FLUID_TANK, ExistingModelFile(rl("block/fluid_tank"), this.models().existingFileHelper)
         )
+
+        itemModels().simpleBlockItem(ModBlocks.LANDING_PAD.get())
+        itemModels().simpleBlockItem(ModBlocks.HEAT_VENT.get())
+
+        blockWithItem(ModBlocks.MAGNET)
+        blockWithItem(ModBlocks.ION_DETECTOR)
+        transparentBlockWithItem(ModBlocks.REINFORCED_GLASS)
+        blockWithItem(ModBlocks.MATERIAL_ANALYSER_CORE)
 
         models().withExistingParent("block/ore_block", ResourceLocation.withDefaultNamespace("block/block"))
             .texture("layer0", ResourceLocation.withDefaultNamespace("block/stone"))
@@ -41,5 +51,9 @@ class ModBlockStateProvider(output: PackOutput, existingFileHelper: ExistingFile
 
     private fun blockWithItem(blockRegistryObject: DeferredBlock<*>) {
         simpleBlockWithItem(blockRegistryObject.get(), cubeAll(blockRegistryObject.get()))
+    }
+
+    private fun transparentBlockWithItem(blockRegistryObject: DeferredBlock<*>) {
+        simpleBlockWithItem(blockRegistryObject.get(), (cubeAll(blockRegistryObject.get()) as BlockModelBuilder).renderType("cutout"))
     }
 }

@@ -17,6 +17,9 @@ class ModItemModelProvider(output: PackOutput, existingFileHelper: ExistingFileH
     public override fun registerModels() {
         simpleItem(ModItems.BLITZ_ORB)
         simpleItem(ModItems.WRENCH)
+        simpleItem(ModItems.LOCATION_SELECTOR)
+        simpleItem(ModItems.MASS_SPECTROMETRY_DATA)
+        simpleItem(ModItems.MATERIAL_ANALYSIS)
 
         simpleModel("dust_item", "item/dust")
         simpleModel("impure_dust_item", "item/dust", "item/impure_dust_overlay")

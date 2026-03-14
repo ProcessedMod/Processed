@@ -45,6 +45,11 @@ class ModBlockLootTables(provider: HolderLookup.Provider) :
         dropSelf(ModBlocks.ITEM_OUTPUT_HATCH)
         dropSelf(ModBlocks.FLUID_INPUT_HATCH)
         dropSelf(ModBlocks.FLUID_OUTPUT_HATCH)
+        dropSelf(ModBlocks.MAGNET)
+        dropSelf(ModBlocks.ION_DETECTOR)
+        dropSelf(ModBlocks.REINFORCED_GLASS)
+        dropSelf(ModBlocks.HEAT_VENT)
+        dropSelf(ModBlocks.MATERIAL_ANALYSER_CORE)
 
         ModCovers.COVERS.entries.forEach { holder -> dropSelf(holder.get().block) }
 

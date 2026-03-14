@@ -1,10 +1,15 @@
 package redcrafter07.processed.block
 
+import net.minecraft.core.BlockPos
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item
+import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.level.block.state.BlockBehaviour
+import net.minecraft.world.level.block.SoundType
+import net.minecraft.world.level.block.TransparentBlock
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties
+import net.minecraft.world.level.block.state.BlockState
 import net.neoforged.neoforge.registries.DeferredBlock
 import net.neoforged.neoforge.registries.DeferredItem
 import net.neoforged.neoforge.registries.DeferredRegister
@@ -32,7 +37,7 @@ object ModBlocks {
     val BLOCKS: DeferredRegister.Blocks = DeferredRegister.createBlocks(ProcessedMod.ID)
 
     val BLITZ_ORE = registerBlock("blitz_ore") {
-        val props = BlockBehaviour.Properties.ofFullCopy(Blocks.DIAMOND_ORE).explosionResistance(1200f)
+        val props = Properties.ofFullCopy(Blocks.DIAMOND_ORE).explosionResistance(1200f)
         Block(props)
     }
     val FLUID_TANK = registerBlock("fluid_tank", ::FluidTankBlock)
@@ -43,7 +48,7 @@ object ModBlocks {
     val BLOCKS_WASHER = registerTieredBlock("washer", ProcessedTier.TIERS, ::WasherBlock)
     val CREATIVE_POWER_SOURCE =
         registerTieredBlock("creative_power_source", ProcessedTier.TIERS, ::CreativePowerSourceBlock)
-    val BASIC_CASING = registerBlock("basic_casing") { Block(BlockBehaviour.Properties.of()) }
+    val BASIC_CASING = registerBlock("basic_casing") { Block(Properties.of()) }
     val BIG_SMELTER = registerBlock("big_smelter", ::BigSmelterBlock)
     val LAUNCH_CONTROLLER = registerBlock("launch_controller", ::LaunchControllerBlock)
     val LANDING_PAD = registerBlock("landing_pad", ::LandingPadBlock)
@@ -51,6 +56,18 @@ object ModBlocks {
     val ITEM_OUTPUT_HATCH = registerBlock("item_output_hatch", ::OutputItemHatchBlock)
     val FLUID_INPUT_HATCH = registerBlock("fluid_input_hatch", ::InputFluidHatchBlock)
     val FLUID_OUTPUT_HATCH = registerBlock("fluid_output_hatch", ::OutputFluidHatchBlock)
+
+    val MAGNET = registerBlock("magnet") { Block(Properties.ofFullCopy(Blocks.IRON_BLOCK)) }
+    val ION_DETECTOR = registerBlock("ion_detector") { Block(Properties.ofFullCopy(Blocks.IRON_BLOCK)) }
+    val REINFORCED_GLASS = registerBlock("reinforced_glass") {
+        val props =
+            Properties.ofFullCopy(Blocks.IRON_BLOCK).sound(SoundType.GLASS).noOcclusion().isValidSpawn(Blocks::never)
+                .isRedstoneConductor(::never).isSuffocating(::never).isViewBlocking(::never)
+        TransparentBlock(props)
+    }
+    val HEAT_VENT = registerBlock("heat_vent", ::HeatVentBlock)
+    val MATERIAL_ANALYSER_CORE =
+        registerBlock("material_analyser_core") { Block(Properties.ofFullCopy(Blocks.IRON_BLOCK)) }
 
     val ENERGY_HATCHES = registerTieredBlock("energy_hatch", ProcessedTier.TIERS, ::EnergyHatchBlock)
 
@@ -121,4 +138,6 @@ object ModBlocks {
     fun interface TieredBlockProvider<T> {
         fun provide(tier: ProcessedTier): T
     }
+
+    fun never(ignored1: BlockState, ignored2: BlockGetter, ignored3: BlockPos) = false
 }
