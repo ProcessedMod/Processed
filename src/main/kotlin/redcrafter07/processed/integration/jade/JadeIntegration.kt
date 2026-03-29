@@ -10,8 +10,10 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.phys.Vec2
 import net.neoforged.neoforge.fluids.FluidStack
+import redcrafter07.processed.ProcessedComputation
 import redcrafter07.processed.ProcessedPower
 import redcrafter07.processed.Translations
+import redcrafter07.processed.block.ComputationHatchBlock
 import redcrafter07.processed.block.TieredRecipeBlock
 import redcrafter07.processed.block.tile_entities.TieredRecipeBlockEntity
 import redcrafter07.processed.gui.widgets.EnergyBarWidget
@@ -31,6 +33,7 @@ import kotlin.math.max
 class JadeIntegration : IWailaPlugin {
     override fun register(registration: IWailaCommonRegistration) {
         registration.registerBlockDataProvider(ProcessedEnergyServerProvider, Block::class.java)
+        registration.registerBlockDataProvider(ProcessedComputationsServerProvider, ComputationHatchBlock::class.java)
         registration.registerBlockDataProvider(MultiblockAssembledStateServerProvider, MultiblockBlock::class.java)
         registration.registerBlockDataProvider(CraftingStateServerProvider, TieredRecipeBlock::class.java)
         registration.registerBlockDataProvider(CraftingStateServerProvider, RecipeMultiblockBlock::class.java)
@@ -38,6 +41,7 @@ class JadeIntegration : IWailaPlugin {
 
     override fun registerClient(registration: IWailaClientRegistration) {
         registration.registerBlockComponent(ProcessedEnergyProvider, Block::class.java)
+        registration.registerBlockComponent(ProcessedComputationsProvider, ComputationHatchBlock::class.java)
         registration.registerBlockComponent(MultiblockAssembledStateProvider, MultiblockBlock::class.java)
         registration.registerBlockComponent(CraftingStateProvider, TieredRecipeBlock::class.java)
         registration.registerBlockComponent(CraftingStateProvider, RecipeMultiblockBlock::class.java)
@@ -63,10 +67,10 @@ class JadeIntegration : IWailaPlugin {
             if (energy.isPresent) {
                 val energy = energy.get()
                 val showOnes = accessor.player.isShiftKeyDown
-                val amount = EnergyBarWidget.getEnergyComponent(energy.energy, showOnes)
-                val maxEnergy = EnergyBarWidget.getEnergyComponent(energy.maxEnergy, showOnes)
+                val amount = EnergyBarWidget.getEnergyComponent(energy.stored, showOnes)
+                val maxEnergy = EnergyBarWidget.getEnergyComponent(energy.maxAmount, showOnes)
                 val text = Component.literal(" ").append(amount).append(" / ").append(maxEnergy)
-                val progress = energy.energy.toFloat() / energy.maxEnergy.toFloat()
+                val progress = energy.stored.toFloat() / energy.maxAmount.toFloat()
                 tooltip.add(EnergyElement(text, progress))
             }
         }
@@ -74,9 +78,31 @@ class JadeIntegration : IWailaPlugin {
         override fun getUid() = rl("energy")
     }
 
+    object ProcessedComputationsProvider : IBlockComponentProvider {
+        override fun appendTooltip(
+            tooltip: ITooltip, accessor: BlockAccessor, config: IPluginConfig
+        ) {
+            val computations = ProcessedComputationsServerProvider.decodeFromData(accessor)
+            if (computations.isPresent) {
+                val computations = computations.get()
+                val showOnes = accessor.player.isShiftKeyDown
+                val amount =
+                    if (showOnes) Translations.hashes1024P0(computations.stored) else Translations.hashes(computations.stored)
+                val max = if (showOnes) Translations.hashes1024P0(computations.maxAmount) else Translations.hashes(
+                    computations.maxAmount
+                )
+                val text = Component.literal(" ").append(amount).append(" / ").append(max)
+                val progress = computations.stored.toDouble() / computations.maxAmount.toDouble()
+                tooltip.add(EnergyElement(text, progress.toFloat()))
+            }
+        }
+
+        override fun getUid() = rl("computations")
+    }
+
     object ProcessedEnergyServerProvider : StreamServerDataProvider<BlockAccessor, EnergyData> {
         val STREAM_CODEC: StreamCodec<RegistryFriendlyByteBuf, EnergyData> = StreamCodec.composite(
-            ByteBufCodecs.INT, EnergyData::energy, ByteBufCodecs.INT, EnergyData::maxEnergy, ::EnergyData
+            ByteBufCodecs.INT, EnergyData::stored, ByteBufCodecs.INT, EnergyData::maxAmount, ::EnergyData
         ).cast()
 
         override fun streamData(accessor: BlockAccessor): EnergyData? {
@@ -84,6 +110,26 @@ class JadeIntegration : IWailaPlugin {
                 accessor.level.getCapability(ProcessedPower.BLOCK, accessor.position, null) ?: return null
             if (cap.energy().maxEnergyStored <= 0) return null
             return EnergyData(cap.energy().energyStored, cap.energy().maxEnergyStored)
+        }
+
+        override fun streamCodec() = STREAM_CODEC
+        override fun getUid() = rl("computations")
+    }
+
+    object ProcessedComputationsServerProvider : StreamServerDataProvider<BlockAccessor, ComputationData> {
+        val STREAM_CODEC: StreamCodec<RegistryFriendlyByteBuf, ComputationData> = StreamCodec.composite(
+            ByteBufCodecs.VAR_LONG,
+            ComputationData::stored,
+            ByteBufCodecs.VAR_LONG,
+            ComputationData::maxAmount,
+            ::ComputationData
+        ).cast()
+
+        override fun streamData(accessor: BlockAccessor): ComputationData? {
+            @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") val cap =
+                accessor.level.getCapability(ProcessedComputation.BLOCK, accessor.position, null) ?: return null
+            if (cap.maxStoredHashes <= 0) return null
+            return ComputationData(cap.storedHashes, cap.maxStoredHashes)
         }
 
         override fun streamCodec() = STREAM_CODEC
@@ -193,5 +239,6 @@ class JadeIntegration : IWailaPlugin {
 
     }
 
-    data class EnergyData(val energy: Int, val maxEnergy: Int)
+    data class EnergyData(val stored: Int, val maxAmount: Int)
+    data class ComputationData(val stored: Long, val maxAmount: Long)
 }

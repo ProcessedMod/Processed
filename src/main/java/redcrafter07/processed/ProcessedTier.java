@@ -104,6 +104,10 @@ public record ProcessedTier(int tier, int speedMultiplier, int energyMultiplier,
     public static final List<ProcessedTier> TIERS = List.of(Rudimentary, Basic, Advanced, IEnergyProMax, Nuclear,
         Quantum, Void, Ultimate);
 
+    public static List<ProcessedTier> tiersFrom(ProcessedTier start) {
+        return TIERS.subList(start.tier, TIERS.size());
+    }
+
     @NotNull
     public static Codec<@NotNull ProcessedTier> CODEC = Codec.INT.xmap(ProcessedTier::fromTierNumber,
         ProcessedTier::tier);

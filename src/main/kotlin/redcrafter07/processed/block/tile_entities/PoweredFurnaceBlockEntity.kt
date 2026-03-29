@@ -22,7 +22,7 @@ class PoweredFurnaceBlockEntity(pos: BlockPos, blockState: BlockState) :
         onTierChanged(tier, tier)
     }
 
-    public override fun onTierChanged(oldTier: ProcessedTier, newTier: ProcessedTier) = useScaledEnergyCapability(1000)
+    public override fun onTierChanged(oldTier: ProcessedTier, newTier: ProcessedTier) = useScaledEnergyCapability(1024)
 
     override fun getRecipe(): RecipeData? {
         val level = level ?: return null

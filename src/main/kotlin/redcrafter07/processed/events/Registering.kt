@@ -14,9 +14,11 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
 import net.neoforged.neoforge.registries.DataPackRegistryEvent
 import net.neoforged.neoforge.registries.NewRegistryEvent
 import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent
+import redcrafter07.processed.ProcessedComputation
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.ProcessedPower
 import redcrafter07.processed.block.machine_abstractions.BlockSide
+import redcrafter07.processed.block.machine_abstractions.ComputationCapableBlockEntity
 import redcrafter07.processed.block.machine_abstractions.EnergyCapableBlockEntity
 import redcrafter07.processed.block.machine_abstractions.FluidCapableBlockEntity
 import redcrafter07.processed.block.machine_abstractions.ItemCapableBlockEntity
@@ -63,6 +65,11 @@ object Registering {
         return blockEntityIs(block, EnergyCapableBlockEntity::class.java)
     }
 
+    /** Checks if the block entity associated with this block implements ComputationCapableBlockEntity */
+    private fun isComputationCapable(block: Block): Boolean {
+        return blockEntityIs(block, ComputationCapableBlockEntity::class.java)
+    }
+
     /** Filters out any blocks that don't implement ItemCapableBlockEntity */
     private fun itemCapable(block: Array<Block>): Array<Block> =
         Arrays.stream(block).filter(Registering::isItemCapable).toArray { arrayOfNulls(it) }
@@ -75,13 +82,17 @@ object Registering {
     private fun energyCapable(block: Array<Block>): Array<Block> =
         Arrays.stream(block).filter(Registering::isEnergyCapable).toArray { arrayOfNulls(it) }
 
+    /** Filters out any blocks that don't implement ComputationCapableBlockEntity */
+    private fun computationCapable(block: Array<Block>): Array<Block> =
+        Arrays.stream(block).filter(Registering::isComputationCapable).toArray { arrayOfNulls(it) }
+
     @SubscribeEvent
     fun onRegisterCapabilities(event: RegisterCapabilitiesEvent) {
         // Gets all processed blocks
         val blocks = ModTileEntities.BLOCK_TYPES.entries.stream().flatMap { it.get().validBlocks.stream() }.toList()
             .toTypedArray()
 
-        // registers all blocks that have an item capability as having an item capability
+        // registers all blocks that have an item capability
         event.registerBlock(
             Capabilities.ItemHandler.BLOCK,
             { _, _, state, blockEntity, side ->
@@ -92,7 +103,7 @@ object Registering {
             },
             *itemCapable(blocks),
         )
-        // registers all blocks that have a processed energy capability as having an item capability
+        // registers all blocks that have a processed energy capability
         event.registerBlock(
             ProcessedPower.BLOCK,
             { _, _, state, blockEntity, side ->
@@ -103,7 +114,7 @@ object Registering {
             },
             *energyCapable(blocks),
         )
-        // registers all blocks that have a fluid as having an item capability
+        // registers all blocks that have a fluid capability
         event.registerBlock(
             Capabilities.FluidHandler.BLOCK,
             { _, _, state, blockEntity, side ->
@@ -113,6 +124,18 @@ object Registering {
                 } else null
             },
             *fluidCapable(blocks),
+        )
+
+        // registers all blocks that have a computation capability
+        event.registerBlock(
+            ProcessedComputation.BLOCK,
+            { _, _, state, blockEntity, side ->
+                if (blockEntity is ComputationCapableBlockEntity) {
+                    if (side == null) blockEntity.computationCapabilityForSide(null, state)
+                    else blockEntity.computationCapabilityForSide(BlockSide.translateDirection(side, state), state)
+                } else null
+            },
+            *computationCapable(blocks),
         )
 
         event.registerItem(

@@ -56,6 +56,7 @@ object ModBlocks {
     val ITEM_OUTPUT_HATCH = registerBlock("item_output_hatch", ::OutputItemHatchBlock)
     val FLUID_INPUT_HATCH = registerBlock("fluid_input_hatch", ::InputFluidHatchBlock)
     val FLUID_OUTPUT_HATCH = registerBlock("fluid_output_hatch", ::OutputFluidHatchBlock)
+    val COMPUTER = registerBlock("computer", ::ComputerBlock)
 
     val MAGNET = registerBlock("magnet") { Block(Properties.ofFullCopy(Blocks.IRON_BLOCK)) }
     val ION_DETECTOR = registerBlock("ion_detector") { Block(Properties.ofFullCopy(Blocks.IRON_BLOCK)) }
@@ -70,6 +71,7 @@ object ModBlocks {
         registerBlock("material_analyser_core") { Block(Properties.ofFullCopy(Blocks.IRON_BLOCK)) }
 
     val ENERGY_HATCHES = registerTieredBlock("energy_hatch", ProcessedTier.TIERS, ::EnergyHatchBlock)
+    val COMPUTATION_HATCHES = registerTieredBlock("computation_hatches", ProcessedTier.tiersFrom(ProcessedTier.Advanced), ::ComputationHatchBlock)
 
     val CABLES = Transmitters.cables.map { (tier, material) ->
         registerBlockSpecial(

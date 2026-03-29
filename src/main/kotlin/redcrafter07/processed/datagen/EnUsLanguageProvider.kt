@@ -3,6 +3,7 @@ package redcrafter07.processed.datagen
 import net.minecraft.data.PackOutput
 import net.neoforged.neoforge.common.data.LanguageProvider
 import redcrafter07.processed.ProcessedMod
+import redcrafter07.processed.ProcessedTier
 import redcrafter07.processed.block.ModBlocks
 import redcrafter07.processed.fluid.ModFluids
 import redcrafter07.processed.items.ModItems
@@ -77,11 +78,13 @@ class EnUsLanguageProvider(output: PackOutput) :
         addBlock(ModBlocks.REINFORCED_GLASS, "Reinforced Glass")
         addBlock(ModBlocks.HEAT_VENT, "Heat Vent")
         addBlock(ModBlocks.MATERIAL_ANALYSER_CORE, "Materials analyser core")
+        addBlock(ModBlocks.COMPUTER, "Computer")
         addBlock(ModFluids.FUEL.block, "Fuel")
 
         // Tiered Blocks
         add("block.processed.creative_power_source", "%d Creative Power Source")
         add("block.processed.energy_hatch", "%s Energy Hatch")
+        add("block.processed.computation_hatch", "%s Computation Hatch")
         add("block.processed.powered_furnace", "%s Powered Furnace")
         add("block.processed.sifter", "%s Sifter")
         add("block.processed.crusher", "%s Crusher")
@@ -105,15 +108,17 @@ class EnUsLanguageProvider(output: PackOutput) :
         add("block.processed.creative_power_source.tooltip", "§7Generates unlimited power for the given tier!")
         add("block.processed.basic_casing.tooltip", "§7The base casing for Processed machines!")
         add("block.processed.energy_hatch.tooltip", "§7Stores %s")
-        add("block.processed.item_input.hatch.tooltip", "§7Item Input for a multiblock. Slots: §e4")
-        add("block.processed.item_output.hatch.tooltip", "§7Item Output for a multiblock. Slots: §e4")
-        add("block.processed.fluid_input.hatch.tooltip", "§7Fluid Input for a multiblock. Space: §a4 B")
-        add("block.processed.fluid_output.hatch.tooltip", "§7Fluid Output for a multiblock. Space: §a4 B")
+        add("block.processed.computation_hatch.tooltip", "§7Stores %s")
+        add("block.processed.item_input_hatch.tooltip", "§7Item Input for a multiblock. Slots: §e4")
+        add("block.processed.item_output_hatch.tooltip", "§7Item Output for a multiblock. Slots: §e4")
+        add("block.processed.fluid_input_hatch.tooltip", "§7Fluid Input for a multiblock. Space: §a4 B")
+        add("block.processed.fluid_output_hatch.tooltip", "§7Fluid Output for a multiblock. Space: §a4 B")
         add("block.processed.magnet.tooltip", "§7Traps ions with the magic of magnets")
         add("block.processed.ion_detector.tooltip", "§7Detects ions")
         add("block.processed.reinforced_glass.tooltip", "§7Glass meant to resist high temperatures and ion beams")
         add("block.processed.heat_vent.tooltip", "§7For venting however much heat u want. seriously. even 15.7 MK")
         add("block.processed.material_analyser_core.tooltip", "§7Analyzes the results of the mass spectrometer")
+        add("block.processed.computer.tooltip", "§7Produces 400 Hashes/t while consuming ${ProcessedTier.Advanced.scalePower(8)} FE/t of Advanced Power")
 
         // Launch Controller State
         add("block.processed.launch_controller.state.idle", "Idle")
@@ -222,6 +227,13 @@ class EnUsLanguageProvider(output: PackOutput) :
         add("processed.unit.crafting_duration.ticks", "%d t")
         add("processed.unit.crafting_duration.secs", "%d s")
         add("processed.unit.crafting_duration.mins", "%d m")
+
+        add("processed.unit.hashes.1024_0", "%d Hashes")
+        add("processed.unit.hashes.1024_1", "%d Kilohashes")
+        add("processed.unit.hashes.1024_2", "%d Megahashes")
+        add("processed.unit.hashes.1024_3", "%d Gigahashes")
+        add("processed.unit.hashes.1024_4", "%d Terrahashes")
+        add("processed.unit.hashes.1024_5", "%d Petahashes")
 
         // -- Planetoids --
         add("processed.planetoid.callisto", "Callisto")

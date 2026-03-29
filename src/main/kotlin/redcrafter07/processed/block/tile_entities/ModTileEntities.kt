@@ -42,6 +42,8 @@ object ModTileEntities {
     val INPUT_FLUID_HATCH = register("input_fluid_hatch", ::InputFluidHatchBlockEntity, ModBlocks.FLUID_INPUT_HATCH)
     val OUTPUT_FLUID_HATCH = register("output_fluid_hatch", ::OutputFluidHatchBlockEntity, ModBlocks.FLUID_OUTPUT_HATCH)
     val ENERGY_HATCH = register("energy_hatch", ::EnergyHatchBlockEntity, *ModBlocks.ENERGY_HATCHES.toTypedArray())
+    val COMPUTATION_HATCH = register("computation_hatch", ::ComputationHatchBlockEntity, *ModBlocks.COMPUTATION_HATCHES.toTypedArray())
+    val COMPUTER = register("computer", ::ComputerBlockEntity, ModBlocks.COMPUTER)
 
     private fun <T : BlockEntity> register(
         name: String, blockEntity: BlockEntitySupplier<T>, vararg blocks: DeferredBlock<*>

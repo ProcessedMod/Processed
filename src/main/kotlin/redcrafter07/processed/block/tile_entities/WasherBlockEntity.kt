@@ -23,7 +23,7 @@ class WasherBlockEntity(pos: BlockPos, blockState: BlockState) :
     }
 
     public override fun onTierChanged(oldTier: ProcessedTier, newTier: ProcessedTier) {
-        useScaledEnergyCapability(1000)
+        useScaledEnergyCapability(1024)
         useFluidCapability(IoState.Input, tier.speedMultiplier * 8000)
     }
 

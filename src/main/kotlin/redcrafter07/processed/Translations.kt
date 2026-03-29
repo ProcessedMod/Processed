@@ -77,6 +77,9 @@ object Translations {
     inline fun energyHatchName(tier: ProcessedTier) = t("block.processed.energy_hatch", tier)
     inline fun energyHatchTooltip(amount: Int) =
         t("block.processed.energy_hatch.tooltip", energy.translate(amount).withStyle(ChatFormatting.GREEN))
+    inline fun computationHatchName(tier: ProcessedTier) = t("block.processed.computation_hatch", tier)
+    inline fun computationHatchTooltip(amount: Long) =
+        t("block.processed.computation_hatch.tooltip", hashes.translate(amount).withStyle(ChatFormatting.GREEN))
 
     inline fun bigSmelterName() = t("block.processed.big_smelter")
     inline fun launchControllerName() = t("block.processed.launch_controller")
@@ -122,6 +125,21 @@ object Translations {
     inline fun unitStacks(stacks: Int) = t("processed.unit.stacks", stacks)
     inline fun unitStacksItems(stacks: Int, items: Int) = t("processed.unit.stacks_items", stacks, items)
     val items = ItemUnit()
+
+    inline fun hashes1024P0(amount: Number) = t("processed.unit.hashes.1024_0", amount)
+    inline fun hashes1024P1(amount: Number) = t("processed.unit.hashes.1024_1", amount)
+    inline fun hashes1024P2(amount: Number) = t("processed.unit.hashes.1024_2", amount)
+    inline fun hashes1024P3(amount: Number) = t("processed.unit.hashes.1024_3", amount)
+    inline fun hashes1024P4(amount: Number) = t("processed.unit.hashes.1024_4", amount)
+    inline fun hashes1024P5(amount: Number) = t("processed.unit.hashes.1024_5", amount)
+    val hashes = LongUnit(
+        0x1L, ::hashes1024P0,
+        0x400L, ::hashes1024P1,
+        0x100000L, ::hashes1024P2,
+        0x40000000L, ::hashes1024P3,
+        0x10000000000L, ::hashes1024P4,
+        0x4000000000000L, ::hashes1024P5,
+    )
 
     inline fun mass(mass: Int) = t("processed.miner_attribute.mass", mass)
     inline fun maxDistance(distance: Int) = t("processed.miner_attribute.max_distance", distance)
@@ -169,6 +187,7 @@ object Translations {
 
     inline fun launchControllerScreenDuration(seconds: Long) =
         t("processed.gui.launch_controller_screen.duration", duration(seconds))
+
     inline fun buttonPushPullPush() = t("processed.gui.button_push_pull.push")
     inline fun buttonPushPullPull() = t("processed.gui.button_push_pull.pull")
 
@@ -188,7 +207,8 @@ object Translations {
         return C.literal(DurationFormatUtils.formatDuration(TimeUnit.SECONDS.toMillis(secs), "HH:mm:ss", true))
     }
 
-    inline fun guiProgressTooltip(durationTicks: Int) = t("processed.gui.progress_tooltip", craftingDuration(durationTicks))
+    inline fun guiProgressTooltip(durationTicks: Int) =
+        t("processed.gui.progress_tooltip", craftingDuration(durationTicks))
 }
 
 class IntUnit(variants: List<Pair<Int, (Number) -> MC>>) : (Int) -> MC {
@@ -234,6 +254,20 @@ class LongUnit(variants: List<Pair<Long, (Number) -> MC>>) : (Long) -> MC {
         amount1: Long, f1: (Number) -> MC, amount2: Long, f2: (Number) -> MC, amount3: Long, f3: (Number) -> MC
     ) : this(
         listOf(Pair(amount1, f1), Pair(amount2, f2), Pair(amount3, f3))
+    )
+
+    constructor(
+        amount1: Long, f1: (Number) -> MC, amount2: Long, f2: (Number) -> MC, amount3: Long, f3: (Number) -> MC,
+        amount4: Long, f4: (Number) -> MC, amount5: Long, f5: (Number) -> MC, amount6: Long, f6: (Number) -> MC,
+    ) : this(
+        listOf(
+            Pair(amount1, f1),
+            Pair(amount2, f2),
+            Pair(amount3, f3),
+            Pair(amount4, f4),
+            Pair(amount5, f5),
+            Pair(amount6, f6)
+        )
     )
 
     fun translate(amount: Long): MC {
