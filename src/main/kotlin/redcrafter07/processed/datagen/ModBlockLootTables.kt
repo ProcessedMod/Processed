@@ -34,6 +34,9 @@ class ModBlockLootTables(provider: HolderLookup.Provider) :
         dropSelf(ModBlocks.CREATIVE_POWER_SOURCE)
         dropSelf(ModBlocks.BASIC_CASING)
         dropSelf(ModBlocks.BIG_SMELTER)
+        dropSelf(ModBlocks.MASS_SPECTROMETER)
+        dropSelf(ModBlocks.MOLECULAR_ANALYZER)
+        dropSelf(ModBlocks.MOLECULAR_EXTRUDER)
         dropSelf(ModBlocks.COMPUTER)
 
         dropSelf(ModBlocks.CABLES)

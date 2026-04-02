@@ -17,7 +17,7 @@ import redcrafter07.processed.recipe.PurifyingRecipe
 class EmiPurifyingRecipe(recipe: RecipeHolder<PurifyingRecipe>) : EmiRecipe {
     val recipeInput: EmiIngredient = NeoForgeEmiIngredient.of(recipe.value.ingredient)
     val recipeOutputs: List<EmiStack>
-    val time = recipe.value.processingTime
+    val time = recipe.value.scaledProcessingTime
     val recipeId: ResourceLocation = recipe.id
     val baseTier = recipe.value.baseTier
     val baseEnergy = recipe.value.energyUsage

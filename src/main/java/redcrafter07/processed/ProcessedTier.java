@@ -97,7 +97,7 @@ public record ProcessedTier(int tier, int speedMultiplier, int energyMultiplier,
         ChatFormatting.GOLD);
     // Idk void energy but it uses more electricity lol
     @NotNull
-    public static final ProcessedTier Ultimate = new ProcessedTier(7, 2187, 16384, Materials.INSTANCE.getTITANIUM(),
+    public static final ProcessedTier Ultimate = new ProcessedTier(7, 2187, 16384, Materials.INSTANCE.getNAQUADAH(),
         ChatFormatting.DARK_RED);
 
     @NotNull

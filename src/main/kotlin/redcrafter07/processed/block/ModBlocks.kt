@@ -16,6 +16,10 @@ import net.neoforged.neoforge.registries.DeferredRegister
 import org.apache.logging.log4j.util.TriConsumer
 import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.ProcessedTier
+import redcrafter07.processed.block.tile_entities.BigSmelterBlockEntity
+import redcrafter07.processed.block.tile_entities.MassSpectrometerBlockEntity
+import redcrafter07.processed.block.tile_entities.MolecularAnalyserBlockEntity
+import redcrafter07.processed.block.tile_entities.MolecularExtruderBlockEntity
 import redcrafter07.processed.items.ModItems
 import redcrafter07.processed.materials.MaterialBlock.OreBlock
 import redcrafter07.processed.materials.MaterialBlockItem.*
@@ -49,7 +53,13 @@ object ModBlocks {
     val CREATIVE_POWER_SOURCE =
         registerTieredBlock("creative_power_source", ProcessedTier.TIERS, ::CreativePowerSourceBlock)
     val BASIC_CASING = registerBlock("basic_casing") { Block(Properties.of()) }
-    val BIG_SMELTER = registerBlock("big_smelter", ::BigSmelterBlock)
+    val BIG_SMELTER = registerBlock("big_smelter") { SimpleRecipeMultiblockBlock(::BigSmelterBlockEntity) }
+    val MASS_SPECTROMETER =
+        registerBlock("mass_spectrometer") { SimpleRecipeMultiblockBlock(::MassSpectrometerBlockEntity) }
+    val MOLECULAR_ANALYZER =
+        registerBlock("molecular_analyzer") { SimpleRecipeMultiblockBlock(::MolecularAnalyserBlockEntity) }
+    val MOLECULAR_EXTRUDER =
+        registerBlock("molecular_extruder") { SimpleRecipeMultiblockBlock(::MolecularExtruderBlockEntity) }
     val LAUNCH_CONTROLLER = registerBlock("launch_controller", ::LaunchControllerBlock)
     val LANDING_PAD = registerBlock("landing_pad", ::LandingPadBlock)
     val ITEM_INPUT_HATCH = registerBlock("item_input_hatch", ::InputItemHatchBlock)
@@ -71,7 +81,9 @@ object ModBlocks {
         registerBlock("material_analyser_core") { Block(Properties.ofFullCopy(Blocks.IRON_BLOCK)) }
 
     val ENERGY_HATCHES = registerTieredBlock("energy_hatch", ProcessedTier.TIERS, ::EnergyHatchBlock)
-    val COMPUTATION_HATCHES = registerTieredBlock("computation_hatches", ProcessedTier.tiersFrom(ProcessedTier.Advanced), ::ComputationHatchBlock)
+    val COMPUTATION_HATCHES = registerTieredBlock(
+        "computation_hatches", ProcessedTier.tiersFrom(ProcessedTier.Advanced), ::ComputationHatchBlock
+    )
 
     val CABLES = Transmitters.cables.map { (tier, material) ->
         registerBlockSpecial(

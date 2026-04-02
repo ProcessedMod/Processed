@@ -33,7 +33,7 @@ class MultiBlockBlockCache {
             access.getExistingData(Attachments.MULTIBLOCK_CHUNK_ATTACHMENT).getOrNull()
 
         fun chunk(level: LevelAccessor, block: BlockPos): ChunkAccess = level.getChunk(
-            SectionPos.blockToSectionCoord(block.x), SectionPos.blockToSectionCoord(block.y)
+            SectionPos.blockToSectionCoord(block.x), SectionPos.blockToSectionCoord(block.z)
         )
 
         /**

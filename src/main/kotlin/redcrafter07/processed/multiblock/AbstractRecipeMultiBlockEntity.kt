@@ -44,7 +44,6 @@ abstract class AbstractRecipeMultiBlockEntity(type: BlockEntityType<*>, pos: Blo
         if (recipeData.progress >= recipeData.maxProgress) {
             if (tryInsertRecipeOutputs(level, pos, state, recipeData)) this.recipeData = getRecipe(level)
             else return false
-            return true
         }
 
         if (!useScaledPower(recipeData.baseEnergyUsage)) {
@@ -61,6 +60,7 @@ abstract class AbstractRecipeMultiBlockEntity(type: BlockEntityType<*>, pos: Blo
 
     fun useScaledPower(amount: Int): Boolean {
         val amount = tier.scalePower(amount)
+        if(amount <= 0) return true
         if (!isAssembled) return false
         val energyIn = specialBlocks[SpecialBlockType.EnergyInput] ?: return false
         val level = level ?: return false

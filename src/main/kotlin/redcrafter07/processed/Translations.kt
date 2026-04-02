@@ -81,7 +81,6 @@ object Translations {
     inline fun computationHatchTooltip(amount: Long) =
         t("block.processed.computation_hatch.tooltip", hashes.translate(amount).withStyle(ChatFormatting.GREEN))
 
-    inline fun bigSmelterName() = t("block.processed.big_smelter")
     inline fun launchControllerName() = t("block.processed.launch_controller")
 
     inline fun launchControllerStateIdle() = t("block.processed.launch_controller.state.idle")

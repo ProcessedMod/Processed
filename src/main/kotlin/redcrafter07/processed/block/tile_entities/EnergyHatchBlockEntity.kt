@@ -16,6 +16,8 @@ import redcrafter07.processed.block.machine_abstractions.BlockSide
 import redcrafter07.processed.block.machine_abstractions.EnergyCapableBlockEntity
 import redcrafter07.processed.block.tile_entities.capabilities.ProcessedPowerStore
 import redcrafter07.processed.block.tile_entities.capabilities.SimpleEnergyStore
+import redcrafter07.processed.multiblock.MultiBlockBlockCache
+import redcrafter07.processed.multiblock.MultiblockBlockEntity
 
 class EnergyHatchBlockEntity(pos: BlockPos, blockState: BlockState, tier: ProcessedTier) : BlockEntity(
     ModTileEntities.ENERGY_HATCH.get(), pos, blockState
@@ -28,6 +30,19 @@ class EnergyHatchBlockEntity(pos: BlockPos, blockState: BlockState, tier: Proces
 
     val handler = SimpleEnergyStore(tier.maxPower * 16, tier.maxPower, 0)
     val wrapper = ProcessedPowerStore(tier, handler)
+
+    init {
+        handler.setOnChange(this::onChange)
+    }
+
+    private fun onChange() {
+        setChanged()
+        val level = level ?: return
+        val controller = MultiBlockBlockCache.getController(level, blockPos) ?: return
+        if (!level.isLoaded(controller)) return
+        val be = level.getBlockEntity(controller)
+        if(be is MultiblockBlockEntity) be.wakeup()
+    }
 
     override fun getUpdatePacket(): Packet<ClientGamePacketListener>? = ClientboundBlockEntityDataPacket.create(this)
     override fun getUpdateTag(provider: HolderLookup.Provider): CompoundTag = saveWithoutMetadata(provider)

@@ -25,6 +25,7 @@ interface Part {
     fun fluidInput() = SpecialBlock(this, MultiblockBlockEntity.SpecialBlockType.FluidInput)
     fun fluidOutput() = SpecialBlock(this, MultiblockBlockEntity.SpecialBlockType.FluidOutput)
     fun energyInput() = SpecialBlock(this, MultiblockBlockEntity.SpecialBlockType.EnergyInput)
+    fun computationInput() = SpecialBlock(this, MultiblockBlockEntity.SpecialBlockType.ComputationInput)
 
     infix fun or(other: Part): Part = if (this == Empty || other == Empty) Empty else Union(this, other)
 
@@ -44,6 +45,7 @@ interface Part {
         val FLUID_IN = block(ModBlocks.FLUID_INPUT_HATCH).fluidInput()
         val FLUID_OUT = block(ModBlocks.FLUID_OUTPUT_HATCH).fluidOutput()
         val ENERGY_IN = blocks(ModBlocks.ENERGY_HATCHES.toList()).energyInput()
+        val COMPUTATION_IN = blocks(ModBlocks.COMPUTATION_HATCHES.toList()).computationInput()
     }
 
     class SpecialBlock(val inner: Part, val type: MultiblockBlockEntity.SpecialBlockType) : Part {

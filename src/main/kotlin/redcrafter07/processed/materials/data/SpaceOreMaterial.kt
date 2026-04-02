@@ -5,7 +5,7 @@ import net.neoforged.neoforge.registries.DeferredItem
 import redcrafter07.processed.materials.getMaybeUnregistered
 
 interface SpaceOreMaterial: MaterialBase, OreMaterial {
-    var rawOreItem: DeferredItem<Item>?
+    var oreItem: DeferredItem<Item>?
 
-    fun rawOre(): Item = getMaybeUnregistered(rawOreItem)
+    fun ore(): Item = getMaybeUnregistered(oreItem)
 }

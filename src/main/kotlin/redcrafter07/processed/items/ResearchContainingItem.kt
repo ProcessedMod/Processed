@@ -1,5 +1,6 @@
 package redcrafter07.processed.items
 
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
@@ -12,8 +13,11 @@ class ResearchContainingItem : Item(Properties().stacksTo(1)) {
     ) {
         val research = stack.get(ModDataComponents.RESEARCH)
         if (research != null) {
-            val research = Component.translatable(research.toLanguageKey("item"))
-            tooltipComponents.add(Translations.itemContainedResearch(research))
+            // try getting the item. if that doesn't work, translate with language key of item.
+            val name = BuiltInRegistries.ITEM.getOptional(research)
+                .map { it.defaultInstance.hoverName }
+                .orElseGet { Component.translatable(research.toLanguageKey("item")) }
+            tooltipComponents.add(Translations.itemContainedResearch(name))
         }
 
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag)

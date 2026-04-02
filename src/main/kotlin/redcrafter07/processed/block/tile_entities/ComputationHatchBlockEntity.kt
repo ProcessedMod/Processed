@@ -12,6 +12,8 @@ import redcrafter07.processed.block.ComputationHatchBlock
 import redcrafter07.processed.block.machine_abstractions.BlockSide
 import redcrafter07.processed.block.machine_abstractions.ComputationCapableBlockEntity
 import redcrafter07.processed.block.tile_entities.capabilities.SimpleInputOnlyComputationStore
+import redcrafter07.processed.multiblock.MultiBlockBlockCache
+import redcrafter07.processed.multiblock.MultiblockBlockEntity
 
 class ComputationHatchBlockEntity(pos: BlockPos, blockState: BlockState, tier: ProcessedTier) : BlockEntity(
     ModTileEntities.COMPUTATION_HATCH.get(), pos, blockState
@@ -25,7 +27,16 @@ class ComputationHatchBlockEntity(pos: BlockPos, blockState: BlockState, tier: P
     val handler: SimpleInputOnlyComputationStore
     init {
         val amount = ProcessedComputation.computationForTier(tier)
-        handler = SimpleInputOnlyComputationStore(0, amount * 2, amount)
+        handler = SimpleInputOnlyComputationStore(0, amount * 2, amount, this::onChange)
+    }
+
+    private fun onChange() {
+        setChanged()
+        val level = level ?: return
+        val controller = MultiBlockBlockCache.getController(level, blockPos) ?: return
+        if (!level.isLoaded(controller)) return
+        val be = level.getBlockEntity(controller)
+        if(be is MultiblockBlockEntity) be.wakeup()
     }
 
     override fun saveAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {

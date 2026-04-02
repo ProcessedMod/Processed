@@ -29,6 +29,9 @@ abstract class SimpleRecipeBuilder(val resultStack: ItemStack, private val prefi
 
     @Deprecated(replaceWith = ReplaceWith("save"), message = "Save without id uses minecraft:, which is bad.")
     final override fun save(recipeOutput: RecipeOutput) = throw UnsupportedOperationException()
+    @Deprecated(replaceWith = ReplaceWith("save"), message = "Save without resource location id uses minecraft:, which is bad.")
+    final override fun save(recipeOutput: RecipeOutput, id: String) = throw UnsupportedOperationException()
+
     override fun save(recipeOutput: RecipeOutput, id: ResourceLocation) {
         val advancement = if (criteria.isEmpty()) null else {
             val builder = recipeOutput.advancement().addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))

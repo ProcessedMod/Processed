@@ -44,7 +44,6 @@ abstract class TieredRecipeBlockEntity(type: BlockEntityType<*>, pos: BlockPos, 
         if (recipeData.progress >= recipeData.maxProgress) {
             if (tryInsertRecipeOutputs(level, pos, state, recipeData)) this.recipeData = getRecipe()
             else return false
-            return true
         }
 
         if (!useScaledPower(recipeData.baseEnergyUsage)) {

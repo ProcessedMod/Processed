@@ -16,6 +16,8 @@ import redcrafter07.processed.block.machine_abstractions.ItemCapableBlockEntity
 import redcrafter07.processed.block.tile_entities.capabilities.InputItemHandlerWrapper
 import redcrafter07.processed.block.tile_entities.capabilities.ProcessedItemStackHandler
 import redcrafter07.processed.gui.ItemHatchMenu
+import redcrafter07.processed.multiblock.MultiBlockBlockCache
+import redcrafter07.processed.multiblock.MultiblockBlockEntity
 import java.util.*
 
 class InputItemHatchBlockEntity(pos: BlockPos, blockState: BlockState) : BlockEntity(
@@ -23,7 +25,19 @@ class InputItemHatchBlockEntity(pos: BlockPos, blockState: BlockState) : BlockEn
 ), ItemCapableBlockEntity, MenuProvider, ItemHatch {
     val handler = ProcessedItemStackHandler(4)
     val wrapper = InputItemHandlerWrapper(handler)
-    init { handler.setOnChange(this::setChanged) }
+
+    init {
+        handler.setOnChange(this::onChange)
+    }
+
+    private fun onChange() {
+        setChanged()
+        val level = level ?: return
+        val controller = MultiBlockBlockCache.getController(level, blockPos) ?: return
+        if (!level.isLoaded(controller)) return
+        val be = level.getBlockEntity(controller)
+        if(be is MultiblockBlockEntity) be.wakeup()
+    }
 
     override fun inventoryHandler() = handler
     override fun pos(): BlockPos = blockPos

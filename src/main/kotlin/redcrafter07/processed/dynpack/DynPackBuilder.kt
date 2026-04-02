@@ -115,6 +115,7 @@ object DynPackBuilder {
         val ingotModel = DelegatedModel(rl("item/ingot_item")).get()
         val rawModel = DelegatedModel(rl("item/raw_item")).get()
         val nuggetModel = DelegatedModel(rl("item/nugget_item")).get()
+        val spaceOreModel = DelegatedModel(rl("item/space_ore")).get()
 
         for (item in ModItems.DUST_ITEMS) DynPackResources.addItemModel(item.id, dustModel)
         for (item in ModItems.IMPURE_DUST_ITEMS) DynPackResources.addItemModel(item.id, impureDustModel)
@@ -124,6 +125,7 @@ object DynPackBuilder {
         for (item in ModItems.INGOT_ITEMS) DynPackResources.addItemModel(item.id, ingotModel)
         for (item in ModItems.NUGGET_ITEMS) DynPackResources.addItemModel(item.id, nuggetModel)
         for (item in ModItems.RAW_MATERIAL_ITEMS) DynPackResources.addItemModel(item.id, rawModel)
+        for (item in ModItems.SPACE_ORE_ITEMS) DynPackResources.addItemModel(item.id, spaceOreModel)
         for (fluid in ModFluids.REGISTERED_FLUIDS) {
             // Make all fluids be an item using `neoforge:fluid_container`, with the parent being `neoforge:item/bucket` and the fluid being this bucket's fluid.
             // This will cause them to render in a bucket! Yay!

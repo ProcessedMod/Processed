@@ -122,6 +122,8 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
             MultiBlockBlockCache.removeBlock(level, pos)
             level.invalidateCapabilities(pos)
         }
+        // sanity check
+        isAssembled = false
     }
 
     /**
@@ -139,7 +141,7 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
      */
     open fun tileTickClient(level: ClientLevel, pos: BlockPos, state: BlockState) = false
 
-    final override fun serverTick(level: ServerLevel, pos: BlockPos, state: BlockState) = false
+    override fun serverTick(level: ServerLevel, pos: BlockPos, state: BlockState) = false
 
     final override fun clientTick(level: ClientLevel, pos: BlockPos, state: BlockState) = false
 
@@ -193,7 +195,7 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
         if (affectedBlocks != null) {
             for (block in affectedBlocks) {
                 val controllerPos: BlockPos? = MultiBlockBlockCache.getController(serverLevel, block)
-                if (controllerPos != null && controllerPos != blockPos) {
+                if (controllerPos != null && controllerPos != blockPos && level?.getBlockEntity(controllerPos) is MultiblockBlockEntity) {
                     affectedBlocks = null
                     break
                 }
@@ -242,6 +244,7 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
 
         for (pos in affectedBlocks) {
             if (pos == blockPos) continue
+            // -96 137 34
 
             MultiBlockBlockCache.setController(serverLevel, pos, blockPos)
             serverLevel.invalidateCapabilities(pos)
@@ -339,7 +342,7 @@ abstract class MultiblockBlockEntity(type: BlockEntityType<*>, pos: BlockPos, bl
     enum class SpecialBlockType(val key: String) {
         None(""), Ignored(""), EnergyInput("energyIn"), ItemInput("itemIn"), ItemOutput("itemOut"), FluidInput("fluidIn"), FluidOutput(
             "fluidOut"
-        );
+        ), ComputationInput("computationIn");
 
         companion object {
             val values = entries.filter { it.key.isNotEmpty() }.toList()

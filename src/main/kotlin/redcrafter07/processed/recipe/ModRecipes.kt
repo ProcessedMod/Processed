@@ -23,6 +23,10 @@ object ModRecipes {
     val WASHING = registerRecipe("washing") { WashingRecipe.Serializer }
     val PURIFYING = registerRecipe("purifying") { PurifyingRecipe.Serializer }
 
+    val MASS_SPECTROMETRY = registerRecipe("mass_spectrometry") { MassSpectrometerRecipe.Serializer }
+    val MOLECULAR_ANALYSIS = registerRecipe("molecular_analysis") { MolecularAnalysisRecipe.Serializer }
+    val MOLECULAR_EXTRUDING = registerRecipe("molecular_extruding") { MolecularExtruderRecipe.Serializer }
+
     fun <T : RecipeSerializer<*>> registerSerializer(
         key: String, serializer: Supplier<T>
     ): DeferredHolder<RecipeSerializer<*>, T> = RECIPE_SERIALIZERS.register(key, serializer)

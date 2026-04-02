@@ -25,6 +25,7 @@ class ModItemModelProvider(output: PackOutput, existingFileHelper: ExistingFileH
         simpleModel("impure_dust_item", "item/dust", "item/impure_dust_overlay")
         simpleModel("washed_dust_item", "item/dust", "item/washed_dust_overlay")
         simpleModel("pure_dust_item", "item/dust", "item/pure_dust_overlay")
+        simpleModel("space_ore", "item/space_ore", "item/space_ore_overlay")
         simpleModel("small_dust_item", "item/small_dust")
         simpleModel("ingot_item", "item/ingot")
         simpleModel("nugget_item", "item/nugget")

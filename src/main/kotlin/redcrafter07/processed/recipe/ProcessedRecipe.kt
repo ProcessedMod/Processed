@@ -13,9 +13,57 @@ import net.minecraft.world.level.Level
 import redcrafter07.processed.ProcessedTier
 
 abstract class ProcessedRecipe<Input : RecipeInput>(
-    val energyUsage: Int, processingTime: Int, val baseTier: ProcessedTier
+    val energyUsage: Int, val baseProcessingTime: Int, val baseTier: ProcessedTier
 ) : Recipe<TieredInput<Input>> {
     companion object {
+        fun <B : ByteBuf, C : ProcessedRecipe<*>, T1> streamComp(
+            c1: StreamCodec<B, T1>,
+            g1: (C) -> T1,
+            ctor: (T1, Int, Int, ProcessedTier) -> C
+        ): StreamCodec<B, C> {
+            return object : StreamCodec<B, C> {
+                override fun decode(buffer: B): C {
+                    val v1 = c1.decode(buffer)
+                    val energyUsage = buffer.readInt()
+                    val processingTime = buffer.readInt()
+                    val baseTier = ProcessedTier.STREAM_CODEC.decode(buffer)
+                    return ctor(v1, energyUsage, processingTime, baseTier)
+                }
+
+                override fun encode(buffer: B, value: C) {
+                    c1.encode(buffer, g1(value)!!)
+                    buffer.writeInt(value.energyUsage)
+                    buffer.writeInt(value.baseProcessingTime)
+                    ProcessedTier.STREAM_CODEC.encode(buffer, value.baseTier)
+                }
+            }
+        }
+        fun <B : ByteBuf, C : ProcessedRecipe<*>, T1, T2> streamComp(
+            c1: StreamCodec<B, T1>,
+            g1: (C) -> T1,
+            c2: StreamCodec<B, T2>,
+            g2: (C) -> T2,
+            ctor: (T1, T2, Int, Int, ProcessedTier) -> C
+        ): StreamCodec<B, C> {
+            return object : StreamCodec<B, C> {
+                override fun decode(buffer: B): C {
+                    val v1 = c1.decode(buffer)
+                    val v2 = c2.decode(buffer)
+                    val energyUsage = buffer.readInt()
+                    val processingTime = buffer.readInt()
+                    val baseTier = ProcessedTier.STREAM_CODEC.decode(buffer)
+                    return ctor(v1, v2, energyUsage, processingTime, baseTier)
+                }
+
+                override fun encode(buffer: B, value: C) {
+                    c1.encode(buffer, g1(value)!!)
+                    c2.encode(buffer, g2(value)!!)
+                    buffer.writeInt(value.energyUsage)
+                    buffer.writeInt(value.baseProcessingTime)
+                    ProcessedTier.STREAM_CODEC.encode(buffer, value.baseTier)
+                }
+            }
+        }
         fun <B : ByteBuf, C : ProcessedRecipe<*>, T1, T2, T3> streamComp(
             c1: StreamCodec<B, T1>,
             g1: (C) -> T1,
@@ -41,7 +89,7 @@ abstract class ProcessedRecipe<Input : RecipeInput>(
                     c2.encode(buffer, g2(value)!!)
                     c3.encode(buffer, g3(value)!!)
                     buffer.writeInt(value.energyUsage)
-                    buffer.writeInt(value.processingTime)
+                    buffer.writeInt(value.baseProcessingTime)
                     ProcessedTier.STREAM_CODEC.encode(buffer, value.baseTier)
                 }
             }
@@ -75,7 +123,7 @@ abstract class ProcessedRecipe<Input : RecipeInput>(
                     c3.encode(buffer, g3(value)!!)
                     c4.encode(buffer, g4(value)!!)
                     buffer.writeInt(value.energyUsage)
-                    buffer.writeInt(value.processingTime)
+                    buffer.writeInt(value.baseProcessingTime)
                     ProcessedTier.STREAM_CODEC.encode(buffer, value.baseTier)
                 }
             }
@@ -85,7 +133,7 @@ abstract class ProcessedRecipe<Input : RecipeInput>(
             Codec.INT.fieldOf("energyUsage").forGetter(ProcessedRecipe<*>::energyUsage)
 
         fun <C : ProcessedRecipe<*>> processing(): RecordCodecBuilder<C, Int> =
-            Codec.INT.fieldOf("processingTime").forGetter(ProcessedRecipe<*>::processingTime)
+            Codec.INT.fieldOf("processingTime").forGetter(ProcessedRecipe<*>::baseProcessingTime)
 
         fun <C : ProcessedRecipe<*>> tier(): RecordCodecBuilder<C, ProcessedTier> =
             ProcessedTier.CODEC.fieldOf("baseTier").forGetter(ProcessedRecipe<*>::baseTier)
@@ -101,5 +149,8 @@ abstract class ProcessedRecipe<Input : RecipeInput>(
     open fun getRemainingItems(input: TieredInput<Input>, level: Level) = getRemainingItems(input, level.random)
     abstract fun getRemainingItems(input: TieredInput<Input>, random: RandomSource): NonNullList<ItemStack>
 
-    val processingTime = processingTime * baseTier.speedMultiplier
+    /**
+     * Only use for maxProgress in RecipeData, never as the `baseProcessingTime` constructor parameter (can commonly happen in serializers)
+     */
+    val scaledProcessingTime = baseProcessingTime * baseTier.speedMultiplier
 }

@@ -12,7 +12,6 @@ import net.minecraft.world.item.crafting.SmeltingRecipe
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 import redcrafter07.processed.ProcessedTier
-import redcrafter07.processed.Translations
 import redcrafter07.processed.block.ModBlocks
 import redcrafter07.processed.multiblock.AbstractRecipeMultiBlockEntity
 import redcrafter07.processed.multiblock.Part
@@ -47,7 +46,7 @@ class BigSmelterBlockEntity(pos: BlockPos, blockState: BlockState) :
     override fun validator() = validator
 
     override fun createMenu(p0: Int, p1: Inventory, p2: Player): AbstractContainerMenu? = null
-    override fun getDisplayName(): Component = Translations.bigSmelterName()
+    override fun getDisplayName(): Component = Component.empty()
 
     override val tier: ProcessedTier = ProcessedTier.Advanced
 

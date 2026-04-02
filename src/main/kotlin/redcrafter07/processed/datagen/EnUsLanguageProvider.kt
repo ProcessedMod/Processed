@@ -79,6 +79,9 @@ class EnUsLanguageProvider(output: PackOutput) :
         addBlock(ModBlocks.HEAT_VENT, "Heat Vent")
         addBlock(ModBlocks.MATERIAL_ANALYSER_CORE, "Materials analyser core")
         addBlock(ModBlocks.COMPUTER, "Computer")
+        addBlock(ModBlocks.MASS_SPECTROMETER, "Mass Spectrometer")
+        addBlock(ModBlocks.MOLECULAR_ANALYZER, "Molecular Analyzer")
+        addBlock(ModBlocks.MOLECULAR_EXTRUDER, "Molecular Extruder")
         addBlock(ModFluids.FUEL.block, "Fuel")
 
         // Tiered Blocks
@@ -119,6 +122,9 @@ class EnUsLanguageProvider(output: PackOutput) :
         add("block.processed.heat_vent.tooltip", "§7For venting however much heat u want. seriously. even 15.7 MK")
         add("block.processed.material_analyser_core.tooltip", "§7Analyzes the results of the mass spectrometer")
         add("block.processed.computer.tooltip", "§7Produces 400 Hashes/t while consuming ${ProcessedTier.Advanced.scalePower(8)} FE/t of Advanced Power")
+        add("block.processed.mass_spectrometer.tooltip", "§7Uses mass spectrometry to figure out the composition of an element")
+        add("block.processed.molecular_analyzer.tooltip", "§7Uses the data of the mass spectrometer to figure out how to turn a raw ore into a usable form")
+        add("block.processed.molecular_extruder.tooltip", "§7Uses the instructions produced by the molecular analyzer to turn raw ore into a usable form")
 
         // Launch Controller State
         add("block.processed.launch_controller.state.idle", "Idle")
@@ -286,6 +292,7 @@ class EnUsLanguageProvider(output: PackOutput) :
 
         // -- Jade --
         add("config.jade.plugin_processed.energy", "Processed Energy")
+        add("config.jade.plugin_processed.computations", "Processed Computations")
         add("config.jade.plugin_processed.multiblock_state", "Multiblock State")
         add("config.jade.plugin_processed.crafting_state", "Crafting State")
         add("config.jade.plugin_processed.crafting_state.output", "Output:")
@@ -295,6 +302,9 @@ class EnUsLanguageProvider(output: PackOutput) :
         add("emi.category.processed.crushing", "Crushing")
         add("emi.category.processed.purifying", "Purifying")
         add("emi.category.processed.washing", "Washing")
+        add("emi.category.processed.mass_spectrometry", "Mass Spectrometry")
+        add("emi.category.processed.molecular_analysis", "Molecular Analysis")
+        add("emi.category.processed.molecular_extruding", "Molecular Extruding")
 
         // -- Tags --
         add("tag.item.c.small_dusts", "Small Dusts")
@@ -317,6 +327,7 @@ class EnUsLanguageProvider(output: PackOutput) :
         ) {
             when (it) {
                 "aluminium" -> "Aluminium"
+                "naquadah" -> "Naquadah"
                 "nickel" -> "Nickel"
                 "titanium" -> "Titanium"
                 "uranium" -> "Uranium"

@@ -18,7 +18,7 @@ class EmiWashingRecipe(recipe: RecipeHolder<WashingRecipe>) : EmiRecipe {
     val recipeInput: EmiIngredient = NeoForgeEmiIngredient.of(recipe.value.ingredient)
     val solvent: EmiIngredient = NeoForgeEmiIngredient.of(recipe.value.dissolver)
     val recipeOutputs: List<EmiStack>
-    val time = recipe.value.processingTime
+    val time = recipe.value.scaledProcessingTime
     val recipeId: ResourceLocation = recipe.id
     val baseTier = recipe.value.baseTier
     val baseEnergy = recipe.value.energyUsage

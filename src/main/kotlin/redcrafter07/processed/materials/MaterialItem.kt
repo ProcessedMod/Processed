@@ -38,4 +38,10 @@ abstract class MaterialItem(override val material: MaterialBase) : Item(DEFAULT_
     class Raw(material: MaterialBase) : MaterialItem(material) {
         override fun getDescription(): Component = Translations.materialRaw(material)
     }
+
+    class SpaceOre(material: MaterialBase) : MaterialItem(material) {
+        override fun getDescription(): Component = Translations.materialOre(material)
+        // == 1 because the overlay should be tinted, not the base
+        override fun getColor(tintIndex: Int) = if(tintIndex == 1) material.color else -1
+    }
 }

@@ -50,7 +50,7 @@ class WasherBlockEntity(pos: BlockPos, blockState: BlockState) :
             val result = recipe.getResultItem(level.registryAccess())
             if (!result.isEmpty) items.add(result)
 
-            return RecipeData(items, recipe.processingTime, recipe.energyUsage)
+            return RecipeData(items, recipe.scaledProcessingTime, recipe.energyUsage)
         }
         return null
     }

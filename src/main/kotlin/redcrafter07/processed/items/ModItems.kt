@@ -38,7 +38,7 @@ object ModItems {
         registerMaterialItems(OreMaterial::washedDustHolder, ::WashedDust) { "washed_${it.identifier}_dust" }
     val RAW_MATERIAL_ITEMS = registerMaterialItems(OreMaterial::rawHolder, ::Raw) { "raw_${it.identifier}" }
 
-    val SPACE_ORE_ITEMS = registerMaterialItems(SpaceOreMaterial::rawOreItem, ::Raw) { "raw_${it.identifier}" }
+    val SPACE_ORE_ITEMS = registerMaterialItems(SpaceOreMaterial::oreItem, ::SpaceOre) { "${it.identifier}_ore" }
 
     val MASS_SPECTROMETRY_DATA = registerItem("mass_spectrometry_data", ::ResearchContainingItem)
     val MATERIAL_ANALYSIS = registerItem("material_analysis", ::ResearchContainingItem)

@@ -30,14 +30,14 @@ class ComputerBlockEntity(pos: BlockPos, blockState: BlockState) :
         var amountLeft = max
 
         lastPushedDir?.let { amountLeft = tryInsertIntoDir(level, amountLeft, it) }
-        if (amountLeft >= 8) lastPushedDir = null
+        if (amountLeft >= max) lastPushedDir = null
 
         for (dir in Direction.entries) {
             if (amountLeft <= 0) return true
             amountLeft = tryInsertIntoDir(level, amountLeft, dir)
         }
 
-        return amountLeft < 8
+        return amountLeft < max
     }
 
     private fun tryInsertIntoDir(level: ServerLevel, amountLeft: Long, dir: Direction): Long {

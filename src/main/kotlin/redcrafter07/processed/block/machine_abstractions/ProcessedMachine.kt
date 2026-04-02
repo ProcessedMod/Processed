@@ -95,6 +95,7 @@ abstract class ProcessedMachine(type: BlockEntityType<*>, pos: BlockPos, blockSt
     override fun saveAdditional(tag: CompoundTag, provider: HolderLookup.Provider) {
         super.saveAdditional(tag, provider)
 
+        tag.putInt("eepytime", sleepTimeLeft)
         tag.putByteArray("io_states", sides.stream().map { it.id.toByte() }.toList())
         tag.put("capability_handlers", capabilityHandlers.serializeNBT(provider))
     }

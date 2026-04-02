@@ -61,7 +61,8 @@ class SquareMultiblockValidator(val data: List<Part>, val size: Vector3i, val re
 
     override fun getBlocks(level: LevelAccessor, controller: BlockPos, facing: Direction): MultiblockValidator.Result? {
         // can't scan for the multiblock if it isn't entirely loaded
-        if (!isStructureLoaded(level, controller, facing)) return null
+        if (!isStructureLoaded(level, controller, facing))
+            return null
         val positions = HashSet<BlockPos>()
 
         val restrictionOccurrences = restrictions.stream().map { 0 }.toList().toMutableList()
@@ -78,14 +79,16 @@ class SquareMultiblockValidator(val data: List<Part>, val size: Vector3i, val re
                     val part = blockAt(x + controllerPosition.x, y + controllerPosition.y, z + controllerPosition.z)
                     val pos = offsetZ.offset(0, y, 0)
                     val state = level.getBlockState(pos)
-                    val specialBlockType = part.blockType(state, level, pos) ?: return null
+                    val specialBlockType = part.blockType(state, level, pos) ?:
+                    return null
                     if (specialBlockType == MultiblockBlockEntity.SpecialBlockType.Ignored) continue
 
                     if (specialBlockType != MultiblockBlockEntity.SpecialBlockType.None) {
                         specialBlocks.getOrPut(specialBlockType) { mutableListOf() }.add(pos)
                     }
                     val controllerPos = MultiBlockBlockCache.getController(level, pos)
-                    if (controllerPos != null && controllerPos != controller) return null
+                    if (controllerPos != null && controllerPos != controller && level.getBlockEntity(controllerPos) is MultiblockBlockEntity)
+                        return null
                     for (i in 0..<restrictions.size) {
                         if (restrictions[i].part.blockType(state, level, pos) != null) restrictionOccurrences[i]++
                     }

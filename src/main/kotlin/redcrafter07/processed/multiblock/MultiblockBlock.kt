@@ -12,6 +12,7 @@ abstract class MultiblockBlock(properties: Properties) : ProcessedBlock(properti
     public override fun onRemove(
         state: BlockState, level: Level, pos: BlockPos, newState: BlockState, movedByPiston: Boolean
     ) {
+        if(newState.`is`(state.block)) return
         MultiblockPreview.removeIfLastDisplayed(pos)
         val be = level.getBlockEntity(pos)
         if (be is MultiblockBlockEntity) be.onRemove(level)

@@ -17,6 +17,8 @@ import redcrafter07.processed.block.machine_abstractions.FluidCapableBlockEntity
 import redcrafter07.processed.block.tile_entities.capabilities.InputFluidHandlerWrapper
 import redcrafter07.processed.block.tile_entities.capabilities.SimpleFluidStore
 import redcrafter07.processed.gui.FluidHatchMenu
+import redcrafter07.processed.multiblock.MultiBlockBlockCache
+import redcrafter07.processed.multiblock.MultiblockBlockEntity
 import java.util.*
 
 class InputFluidHatchBlockEntity(pos: BlockPos, blockState: BlockState) : BlockEntity(
@@ -24,7 +26,16 @@ class InputFluidHatchBlockEntity(pos: BlockPos, blockState: BlockState) : BlockE
 ), FluidCapableBlockEntity, MenuProvider, FluidHatch {
     val handler = SimpleFluidStore(1, 4000)
     val wrapper = InputFluidHandlerWrapper(handler)
-    init { handler.setOnChange(this::setChanged) }
+    init { handler.setOnChange(this::onChange) }
+
+    private fun onChange() {
+        setChanged()
+        val level = level ?: return
+        val controller = MultiBlockBlockCache.getController(level, blockPos) ?: return
+        if (!level.isLoaded(controller)) return
+        val be = level.getBlockEntity(controller)
+        if(be is MultiblockBlockEntity) be.wakeup()
+    }
 
     override fun inventoryHandler() = handler
     override fun pos(): BlockPos = blockPos
