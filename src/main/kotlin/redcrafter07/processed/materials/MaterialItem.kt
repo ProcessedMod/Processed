@@ -38,6 +38,18 @@ abstract class MaterialItem(override val material: MaterialBase) : Item(DEFAULT_
     class Raw(material: MaterialBase) : MaterialItem(material) {
         override fun getDescription(): Component = Translations.materialRaw(material)
     }
+    class Plate(material: MaterialBase) : MaterialItem(material) {
+        override fun getDescription(): Component = Translations.materialPlate(material)
+    }
+    class Rod(material: MaterialBase) : MaterialItem(material) {
+        override fun getDescription(): Component = Translations.materialRod(material)
+    }
+    class Screw(material: MaterialBase) : MaterialItem(material) {
+        override fun getDescription(): Component = Translations.materialScrew(material)
+    }
+    class Wiring(material: MaterialBase) : MaterialItem(material) {
+        override fun getDescription(): Component = Translations.materialWiring(material)
+    }
 
     class SpaceOre(material: MaterialBase) : MaterialItem(material) {
         override fun getDescription(): Component = Translations.materialOre(material)

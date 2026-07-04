@@ -2,6 +2,7 @@ package redcrafter07.processed.datagen
 
 import net.neoforged.neoforge.common.data.LanguageProvider
 import redcrafter07.processed.materials.Materials
+import redcrafter07.processed.materials.data.CraftingMaterial
 import redcrafter07.processed.materials.data.DustMaterial
 import redcrafter07.processed.materials.data.IngotMaterial
 import redcrafter07.processed.materials.data.MinableOreMaterial
@@ -20,6 +21,10 @@ object TagsLanguageProvider {
         nuggetFmt: String,
         oresFmt: String,
         rawMaterialsFmt: String,
+        plateFmt: String,
+        screwFmt: String,
+        rodFmt: String,
+        wiringFmt: String,
         materialNames: (String) -> String,
     ) {
         Materials.MATERIALS.forEach {
@@ -44,6 +49,13 @@ object TagsLanguageProvider {
             }
 
             if (it is MinableOreMaterial) langProvider.addTag(it::oreBlockItemTag, oresFmt.format(name))
+
+            if (it is CraftingMaterial) {
+                langProvider.addTag(it::plateTag, plateFmt.format(name))
+                langProvider.addTag(it::screwTag, screwFmt.format(name))
+                langProvider.addTag(it::rodTag, rodFmt.format(name))
+                langProvider.addTag(it::wiringTag, wiringFmt.format(name))
+            }
         }
     }
 

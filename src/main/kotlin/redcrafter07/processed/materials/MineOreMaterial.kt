@@ -4,6 +4,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import net.neoforged.neoforge.registries.DeferredBlock
 import net.neoforged.neoforge.registries.DeferredItem
+import redcrafter07.processed.materials.data.CraftingMaterial
 import redcrafter07.processed.materials.data.DustMaterial
 import redcrafter07.processed.materials.data.IngotMaterial
 import redcrafter07.processed.materials.data.MaterialBase
@@ -11,7 +12,7 @@ import redcrafter07.processed.materials.data.MinableOreMaterial
 import redcrafter07.processed.materials.data.OreMaterial
 
 class MineOreMaterial(override val identifier: String, override val color: Int) : MaterialBase, MinableOreMaterial,
-    OreMaterial, DustMaterial, IngotMaterial {
+    OreMaterial, DustMaterial, IngotMaterial, CraftingMaterial {
     override var oreBlockHolder: DeferredBlock<Block>? = null
     override var oreBlockItemHolder: DeferredItem<Item>? = null
     override var impureDustHolder: DeferredItem<Item>? = null
@@ -22,4 +23,8 @@ class MineOreMaterial(override val identifier: String, override val color: Int) 
     override var smallDustHolder: DeferredItem<Item>? = null
     override var ingotHolder: DeferredItem<Item>? = null
     override var nuggetHolder: DeferredItem<Item>? = null
+    override var plateHolder: DeferredItem<Item>? = null
+    override var screwHolder: DeferredItem<Item>? = null
+    override var rodHolder: DeferredItem<Item>? = null
+    override var wiringHolder: DeferredItem<Item>? = null
 }

@@ -40,6 +40,11 @@ object ModItems {
 
     val SPACE_ORE_ITEMS = registerMaterialItems(SpaceOreMaterial::oreItem, ::SpaceOre) { "${it.identifier}_ore" }
 
+    val PLATE_ITEMS = registerMaterialItems(CraftingMaterial::plateHolder, ::Plate) { it.identifier + "_plate" }
+    val ROD_ITEMS = registerMaterialItems(CraftingMaterial::rodHolder, ::Rod) { it.identifier + "_rod" }
+    val SCREW_ITEMS = registerMaterialItems(CraftingMaterial::screwHolder, ::Screw) { it.identifier + "_screw" }
+    val WIRING_ITEMS = registerMaterialItems(CraftingMaterial::wiringHolder, ::Wiring) { it.identifier + "_wiring" }
+
     val MASS_SPECTROMETRY_DATA = registerItem("mass_spectrometry_data", ::ResearchContainingItem)
     val MATERIAL_ANALYSIS = registerItem("material_analysis", ::ResearchContainingItem)
 

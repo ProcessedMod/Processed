@@ -30,6 +30,10 @@ class ModItemModelProvider(output: PackOutput, existingFileHelper: ExistingFileH
         simpleModel("ingot_item", "item/ingot")
         simpleModel("nugget_item", "item/nugget")
         simpleModel("raw_item", "item/raw_metal")
+        simpleModel("plate", "item/components/plate")
+        simpleModel("rod", "item/components/rod")
+        simpleModel("screw", "item/components/screw")
+        simpleModel("wiring", "item/components/wiring")
         ModCovers.COVERS.entries.forEach { def -> simpleItem(def.get().location.value) }
     }
 

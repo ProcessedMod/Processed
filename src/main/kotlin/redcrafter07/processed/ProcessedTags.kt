@@ -16,6 +16,10 @@ object ProcessedTags {
         val WASHED_DUSTS = commonTag("washed_dusts")
         val PURE_DUSTS = commonTag("pure_dusts")
 
+        val PLATES = commonTag("plates")
+        val SCREWS = commonTag("screws")
+        val WIRING = commonTag("wiring")
+
         fun commonTag(name: String): TagKey<Item> {
             return ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", name))
         }

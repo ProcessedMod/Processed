@@ -5,7 +5,7 @@ import net.neoforged.neoforge.registries.DeferredItem
 import redcrafter07.processed.materials.data.*
 
 class MinerOreMaterial(override val identifier: String, override val color: Int) : MaterialBase, SpaceOreMaterial,
-    OreMaterial, DustMaterial, IngotMaterial {
+    OreMaterial, DustMaterial, IngotMaterial, CraftingMaterial {
     override var impureDustHolder: DeferredItem<Item>? = null
     override var pureDustHolder: DeferredItem<Item>? = null
     override var washedDustHolder: DeferredItem<Item>? = null
@@ -15,4 +15,8 @@ class MinerOreMaterial(override val identifier: String, override val color: Int)
     override var ingotHolder: DeferredItem<Item>? = null
     override var nuggetHolder: DeferredItem<Item>? = null
     override var oreItem: DeferredItem<Item>? = null
+    override var plateHolder: DeferredItem<Item>? = null
+    override var screwHolder: DeferredItem<Item>? = null
+    override var rodHolder: DeferredItem<Item>? = null
+    override var wiringHolder: DeferredItem<Item>? = null
 }

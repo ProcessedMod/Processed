@@ -10,6 +10,7 @@ import redcrafter07.processed.ProcessedMod
 import redcrafter07.processed.ProcessedTags
 import redcrafter07.processed.items.ModItems
 import redcrafter07.processed.materials.Materials
+import redcrafter07.processed.materials.data.CraftingMaterial
 import redcrafter07.processed.materials.data.DustMaterial
 import redcrafter07.processed.materials.data.IngotMaterial
 import redcrafter07.processed.materials.data.MinableOreMaterial
@@ -38,6 +39,11 @@ internal class ModItemTagProvider(
         val rawMaterials = this.tag(Tags.Items.RAW_MATERIALS)
 
         val ores = this.tag(Tags.Items.ORES)
+
+        val plates = this.tag(ProcessedTags.Items.PLATES)
+        val screws = this.tag(ProcessedTags.Items.SCREWS)
+        val rods = this.tag(Tags.Items.RODS)
+        val wiring = this.tag(ProcessedTags.Items.WIRING)
 
         this.tag(ProcessedTags.Items.INGOT_BLITZ).add(ModItems.BLITZ_ORB.get())
 
@@ -83,9 +89,28 @@ internal class ModItemTagProvider(
         }
 
         Materials.getMaterials<MinableOreMaterial>().forEach {
-            if(isntVanilla(it.oreBlockItemHolder)) {
+            if (isntVanilla(it.oreBlockItemHolder)) {
                 this.tag(it.oreBlockItemTag()).add(it.oreBlockItem())
                 ores.addTag(it.oreBlockItemTag())
+            }
+        }
+
+        Materials.getMaterials<CraftingMaterial>().forEach {
+            if (isntVanilla(it.rodHolder)) {
+                this.tag(it.rodTag()).add(it.rod())
+                rods.addTag(it.rodTag())
+            }
+            if (isntVanilla(it.screwHolder)) {
+                this.tag(it.screwTag()).add(it.screw())
+                screws.addTag(it.screwTag())
+            }
+            if (isntVanilla(it.plateHolder)) {
+                this.tag(it.plateTag()).add(it.plate())
+                plates.addTag(it.plateTag())
+            }
+            if (isntVanilla(it.wiringHolder)) {
+                this.tag(it.wiringTag()).add(it.wiring())
+                wiring.addTag(it.wiringTag())
             }
         }
     }

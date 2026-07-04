@@ -116,6 +116,10 @@ object DynPackBuilder {
         val rawModel = DelegatedModel(rl("item/raw_item")).get()
         val nuggetModel = DelegatedModel(rl("item/nugget_item")).get()
         val spaceOreModel = DelegatedModel(rl("item/space_ore")).get()
+        val plateModel = DelegatedModel(rl("item/plate")).get()
+        val rodModel = DelegatedModel(rl("item/rod")).get()
+        val screwModel = DelegatedModel(rl("item/screw")).get()
+        val wiringModel = DelegatedModel(rl("item/wiring")).get()
 
         for (item in ModItems.DUST_ITEMS) DynPackResources.addItemModel(item.id, dustModel)
         for (item in ModItems.IMPURE_DUST_ITEMS) DynPackResources.addItemModel(item.id, impureDustModel)
@@ -126,6 +130,10 @@ object DynPackBuilder {
         for (item in ModItems.NUGGET_ITEMS) DynPackResources.addItemModel(item.id, nuggetModel)
         for (item in ModItems.RAW_MATERIAL_ITEMS) DynPackResources.addItemModel(item.id, rawModel)
         for (item in ModItems.SPACE_ORE_ITEMS) DynPackResources.addItemModel(item.id, spaceOreModel)
+        for (item in ModItems.PLATE_ITEMS) DynPackResources.addItemModel(item.id, plateModel)
+        for (item in ModItems.ROD_ITEMS) DynPackResources.addItemModel(item.id, rodModel)
+        for (item in ModItems.SCREW_ITEMS) DynPackResources.addItemModel(item.id, screwModel)
+        for (item in ModItems.WIRING_ITEMS) DynPackResources.addItemModel(item.id, wiringModel)
         for (fluid in ModFluids.REGISTERED_FLUIDS) {
             // Make all fluids be an item using `neoforge:fluid_container`, with the parent being `neoforge:item/bucket` and the fluid being this bucket's fluid.
             // This will cause them to render in a bucket! Yay!

@@ -47,15 +47,20 @@ class EnUsLanguageProvider(output: PackOutput) :
         add("item.processed.assembled_mining_rocket.components", "§7Components:")
         add("item.processed.assembled_mining_rocket.stats", "§7Rocket stats:")
 
+
         add("processed.item.material_dust", "%s Dust")
         add("processed.item.material_dust.small", "Small %s Dust")
         add("processed.item.material_dust.impure", "Dirty %s Dust")
-        add("processed.item.material_dust.washed", "Washed %s Dust")
-        add("processed.item.material_dust.pure", "Pure %s Dust")
+        add("processed.item.material_dust.washed", "Pure %s Dust")
+        add("processed.item.material_dust.pure", "Washed %s Dust")
         add("processed.item.material_ingot", "%s Ingot")
         add("processed.item.material_nugget", "%s Nugget")
-        add("processed.item.material_raw", "Raw %s")
-        add("processed.item.material_ore", "%s Ore")
+        add("processed.item.material_raw", "%s Ore")
+        add("processed.item.material_ore", "Raw %s")
+        add("processed.item.material_plate", "%s Plate")
+        add("processed.item.material_screw", "%s Screw")
+        add("processed.item.material_rod", "%s Rod")
+        add("processed.item.material_wiring", "%s Machine Wiring")
         add("processed.item.material_cable", "%s Cable")
         add("processed.item.material_transporter", "%s Transporter")
         add("processed.item.material_pipe", "%s Pipe")
@@ -323,11 +328,17 @@ class EnUsLanguageProvider(output: PackOutput) :
             "%s Ingots",
             "%s Nuggets",
             "%s Ores",
-            "Raw %s"
+            "Raw %s",
+            "%s Plates",
+            "%s Screws",
+            "%s Rods",
+            "%s Machine Wiring",
         ) {
             when (it) {
                 "aluminium" -> "Aluminium"
                 "naquadah" -> "Naquadah"
+                "tin" -> "Tin"
+                "copper" -> "Copper"
                 "nickel" -> "Nickel"
                 "titanium" -> "Titanium"
                 "uranium" -> "Uranium"
